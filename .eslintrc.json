@@ -24,8 +24,6 @@
 		"project":     "./tsconfig.json"
 	},
 	"rules": {
-		"gatewaker/import-order": "error",
-		"@typescript-eslint/ban-ts-ignore": "error",
 		"@typescript-eslint/camelcase": "off",
 		"@typescript-eslint/naming-convention": [
 			"error",
@@ -42,7 +40,6 @@
 			{ "selector": "enum", "format": ["PascalCase"] },
 			{ "selector": "typeParameter", "format": ["PascalCase"] }
 		],
-		"@typescript-eslint/class-name-casing": "error",
 		"no-dupe-class-members": "off",
 		"@typescript-eslint/explicit-function-return-type": ["error", {
 			"allowExpressions": true

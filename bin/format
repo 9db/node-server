@@ -5,5 +5,4 @@
 # If you want to make a change or fix broken behavior in this file,
 # you should do so upstream in https://github.com/burninggarden/botanist.
 
-./node_modules/.bin/eslint src --ext .ts --fix
-./node_modules/.bin/eslint test --ext .ts --fix
+./node_modules/.bin/eslint src test/unit --ext .ts --ext .tsx --fix
