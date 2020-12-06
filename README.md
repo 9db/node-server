@@ -8,8 +8,7 @@ A reference implementation of the 9DB server specification, written in Node.js.
 npm install @9db/server --save
 ```
 
-```
-```
+<br>
 
 ## Usage
 
@@ -23,8 +22,7 @@ server.start();
 
 You should be able to access the server by visiting http://localhost:9999.
 
-```
-```
+<br>
 
 ## Options
 
@@ -36,8 +34,7 @@ key        | description                                                        
 `adapter`  | The database adapter to use for storing nodes. See the [Adapters](#adapters) section below. | `MemoryAdapter`
 `hostname` | The [FQDN](https://en.wikipedia.org/wiki/Fully_qualified_domain_name) that this server will be hosted from.                                              | `localhost`
 
-```
-```
+<br>
 
 ## Adapters
 
@@ -94,8 +91,7 @@ const adapter = new RedisAdapter({
 });
 ```
 
-```
-```
+<br>
 
 ### Creating your own adapter
 
