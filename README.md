@@ -27,7 +27,7 @@ The following options can be passed to `new Server({ ... })`:
 key        | description                                                                                 | default value
 ---------- | ------------------------------------------------------------------------------------------- | -------------
 `port`     | The HTTP port that the 9DB server should bind to.                                           | `9999`
-`adapter`  | The database adapter to use for storing nodes. See the [Adapters](#adapters) section below. | `new MemoryAdapter()`
+`adapter`  | The database adapter to use for storing nodes. See the [Adapters](#adapters) section below. | `MemoryAdapter`
 `hostname` | The [FQDN](https://en.wikipedia.org/wiki/Fully_qualified_domain_name) that this server will be hosted from.                                              | `localhost`
 
 ### Adapters
@@ -36,6 +36,7 @@ The server uses adapters in order to store nodes for later use. Pass an explicit
 adapter to your server via:
 
 ```ts
+const adapter = new MemoryAdapter();
 const server = new Server({ adapter });
 ```
 
