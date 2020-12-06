@@ -2,13 +2,13 @@
 
 A reference implementation of the 9DB server specification, written in Node.js.
 
-### Installation
+## Installation
 
 ```
 npm install @9db/server --save
 ```
 
-### Usage
+## Usage
 
 ```js
 import {Server} from '@9db/server';
@@ -20,7 +20,7 @@ server.start();
 
 You should be able to access the server by visiting http://localhost:9999.
 
-### Options
+## Options
 
 The following options can be passed to `new Server({ ... })`:
 
@@ -30,7 +30,7 @@ key        | description                                                        
 `adapter`  | The database adapter to use for storing nodes. See the [Adapters](#adapters) section below. | `MemoryAdapter`
 `hostname` | The [FQDN](https://en.wikipedia.org/wiki/Fully_qualified_domain_name) that this server will be hosted from.                                              | `localhost`
 
-### Adapters
+## Adapters
 
 The server uses adapters in order to store nodes for later use. Pass an explicit
 adapter to your server via:
@@ -42,7 +42,7 @@ const server = new Server({ adapter });
 
 There are several different adapters available out of the box:
 
-#### `MemoryAdapter`
+### `MemoryAdapter`
 
 This adapter merely retains nodes in local process memory. If the server crashes
 or is restarted, all persisted nodes will be lost. Useful for local development
@@ -56,7 +56,7 @@ import {MemoryAdapter} from '@9db/server';
 const adapter = new MemoryAdapter();
 ```
 
-#### `FilesystemAdapter`
+### `FilesystemAdapter`
 
 This adapter persists nodes to the local filesystem. Depending on your needs,
 this simple persistence mechanism could be sufficient. However, it is not well
@@ -71,7 +71,7 @@ const adapter = new FilesystemAdapter({
 });
 ```
 
-#### `RedisAdapter`
+### `RedisAdapter`
 
 This adapter persists nodes to a Redis instance. This is the recommended adapter
 to use for high-traffic sites.
