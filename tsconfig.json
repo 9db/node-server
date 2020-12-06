@@ -1,0 +1,30 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"noImplicitReturns": true,
+		"noImplicitAny": true,
+		"strictNullChecks": true,
+		"noUnusedLocals": true,
+		"strictPropertyInitialization": true,
+		"forceConsistentCasingInFileNames": true,
+		"baseUrl":         "./src",
+		"target":          "es2017",
+		"module":          "commonjs",
+		"outDir":          "dist",
+		"sourceMap":       true,
+		"esModuleInterop": true,
+		"lib": [
+			"esnext"
+		]
+	},
+	"typeRoots": [
+		"node_modules/@types"
+	],
+	"include": [
+		"src/**/*.ts",
+		"test/**/*.ts"
+	],
+	"exclude": [
+		"node_modules"
+	]
+}

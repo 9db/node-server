@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+./bin/compile-source-files --verify
+
+if [ $? -eq 1 ]; then
+	./bin/compile-source-files
+fi
+
+date +%s > ./dist/.last-publish-time

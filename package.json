@@ -1,0 +1,35 @@
+{
+  "name": "@9db/node-server",
+  "description": "A reference implementation of the 9DB server specification",
+  "version": "0.0.1",
+  "private": false,
+  "author": "9DB",
+  "homepage": "https://9db.org",
+  "repository": "https://github.com/9db/node-server",
+  "main": "./dist/src/index.js",
+  "dependencies": {
+    "@types/jest": "^24.0.17",
+    "@types/node": "10.9.4"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^1.5.0",
+    "@typescript-eslint/parser": "^1.5.0",
+    "eslint": "6.1.0",
+    "eslint-plugin-jest": "^23.8.2",
+    "eslint-plugin-prettier": "^3.1.2",
+    "jest": "^24.8.0",
+    "prettier": "2.0.1",
+    "typescript": "3.5.1"
+  },
+  "resolutions": {
+    "typescript-eslint-parser": "npm:@typescript-eslint/parser@1.10.2"
+  },
+  "scripts": {
+    "install": "./bin/install",
+    "test": "./bin/test",
+    "lint": "./bin/lint",
+    "preversion": "./bin/preversion",
+    "postversion": "./bin/postversion",
+    "prepublishOnly": "./bin/prepublish"
+  }
+}
