@@ -1,4 +1,4 @@
-import Adapter from 'type/adapter';
+import Adapter from 'interface/adapter';
 import MemoryAdapter from 'adapter/memory';
 
 interface ServerConfig {
