@@ -6,7 +6,7 @@ interface Adapter {
 		namespace_key: string,
 		type_key: string,
 		node_key: string
-	): Promise<Node>;
+	): Promise<Node | undefined>;
 
 	storeNode(node: Node): Promise<Node>;
 

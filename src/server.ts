@@ -1,9 +1,9 @@
 import HTTP from 'http';
 
 import Route from 'route';
-import Routes from 'server/routes';
 import Adapter from 'interface/adapter';
 import closeServer from 'http/utility/close-server';
+import buildRoutes from 'server/utility/build-routes';
 import MemoryAdapter from 'adapter/memory';
 
 interface ServerConfig {
@@ -36,7 +36,7 @@ class Server {
 		this.port = config.port;
 		this.adapter = config.adapter;
 		this.hostname = config.hostname;
-		this.routes = Routes;
+		this.routes = buildRoutes(config.adapter);
 
 		this.server = HTTP.createServer((request, response) => {
 			this.handleRequest(request, response);

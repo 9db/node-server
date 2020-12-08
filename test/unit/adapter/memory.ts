@@ -21,18 +21,11 @@ describe('MemoryAdapter', () => {
 		});
 
 		describe('when node does not exist in cache', () => {
-			it('raises an exception', async () => {
-				expect.assertions(1);
-
+			it('returns undefined', async () => {
 				const adapter = new MemoryAdapter();
+				const node = await adapter.fetchNode('non', 'existent', 'node');
 
-				try {
-					await adapter.fetchNode('non', 'existent', 'node');
-				} catch (error) {
-					expect(error.message).toStrictEqual(
-						'Node not found: non/existent/node'
-					);
-				}
+				expect(node).toStrictEqual(undefined);
 			});
 		});
 	});

@@ -1,10 +1,12 @@
 import HTTP from 'http';
 
+import fetchJson from 'http/utility/fetch-json';
 import HttpHeader from 'http/enum/header';
 import StatusCode from 'http/enum/status-code';
+import NodeFactory from 'factory/node';
 import ContentType from 'http/enum/content-type';
 import closeServer from 'http/utility/close-server';
-import fetchJson from 'http/utility/fetch-json';
+import MemoryAdapter from 'adapter/memory';
 import JsonFetchNodeRoute from 'route/json/fetch-node';
 import JsonFetchNodeEndpoint from 'endpoint/json/fetch-node';
 
@@ -13,12 +15,19 @@ describe('JsonFetchNodeEndpoint', () => {
 		const port = 4482;
 
 		let server!: HTTP.Server;
+		let adapter!: MemoryAdapter;
 
 		beforeEach(() => {
-			server = HTTP.createServer((request, response) => {
-				const route = new JsonFetchNodeRoute();
+			adapter = new MemoryAdapter();
 
-				const endpoint = new JsonFetchNodeEndpoint(request, response, route);
+			server = HTTP.createServer((request, response) => {
+				const route = new JsonFetchNodeRoute(adapter);
+				const endpoint = new JsonFetchNodeEndpoint(
+					request,
+					response,
+					route,
+					adapter
+				);
 
 				endpoint.serve();
 			});
@@ -30,21 +39,42 @@ describe('JsonFetchNodeEndpoint', () => {
 			closeServer(server).then(done);
 		});
 
-		it('returns expected response data', async () => {
-			const url = `http://localhost:${port}/public/wizard/gandalf`;
+		describe('when the specified node exists', () => {
+			it('returns expected response data', async () => {
+				const node = NodeFactory.create({
+					namespace_key: 'public',
+					type_key: 'wizard',
+					key: 'gandalf',
+				});
 
-			const result = await fetchJson(url);
+				await adapter.storeNode(node);
 
-			expect(result.body).toStrictEqual({
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				const url = `http://localhost:${port}/public/wizard/gandalf`;
+				const result = await fetchJson(url);
+
+				expect(result.body).toStrictEqual(node);
+				expect(result.status_code).toStrictEqual(StatusCode.SUCCESS);
+
+				expect(result.headers).toMatchObject({
+					[HttpHeader.CONTENT_TYPE]: ContentType.JSON,
+				});
 			});
+		});
 
-			expect(result.status_code).toStrictEqual(StatusCode.SUCCESS);
+		describe('when the specified node does not exist', () => {
+			it('returns the expected error data', async () => {
+				const url = `http://localhost:${port}/public/wizard/gandalf`;
+				const result = await fetchJson(url);
 
-			expect(result.headers).toMatchObject({
-				[HttpHeader.CONTENT_TYPE]: ContentType.JSON,
+				expect(result.body).toStrictEqual({
+					message: 'File not found'
+				});
+
+				expect(result.status_code).toStrictEqual(StatusCode.FILE_NOT_FOUND);
+
+				expect(result.headers).toMatchObject({
+					[HttpHeader.CONTENT_TYPE]: ContentType.JSON,
+				});
 			});
 		});
 	});

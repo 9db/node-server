@@ -1,4 +1,12 @@
+import Adapter from 'interface/adapter';
+
 abstract class Operation<T> {
+	private adapter: Adapter;
+
+	public constructor(adapter: Adapter) {
+		this.adapter = adapter;
+	}
+
 	public async perform(): Promise<T> {
 		try {
 			const result = await this.performInternal();
@@ -9,6 +17,10 @@ abstract class Operation<T> {
 
 			throw error;
 		}
+	}
+
+	protected getAdapter(): Adapter {
+		return this.adapter;
 	}
 
 	private logFailure(error: Error): void {

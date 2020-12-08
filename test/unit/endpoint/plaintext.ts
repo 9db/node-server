@@ -5,6 +5,7 @@ import HttpMethod from 'http/enum/method';
 import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import closeServer from 'http/utility/close-server';
+import MemoryAdapter from 'adapter/memory';
 import PlaintextRoute from 'route/plaintext';
 import fetchPlaintext from 'http/utility/fetch-plaintext';
 import PlaintextEndpoint from 'endpoint/plaintext';
@@ -17,11 +18,18 @@ describe('PlaintextEndpoint', () => {
 			}
 		}
 
-		const route = new PlaintextRoute(HttpMethod.GET, '/wizards', MockEndpoint);
+		const adapter = new MemoryAdapter();
+
+		const route = new PlaintextRoute(
+			HttpMethod.GET,
+			'/wizards',
+			MockEndpoint,
+			adapter
+		);
 
 		it('returns expected response data', async () => {
 			const server = HTTP.createServer((request, response) => {
-				const endpoint = new MockEndpoint(request, response, route);
+				const endpoint = new MockEndpoint(request, response, route, adapter);
 
 				endpoint.serve();
 			});
@@ -51,11 +59,18 @@ describe('PlaintextEndpoint', () => {
 			}
 		}
 
-		const route = new PlaintextRoute(HttpMethod.GET, '/wizards', MockEndpoint);
+		const adapter = new MemoryAdapter();
+
+		const route = new PlaintextRoute(
+			HttpMethod.GET,
+			'/wizards',
+			MockEndpoint,
+			adapter
+		);
 
 		it('returns expected plaintext error', async () => {
 			const server = HTTP.createServer((request, response) => {
-				const endpoint = new MockEndpoint(request, response, route);
+				const endpoint = new MockEndpoint(request, response, route, adapter);
 
 				endpoint.serve();
 			});

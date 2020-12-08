@@ -1,6 +1,7 @@
 import Node from 'type/node';
+import Adapter from 'interface/adapter';
 import Operation from 'operation';
-import NodeFactory from 'factory/node';
+import NotFoundError from 'http/error/not-found';
 
 interface Input {
 	readonly namespace_key: string;
@@ -11,19 +12,27 @@ interface Input {
 class FetchNodeOperation extends Operation<Node> {
 	private input: Input;
 
-	public constructor(input: Input) {
-		super();
+	public constructor(adapter: Adapter, input: Input) {
+		super(adapter);
 
 		this.input = input;
 	}
 
-	protected performInternal(): Promise<Node> {
+	protected async performInternal(): Promise<Node> {
 		const input = this.getInput();
-		const node = NodeFactory.create({
-			...input,
-		});
+		const adapter = this.getAdapter();
 
-		return Promise.resolve(node);
+		const node = await adapter.fetchNode(
+			input.namespace_key,
+			input.type_key,
+			input.key
+		);
+
+		if (node === undefined) {
+			throw new NotFoundError();
+		}
+
+		return node;
 	}
 
 	private getInput(): Input {

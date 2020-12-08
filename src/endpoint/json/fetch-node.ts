@@ -14,7 +14,8 @@ class JsonFetchNodeEndpoint extends JsonEndpoint {
 			key,
 		};
 
-		const operation = new FetchNodeOperation(input);
+		const adapter = this.getAdapter();
+		const operation = new FetchNodeOperation(adapter, input);
 
 		return operation.perform();
 	}

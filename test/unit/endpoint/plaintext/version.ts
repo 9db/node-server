@@ -4,6 +4,7 @@ import HttpHeader from 'http/enum/header';
 import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import closeServer from 'http/utility/close-server';
+import MemoryAdapter from 'adapter/memory';
 import fetchPlaintext from 'http/utility/fetch-plaintext';
 import PlaintextVersionRoute from 'route/plaintext/version';
 import PlaintextVersionEndpoint from 'endpoint/plaintext/version';
@@ -16,8 +17,14 @@ describe('PlaintextVersionEndpoint', () => {
 
 		beforeEach(() => {
 			server = HTTP.createServer((request, response) => {
-				const route = new PlaintextVersionRoute();
-				const endpoint = new PlaintextVersionEndpoint(request, response, route);
+				const adapter = new MemoryAdapter();
+				const route = new PlaintextVersionRoute(adapter);
+				const endpoint = new PlaintextVersionEndpoint(
+					request,
+					response,
+					route,
+					adapter
+				);
 
 				endpoint.serve();
 			});

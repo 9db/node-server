@@ -9,6 +9,7 @@ import JsonObject from 'http/type/json-object';
 import ContentType from 'http/enum/content-type';
 import closeServer from 'http/utility/close-server';
 import JsonEndpoint from 'endpoint/json';
+import MemoryAdapter from 'adapter/memory';
 
 describe('JsonEndpoint', () => {
 	describe('process()', () => {
@@ -22,11 +23,18 @@ describe('JsonEndpoint', () => {
 			}
 		}
 
-		const route = new JsonRoute(HttpMethod.GET, '/wizard', MockEndpoint);
+		const adapter = new MemoryAdapter();
+
+		const route = new JsonRoute(
+			HttpMethod.GET,
+			'/wizard',
+			MockEndpoint,
+			adapter
+		);
 
 		it('returns expected response data', async () => {
 			const server = HTTP.createServer((request, response) => {
-				const endpoint = new MockEndpoint(request, response, route);
+				const endpoint = new MockEndpoint(request, response, route, adapter);
 
 				endpoint.serve();
 			});
@@ -58,11 +66,18 @@ describe('JsonEndpoint', () => {
 			}
 		}
 
-		const route = new JsonRoute(HttpMethod.GET, '/wizard', MockEndpoint);
+		const adapter = new MemoryAdapter();
+
+		const route = new JsonRoute(
+			HttpMethod.GET,
+			'/wizard',
+			MockEndpoint,
+			adapter
+		);
 
 		it('returns expected JSON error', async () => {
 			const server = HTTP.createServer((request, response) => {
-				const endpoint = new MockEndpoint(request, response, route);
+				const endpoint = new MockEndpoint(request, response, route, adapter);
 
 				endpoint.serve();
 			});

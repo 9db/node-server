@@ -1,10 +1,11 @@
 import HTTP from 'http';
 
+import fetchJson from 'http/utility/fetch-json';
 import HttpHeader from 'http/enum/header';
 import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import closeServer from 'http/utility/close-server';
-import fetchJson from 'http/utility/fetch-json';
+import MemoryAdapter from 'adapter/memory';
 import JsonNotFoundRoute from 'route/json/not-found';
 import JsonNotFoundEndpoint from 'endpoint/json/not-found';
 
@@ -16,9 +17,15 @@ describe('JsonNotFoundEndpoint', () => {
 
 		beforeEach(() => {
 			server = HTTP.createServer((request, response) => {
-				const route = new JsonNotFoundRoute();
+				const adapter = new MemoryAdapter();
+				const route = new JsonNotFoundRoute(adapter);
 
-				const endpoint = new JsonNotFoundEndpoint(request, response, route);
+				const endpoint = new JsonNotFoundEndpoint(
+					request,
+					response,
+					route,
+					adapter
+				);
 
 				endpoint.serve();
 			});

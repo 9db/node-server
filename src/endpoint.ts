@@ -1,6 +1,7 @@
 import HTTP from 'http';
 
 import Route from 'interface/route';
+import Adapter from 'interface/adapter';
 import HttpError from 'http/error';
 import HeaderMap from 'http/type/header-map';
 import HttpHeader from 'http/enum/header';
@@ -14,16 +15,19 @@ abstract class Endpoint {
 	private request: HTTP.IncomingMessage;
 	private response: HTTP.ServerResponse;
 	private route: Route;
+	private adapter: Adapter;
 	private status_code: StatusCode;
 
 	public constructor(
 		request: HTTP.IncomingMessage,
 		response: HTTP.ServerResponse,
-		route: Route
+		route: Route,
+		adapter: Adapter
 	) {
 		this.request = request;
 		this.response = response;
 		this.route = route;
+		this.adapter = adapter;
 		this.status_code = StatusCode.SUCCESS;
 	}
 
@@ -61,6 +65,10 @@ abstract class Endpoint {
 
 	protected setStatusCode(status_code: StatusCode): void {
 		this.status_code = status_code;
+	}
+
+	protected getAdapter(): Adapter {
+		return this.adapter;
 	}
 
 	private getUrl(): string {

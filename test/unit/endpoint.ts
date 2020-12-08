@@ -10,6 +10,7 @@ import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import ServerError from 'http/error/server-error';
 import MockEndpoint from 'test/mock/endpoint';
+import MemoryAdapter from 'adapter/memory';
 import NotFoundError from 'http/error/not-found';
 import BadRequestError from 'http/error/bad-request';
 import buildMockRequest from 'test/utility/build-mock-request';
@@ -26,18 +27,27 @@ describe('Endpoint', () => {
 				}
 			}
 
+			const adapter = new MemoryAdapter();
+
 			const route = new Route(
 				ContentType.TEXT,
 				HttpMethod.GET,
 				'/',
-				MockEndpoint
+				MockEndpoint,
+				adapter
 			);
 
 			it('sets expected status and headers on response', async () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
 				const write_head_spy = jest.spyOn(response, 'writeHead');
-				const endpoint = new ThrowawayEndpoint(request, response, route);
+
+				const endpoint = new ThrowawayEndpoint(
+					request,
+					response,
+					route,
+					adapter
+				);
 
 				endpoint.serve();
 
@@ -52,7 +62,13 @@ describe('Endpoint', () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
 				const end_spy = jest.spyOn(response, 'end');
-				const endpoint = new ThrowawayEndpoint(request, response, route);
+
+				const endpoint = new ThrowawayEndpoint(
+					request,
+					response,
+					route,
+					adapter
+				);
 
 				endpoint.serve();
 
@@ -71,18 +87,26 @@ describe('Endpoint', () => {
 				}
 			}
 
+			const adapter = new MemoryAdapter();
+
 			const route = new Route(
 				ContentType.TEXT,
 				HttpMethod.GET,
 				'/',
-				MockEndpoint
+				MockEndpoint,
+				adapter
 			);
 
 			it('sets expected status and headers on response', async () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
 				const write_head_spy = jest.spyOn(response, 'writeHead');
-				const endpoint = new ThrowawayEndpoint(request, response, route);
+				const endpoint = new ThrowawayEndpoint(
+					request,
+					response,
+					route,
+					adapter
+				);
 
 				endpoint.serve();
 
@@ -97,8 +121,14 @@ describe('Endpoint', () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
 				const end_spy = jest.spyOn(response, 'end');
-				const endpoint = new ThrowawayEndpoint(request, response, route);
 				const expected_buffer = Buffer.from(result);
+
+				const endpoint = new ThrowawayEndpoint(
+					request,
+					response,
+					route,
+					adapter
+				);
 
 				endpoint.serve();
 
@@ -115,18 +145,27 @@ describe('Endpoint', () => {
 				}
 			}
 
+			const adapter = new MemoryAdapter();
+
 			const route = new Route(
 				ContentType.TEXT,
 				HttpMethod.GET,
 				'/',
-				MockEndpoint
+				MockEndpoint,
+				adapter
 			);
 
 			it('does not set status or headers on response', async () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
 				const write_head_spy = jest.spyOn(response, 'writeHead');
-				const endpoint = new ThrowawayEndpoint(request, response, route);
+
+				const endpoint = new ThrowawayEndpoint(
+					request,
+					response,
+					route,
+					adapter
+				);
 
 				endpoint.serve();
 
@@ -139,7 +178,13 @@ describe('Endpoint', () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
 				const end_spy = jest.spyOn(response, 'end');
-				const endpoint = new ThrowawayEndpoint(request, response, route);
+
+				const endpoint = new ThrowawayEndpoint(
+					request,
+					response,
+					route,
+					adapter
+				);
 
 				endpoint.serve();
 
@@ -167,16 +212,25 @@ describe('Endpoint', () => {
 					}
 				}
 
+				const adapter = new MemoryAdapter();
+
 				const route = new Route(
 					ContentType.TEXT,
 					HttpMethod.GET,
 					'/',
-					MockEndpoint
+					MockEndpoint,
+					adapter
 				);
 
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
-				const endpoint = new ThrowawayEndpoint(request, response, route);
+
+				const endpoint = new ThrowawayEndpoint(
+					request,
+					response,
+					route,
+					adapter
+				);
 
 				endpoint.serve();
 
@@ -202,11 +256,14 @@ describe('Endpoint', () => {
 						}
 					}
 
+					const adapter = new MemoryAdapter();
+
 					const route = new Route(
 						ContentType.TEXT,
 						HttpMethod.GET,
 						'/',
-						MockEndpoint
+						MockEndpoint,
+						adapter
 					);
 
 					const request = buildMockRequest(
@@ -216,7 +273,13 @@ describe('Endpoint', () => {
 					);
 
 					const response = buildMockResponse();
-					const endpoint = new ThrowawayEndpoint(request, response, route);
+
+					const endpoint = new ThrowawayEndpoint(
+						request,
+						response,
+						route,
+						adapter
+					);
 
 					endpoint.serve();
 
@@ -234,16 +297,26 @@ describe('Endpoint', () => {
 				}
 			}
 
+			const adapter = new MemoryAdapter();
+
 			const route = new Route(
 				ContentType.JSON,
 				HttpMethod.GET,
 				'/x',
-				MockEndpoint
+				MockEndpoint,
+				adapter
 			);
 
 			const request = buildMockRequest('/x', HttpMethod.GET, ContentType.JSON);
 			const response = buildMockResponse();
-			const endpoint = new ThrowawayEndpoint(request, response, route);
+
+			const endpoint = new ThrowawayEndpoint(
+				request,
+				response,
+				route,
+				adapter
+			);
+
 			const actual_request = endpoint.privilegedGetRequest();
 
 			expect(actual_request).toStrictEqual(request);
@@ -258,16 +331,26 @@ describe('Endpoint', () => {
 				}
 			}
 
+			const adapter = new MemoryAdapter();
+
 			const route = new Route(
 				ContentType.JSON,
 				HttpMethod.GET,
 				'/x',
-				MockEndpoint
+				MockEndpoint,
+				adapter
 			);
 
 			const request = buildMockRequest('/x', HttpMethod.GET, ContentType.JSON);
 			const response = buildMockResponse();
-			const endpoint = new ThrowawayEndpoint(request, response, route);
+
+			const endpoint = new ThrowawayEndpoint(
+				request,
+				response,
+				route,
+				adapter
+			);
+
 			const actual_response = endpoint.privilegedGetResponse();
 
 			expect(actual_response).toStrictEqual(response);
@@ -282,16 +365,26 @@ describe('Endpoint', () => {
 				}
 			}
 
+			const adapter = new MemoryAdapter();
+
 			const route = new Route(
 				ContentType.JSON,
 				HttpMethod.GET,
 				'/x',
-				MockEndpoint
+				MockEndpoint,
+				adapter
 			);
 
 			const request = buildMockRequest('/x', HttpMethod.GET, ContentType.JSON);
 			const response = buildMockResponse();
-			const endpoint = new ThrowawayEndpoint(request, response, route);
+
+			const endpoint = new ThrowawayEndpoint(
+				request,
+			  response,
+			  route,
+				adapter
+			);
+
 			const headers = endpoint.privilegedGetResponseHeaders();
 
 			expect(headers).toStrictEqual({
@@ -307,11 +400,14 @@ describe('Endpoint', () => {
 			}
 		}
 
+		const adapter = new MemoryAdapter();
+
 		const route = new Route(
 			ContentType.JSON,
 			HttpMethod.GET,
 			'/:wizard',
-			MockEndpoint
+			MockEndpoint,
+			adapter
 		);
 
 		const request = buildMockRequest(
@@ -321,7 +417,12 @@ describe('Endpoint', () => {
 		);
 
 		const response = buildMockResponse();
-		const endpoint = new ThrowawayEndpoint(request, response, route);
+		const endpoint = new ThrowawayEndpoint(
+			request,
+			response,
+			route,
+			adapter
+		);
 
 		it('delegates to the supplied route', () => {
 			const parameter = endpoint.privilegedGetUrlParameter('wizard');

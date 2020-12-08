@@ -17,13 +17,9 @@ class MemoryAdapter implements Adapter {
 		namespace_key: string,
 		type_key: string,
 		node_key: string
-	): Promise<Node> {
+	): Promise<Node | undefined> {
 		const cache_key = this.createCacheKey(namespace_key, type_key, node_key);
 		const node = this.cache[cache_key];
-
-		if (node === undefined) {
-			throw new Error(`Node not found: ${cache_key}`);
-		}
 
 		return Promise.resolve(node);
 	}
