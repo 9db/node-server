@@ -29,7 +29,7 @@ describe('fetchBuffer', () => {
 		it('returns the expected data', async () => {
 			const server = HTTP.createServer((_request, response) => {
 				response.writeHead(StatusCode.SUCCESS, {
-					[HttpHeader.CONTENT_TYPE]: ContentType.TEXT
+					[HttpHeader.CONTENT_TYPE]: ContentType.TEXT,
 				});
 
 				response.end('speak friend and enter');
@@ -43,7 +43,7 @@ describe('fetchBuffer', () => {
 			expect(result.status_code).toStrictEqual(StatusCode.SUCCESS);
 
 			expect(result.headers).toMatchObject({
-				[HttpHeader.CONTENT_TYPE]: ContentType.TEXT
+				[HttpHeader.CONTENT_TYPE]: ContentType.TEXT,
 			});
 
 			await closeServer(server);

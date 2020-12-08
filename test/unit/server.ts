@@ -24,6 +24,7 @@ describe('Server', () => {
 		describe('when /version is requested', () => {
 			it('returns the expected data', async () => {
 				const result = await fetchPlaintext(`http://localhost:${port}/version`);
+				// eslint-disable-next-line @typescript-eslint/no-var-requires
 				const manifest = require('../../../package.json');
 
 				expect(result.body).toStrictEqual(manifest.version);

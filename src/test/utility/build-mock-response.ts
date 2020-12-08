@@ -5,8 +5,10 @@ import StatusCode from 'http/enum/status-code';
 
 function buildMockResponse(): HTTP.ServerResponse {
 	return {
-		writeHead(status_code: StatusCode, headers: HeaderMap): void {},
-		end(data: string | Buffer): void {},
+		/* eslint-disable @typescript-eslint/no-empty-function */
+		writeHead(_status_code: StatusCode, _headers: HeaderMap): void {},
+		end(_data: string | Buffer): void {},
+		/* eslint-enable @typescript-eslint/no-empty-function */
 	} as HTTP.ServerResponse;
 }
 

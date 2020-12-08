@@ -36,7 +36,7 @@ function fetchBuffer(
 				resolve({
 					body,
 					headers,
-					status_code
+					status_code,
 				});
 			});
 		});
