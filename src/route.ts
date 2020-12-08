@@ -14,7 +14,6 @@ interface ParameterMap {
 class Route implements RouteInterface {
 	private content_type: ContentType;
 	private method: HttpMethod;
-	private url: string;
 	private endpoint_constructor: EndpointConstructor;
 	private parameter_keys: string[];
 	private regex: RegExp;
@@ -22,24 +21,26 @@ class Route implements RouteInterface {
 	public constructor(
 		content_type: ContentType,
 		method: HttpMethod,
-		url: string,
+		path: string,
 		endpoint_constructor: EndpointConstructor
 	) {
 		this.content_type = content_type;
 		this.method = method;
-		this.url = url;
 		this.endpoint_constructor = endpoint_constructor;
 
-		const parser = new PathParser(url);
+		const parser = new PathParser(path);
 		const parsed_path = parser.parse();
 
 		this.regex = parsed_path.regex;
 		this.parameter_keys = parsed_path.parameter_keys;
-
 	}
 
 	public accepts(request: HTTP.IncomingMessage): boolean {
-		if (this.url !== request.url) {
+		if (request.url === undefined) {
+			return false;
+		}
+
+		if (this.regex.test(request.url) === false) {
 			return false;
 		}
 
