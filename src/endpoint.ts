@@ -30,6 +30,7 @@ abstract class Endpoint {
 
 	private request: HTTP.IncomingMessage;
 	private response: HTTP.ServerResponse;
+	private status_code: StatusCode;
 
 	public constructor(
 		request: HTTP.IncomingMessage,
@@ -37,6 +38,7 @@ abstract class Endpoint {
 	) {
 		this.request = request;
 		this.response = response;
+		this.status_code = StatusCode.SUCCESS;
 	}
 
 	public serve(): void {
@@ -59,26 +61,55 @@ abstract class Endpoint {
 		};
 	}
 
-	private handleResult(result: string | Buffer | void): void {
+	protected setStatusCode(status_code: StatusCode): void {
+		this.status_code = status_code;
+	}
+
+	private getStatusCode(): StatusCode {
+		return this.status_code;
+	}
+
+	private handleResult(result: string | Buffer | object | void): void {
 		if (result === undefined) {
 			return;
 		}
 
+		if (result instanceof Buffer) {
+			return this.sendData(result);
+		}
+
+		if (typeof result !== 'string') {
+			result = JSON.stringify(result);
+		}
+
+		const buffer = Buffer.from(result);
+
+		return this.sendData(buffer);
+	}
+
+	private sendData(data: Buffer): void {
 		const response = this.getResponse();
+		const status_code = this.getStatusCode();
 		const headers = this.getResponseHeaders();
 
-		response.writeHead(StatusCode.SUCCESS, headers);
-		response.end(result);
+		response.writeHead(status_code, headers);
+		response.end(data);
 	}
 
 	private handleError(error: Error): void {
+		let http_error;
+
 		if (error instanceof HttpError) {
-			return this.serveError(error);
+			http_error = error;
+		} else {
+			http_error = new ServerError(error.message);
 		}
 
-		const server_error = new ServerError(error.message);
+		this.setStatusCode(http_error.status_code);
 
-		return this.serveError(server_error);
+		const serialized_error = this.serializeError(http_error);
+
+		return this.handleResult(serialized_error);
 	}
 
 	private getContentType(): ContentType {
@@ -92,7 +123,7 @@ abstract class Endpoint {
 	}
 
 	protected abstract process(): Promise<string | Buffer | void>;
-	protected abstract serveError(error: HttpError): void;
+	protected abstract serializeError(error: HttpError): string | Buffer | object;
 }
 
 export default Endpoint;

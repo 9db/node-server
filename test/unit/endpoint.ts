@@ -24,7 +24,7 @@ describe('Endpoint', () => {
 				throw new Error('Not implemented');
 			}
 
-			protected serveError(_error: HttpError): void {
+			protected serializeError(_error: HttpError): string {
 				throw new Error('Not implemented');
 			}
 		}
@@ -89,7 +89,7 @@ describe('Endpoint', () => {
 					return Promise.resolve(result);
 				}
 
-				protected serveError(_error: HttpError): void {
+				protected serializeError(_error: HttpError): string {
 					throw new Error('Not implemented');
 				}
 			}
@@ -133,7 +133,7 @@ describe('Endpoint', () => {
 					return Promise.resolve(result);
 				}
 
-				protected serveError(_error: HttpError): void {
+				protected serializeError(_error: HttpError): string {
 					throw new Error('Not implemented');
 				}
 			}
@@ -158,12 +158,13 @@ describe('Endpoint', () => {
 				const response = buildMockResponse();
 				const end_spy = jest.spyOn(response, 'end');
 				const endpoint = new MockEndpoint(request, response);
+				const expected_buffer = Buffer.from(result);
 
 				endpoint.serve();
 
 				await sleep(10);
 
-				expect(end_spy).toHaveBeenCalledWith(result);
+				expect(end_spy).toHaveBeenCalledWith(expected_buffer);
 			});
 		});
 
@@ -175,7 +176,7 @@ describe('Endpoint', () => {
 					return Promise.resolve();
 				}
 
-				protected serveError(_error: HttpError): void {
+				protected serializeError(_error: HttpError): string {
 					throw new Error('Not implemented');
 				}
 			}
@@ -208,7 +209,7 @@ describe('Endpoint', () => {
 		});
 
 		describe('when process() method raises an exception', () => {
-			it('forwards error to serveError()', async () => {
+			it('forwards error to serializeError()', async () => {
 				expect.assertions(1);
 
 				const expected_error = new NotFoundError();
@@ -220,8 +221,10 @@ describe('Endpoint', () => {
 						return Promise.reject(expected_error);
 					}
 
-					protected serveError(error: HttpError): void {
+					protected serializeError(error: HttpError): string {
 						expect(error).toStrictEqual(expected_error);
+
+						return error.message;
 					}
 				}
 
@@ -235,7 +238,7 @@ describe('Endpoint', () => {
 			});
 
 			describe('when process() returns a non-HTTP error', () => {
-				it('converts it to a generic HTTP error before passing to serveError()', async () => {
+				it('converts it to a generic HTTP error before passing to serializeError()', async () => {
 					expect.assertions(2);
 
 					class MockEndpoint extends Endpoint {
@@ -247,9 +250,11 @@ describe('Endpoint', () => {
 							return Promise.reject(error);
 						}
 
-						protected serveError(error: HttpError): void {
+						protected serializeError(error: HttpError): string {
 							expect(error).toBeInstanceOf(ServerError);
 							expect(error.message).toStrictEqual('A weird thing happened');
+
+							return error.message;
 						}
 					}
 
@@ -282,7 +287,7 @@ describe('Endpoint', () => {
 					throw new Error('Not implemented');
 				}
 
-				protected serveError(_error: HttpError): void {
+				protected serializeError(_error: HttpError): string {
 					throw new Error('Not implemented');
 				}
 			}
@@ -309,7 +314,7 @@ describe('Endpoint', () => {
 					throw new Error('Not implemented');
 				}
 
-				protected serveError(_error: HttpError): void {
+				protected serializeError(_error: HttpError): string {
 					throw new Error('Not implemented');
 				}
 			}
@@ -336,7 +341,7 @@ describe('Endpoint', () => {
 					throw new Error('Not implemented');
 				}
 
-				protected serveError(_error: HttpError): void {
+				protected serializeError(_error: HttpError): string {
 					throw new Error('Not implemented');
 				}
 			}

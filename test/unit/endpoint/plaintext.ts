@@ -73,7 +73,7 @@ describe('PlaintextEndpoint', () => {
 		});
 	});
 
-	describe('serveError()', () => {
+	describe('serializeError()', () => {
 		class MockEndpoint extends PlaintextEndpoint {
 			protected static url = '/wizards';
 			protected static method = HttpMethod.GET;
