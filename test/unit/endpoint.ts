@@ -321,19 +321,12 @@ describe('Endpoint', () => {
 				HttpMethod.GET,
 				ContentType.JSON
 			);
+
 			const response = buildMockResponse();
 			const endpoint = new ThrowawayEndpoint(request, response, route);
-
-			const spy = jest.spyOn(route, 'getUrlParameter');
-
-			spy.mockImplementation(() => {
-				return 'gandalf';
-			});
-
 			const parameter = endpoint.privilegedGetUrlParameter('wizard');
 
 			expect(parameter).toStrictEqual('gandalf');
-			expect(spy).toHaveBeenCalledWith('/gandalf', 'wizard');
 		});
 	});
 });

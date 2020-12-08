@@ -1,16 +1,23 @@
 import HTTP from 'http';
 
 import HttpMethod from 'http/enum/method';
+import PathParser from 'route/utility/path-parser';
 import ContentType from 'http/enum/content-type';
 import RouteInterface from 'interface/route';
 import EndpointConstructor from 'interface/endpoint-constructor';
 import getAcceptedContentTypes from 'http/utility/get-accepted-content-types';
+
+interface ParameterMap {
+	[key: string]: string;
+}
 
 class Route implements RouteInterface {
 	private content_type: ContentType;
 	private method: HttpMethod;
 	private url: string;
 	private endpoint_constructor: EndpointConstructor;
+	private parameter_keys: string[];
+	private regex: RegExp;
 
 	public constructor(
 		content_type: ContentType,
@@ -22,6 +29,13 @@ class Route implements RouteInterface {
 		this.method = method;
 		this.url = url;
 		this.endpoint_constructor = endpoint_constructor;
+
+		const parser = new PathParser(url);
+		const parsed_path = parser.parse();
+
+		this.regex = parsed_path.regex;
+		this.parameter_keys = parsed_path.parameter_keys;
+
 	}
 
 	public accepts(request: HTTP.IncomingMessage): boolean {
@@ -51,13 +65,43 @@ class Route implements RouteInterface {
 	}
 
 	public getUrlParameter(url: string, parameter: string): string | undefined {
-		return 'foo';
+		const parameters = this.getParametersForUrl(url);
+
+		return parameters[parameter];
 	}
 
 	protected matchesContentType(request: HTTP.IncomingMessage): boolean {
 		const content_types = getAcceptedContentTypes(request);
 
 		return content_types.includes(this.content_type);
+	}
+
+	private getParametersForUrl(url: string): ParameterMap {
+		const regex = this.getRegex();
+		const match = url.match(regex);
+		const result: ParameterMap = {};
+
+		if (match === null) {
+			return result;
+		}
+
+		const parameter_keys = this.getParameterKeys();
+
+		parameter_keys.forEach((parameter_key, index) => {
+			const parameter_value = match[index + 1];
+
+			result[parameter_key] = parameter_value;
+		});
+
+		return result;
+	}
+
+	private getParameterKeys(): string[] {
+		return this.parameter_keys;
+	}
+
+	private getRegex(): RegExp {
+		return this.regex;
 	}
 
 	private getEndpointConstructor(): EndpointConstructor {
