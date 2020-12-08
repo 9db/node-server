@@ -24,24 +24,20 @@ class PathParser {
 
 			parameter_keys.push(parameter_key);
 
-			return '([^\/]+)';
+			return '([^\\/]+)';
 		});
 
-		const regex_string = '^\/' + regex_parts.join('\/') + '$';
+		const regex_string = '^/' + regex_parts.join('/') + '$';
 		const regex = new RegExp(regex_string);
 
 		return {
 			regex,
-			parameter_keys
+			parameter_keys,
 		};
 	}
 
 	private getPathWithoutLeadingSlash(): string {
-		if (this.path.startsWith('/')) {
-			return this.path.slice(1);
-		}
-
-		return this.path;
+		return this.path.slice(1);
 	}
 }
 
