@@ -17,14 +17,13 @@ describe('PlaintextNotFoundEndpoint', () => {
 
 		beforeEach(() => {
 			server = HTTP.createServer((request, response) => {
-				const adapter = new MemoryAdapter();
-				const route = new PlaintextNotFoundRoute(adapter);
+				const route = new PlaintextNotFoundRoute();
 
 				const endpoint = new PlaintextNotFoundEndpoint(
 					request,
 					response,
 					route,
-					adapter
+					new MemoryAdapter()
 				);
 
 				endpoint.serve();

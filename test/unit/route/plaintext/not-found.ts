@@ -1,13 +1,11 @@
 import HttpMethod from 'http/enum/method';
 import ContentType from 'http/enum/content-type';
-import MemoryAdapter from 'adapter/memory';
 import buildMockRequest from 'test/utility/build-mock-request';
 import PlaintextNotFoundRoute from 'route/plaintext/not-found';
 
 describe('PlaintextNotFoundRoute', () => {
 	describe('accepts()', () => {
-		const adapter = new MemoryAdapter();
-		const route = new PlaintextNotFoundRoute(adapter);
+		const route = new PlaintextNotFoundRoute();
 
 		describe('when given a request whose URL does not match', () => {
 			const request = buildMockRequest(

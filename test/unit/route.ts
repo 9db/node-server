@@ -17,8 +17,7 @@ describe('Route', () => {
 				ContentType.TEXT,
 				HttpMethod.GET,
 				'/foo',
-				MockEndpoint,
-				new MemoryAdapter()
+				MockEndpoint
 			);
 
 			describe('when given a request whose URL does not match', () => {
@@ -75,8 +74,7 @@ describe('Route', () => {
 				ContentType.TEXT,
 				HttpMethod.GET,
 				'/v1/:namespace/type/:node_key',
-				MockEndpoint,
-				new MemoryAdapter()
+				MockEndpoint
 			);
 
 			describe('when given a request whose URL matches only the first part of the path', () => {
@@ -150,8 +148,7 @@ describe('Route', () => {
 				ContentType.TEXT,
 				HttpMethod.GET,
 				'/foo',
-				ThrowawayEndpoint,
-				adapter
+				ThrowawayEndpoint
 			);
 
 			const serve_spy = jest.spyOn(ThrowawayEndpoint.prototype, 'serve');
@@ -160,7 +157,7 @@ describe('Route', () => {
 				return undefined;
 			});
 
-			route.serve(request, response);
+			route.serve(request, response, adapter);
 
 			expect(serve_spy).toHaveBeenCalled();
 		});
@@ -173,8 +170,7 @@ describe('Route', () => {
 					ContentType.TEXT,
 					HttpMethod.GET,
 					'/v1/:wizard/passwords/:password',
-					MockEndpoint,
-					new MemoryAdapter()
+					MockEndpoint
 				);
 
 				const parameter = route.getUrlParameter(
@@ -192,8 +188,7 @@ describe('Route', () => {
 					ContentType.TEXT,
 					HttpMethod.GET,
 					'/v1/:wizard/passwords/:password',
-					MockEndpoint,
-					new MemoryAdapter()
+					MockEndpoint
 				);
 
 				const parameter = route.getUrlParameter(
@@ -211,8 +206,7 @@ describe('Route', () => {
 					ContentType.TEXT,
 					HttpMethod.GET,
 					'/v1/:wizard/passwords/:password',
-					MockEndpoint,
-					new MemoryAdapter()
+					MockEndpoint
 				);
 
 				const parameter = route.getUrlParameter(

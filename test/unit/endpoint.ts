@@ -27,14 +27,11 @@ describe('Endpoint', () => {
 				}
 			}
 
-			const adapter = new MemoryAdapter();
-
 			const route = new Route(
 				ContentType.TEXT,
 				HttpMethod.GET,
 				'/',
-				MockEndpoint,
-				adapter
+				MockEndpoint
 			);
 
 			it('sets expected status and headers on response', async () => {
@@ -46,7 +43,7 @@ describe('Endpoint', () => {
 					request,
 					response,
 					route,
-					adapter
+					new MemoryAdapter()
 				);
 
 				endpoint.serve();
@@ -67,7 +64,7 @@ describe('Endpoint', () => {
 					request,
 					response,
 					route,
-					adapter
+					new MemoryAdapter()
 				);
 
 				endpoint.serve();
@@ -87,14 +84,11 @@ describe('Endpoint', () => {
 				}
 			}
 
-			const adapter = new MemoryAdapter();
-
 			const route = new Route(
 				ContentType.TEXT,
 				HttpMethod.GET,
 				'/',
-				MockEndpoint,
-				adapter
+				MockEndpoint
 			);
 
 			it('sets expected status and headers on response', async () => {
@@ -105,7 +99,7 @@ describe('Endpoint', () => {
 					request,
 					response,
 					route,
-					adapter
+					new MemoryAdapter()
 				);
 
 				endpoint.serve();
@@ -127,7 +121,7 @@ describe('Endpoint', () => {
 					request,
 					response,
 					route,
-					adapter
+					new MemoryAdapter()
 				);
 
 				endpoint.serve();
@@ -145,14 +139,11 @@ describe('Endpoint', () => {
 				}
 			}
 
-			const adapter = new MemoryAdapter();
-
 			const route = new Route(
 				ContentType.TEXT,
 				HttpMethod.GET,
 				'/',
-				MockEndpoint,
-				adapter
+				MockEndpoint
 			);
 
 			it('does not set status or headers on response', async () => {
@@ -164,7 +155,7 @@ describe('Endpoint', () => {
 					request,
 					response,
 					route,
-					adapter
+					new MemoryAdapter()
 				);
 
 				endpoint.serve();
@@ -183,7 +174,7 @@ describe('Endpoint', () => {
 					request,
 					response,
 					route,
-					adapter
+					new MemoryAdapter()
 				);
 
 				endpoint.serve();
@@ -212,14 +203,11 @@ describe('Endpoint', () => {
 					}
 				}
 
-				const adapter = new MemoryAdapter();
-
 				const route = new Route(
 					ContentType.TEXT,
 					HttpMethod.GET,
 					'/',
-					MockEndpoint,
-					adapter
+					MockEndpoint
 				);
 
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
@@ -229,7 +217,7 @@ describe('Endpoint', () => {
 					request,
 					response,
 					route,
-					adapter
+					new MemoryAdapter()
 				);
 
 				endpoint.serve();
@@ -256,14 +244,11 @@ describe('Endpoint', () => {
 						}
 					}
 
-					const adapter = new MemoryAdapter();
-
 					const route = new Route(
 						ContentType.TEXT,
 						HttpMethod.GET,
 						'/',
-						MockEndpoint,
-						adapter
+						MockEndpoint
 					);
 
 					const request = buildMockRequest(
@@ -278,7 +263,7 @@ describe('Endpoint', () => {
 						request,
 						response,
 						route,
-						adapter
+						new MemoryAdapter()
 					);
 
 					endpoint.serve();
@@ -297,14 +282,11 @@ describe('Endpoint', () => {
 				}
 			}
 
-			const adapter = new MemoryAdapter();
-
 			const route = new Route(
 				ContentType.JSON,
 				HttpMethod.GET,
 				'/x',
-				MockEndpoint,
-				adapter
+				MockEndpoint
 			);
 
 			const request = buildMockRequest('/x', HttpMethod.GET, ContentType.JSON);
@@ -314,7 +296,7 @@ describe('Endpoint', () => {
 				request,
 				response,
 				route,
-				adapter
+				new MemoryAdapter()
 			);
 
 			const actual_request = endpoint.privilegedGetRequest();
@@ -331,14 +313,11 @@ describe('Endpoint', () => {
 				}
 			}
 
-			const adapter = new MemoryAdapter();
-
 			const route = new Route(
 				ContentType.JSON,
 				HttpMethod.GET,
 				'/x',
-				MockEndpoint,
-				adapter
+				MockEndpoint
 			);
 
 			const request = buildMockRequest('/x', HttpMethod.GET, ContentType.JSON);
@@ -348,7 +327,7 @@ describe('Endpoint', () => {
 				request,
 				response,
 				route,
-				adapter
+				new MemoryAdapter()
 			);
 
 			const actual_response = endpoint.privilegedGetResponse();
@@ -365,14 +344,11 @@ describe('Endpoint', () => {
 				}
 			}
 
-			const adapter = new MemoryAdapter();
-
 			const route = new Route(
 				ContentType.JSON,
 				HttpMethod.GET,
 				'/x',
-				MockEndpoint,
-				adapter
+				MockEndpoint
 			);
 
 			const request = buildMockRequest('/x', HttpMethod.GET, ContentType.JSON);
@@ -380,9 +356,9 @@ describe('Endpoint', () => {
 
 			const endpoint = new ThrowawayEndpoint(
 				request,
-			  response,
-			  route,
-				adapter
+				response,
+				route,
+				new MemoryAdapter()
 			);
 
 			const headers = endpoint.privilegedGetResponseHeaders();
@@ -400,14 +376,11 @@ describe('Endpoint', () => {
 			}
 		}
 
-		const adapter = new MemoryAdapter();
-
 		const route = new Route(
 			ContentType.JSON,
 			HttpMethod.GET,
 			'/:wizard',
-			MockEndpoint,
-			adapter
+			MockEndpoint
 		);
 
 		const request = buildMockRequest(
@@ -421,7 +394,7 @@ describe('Endpoint', () => {
 			request,
 			response,
 			route,
-			adapter
+			new MemoryAdapter()
 		);
 
 		it('delegates to the supplied route', () => {

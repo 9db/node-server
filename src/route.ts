@@ -16,7 +16,6 @@ class Route implements RouteInterface {
 	private content_type: ContentType;
 	private method: HttpMethod;
 	private endpoint_constructor: EndpointConstructor;
-	private adapter: Adapter;
 	private parameter_keys: string[];
 	private regex: RegExp;
 
@@ -24,13 +23,11 @@ class Route implements RouteInterface {
 		content_type: ContentType,
 		method: HttpMethod,
 		path: string,
-		endpoint_constructor: EndpointConstructor,
-		adapter: Adapter
+		endpoint_constructor: EndpointConstructor
 	) {
 		this.content_type = content_type;
 		this.method = method;
 		this.endpoint_constructor = endpoint_constructor;
-		this.adapter = adapter;
 
 		const parser = new PathParser(path);
 		const parsed_path = parser.parse();
@@ -61,10 +58,10 @@ class Route implements RouteInterface {
 
 	public serve(
 		request: HTTP.IncomingMessage,
-		response: HTTP.ServerResponse
+		response: HTTP.ServerResponse,
+		adapter: Adapter
 	): void {
 		const Constructor = this.getEndpointConstructor();
-		const adapter = this.getAdapter();
 		const endpoint = new Constructor(request, response, this, adapter);
 
 		endpoint.serve();
@@ -112,10 +109,6 @@ class Route implements RouteInterface {
 
 	private getEndpointConstructor(): EndpointConstructor {
 		return this.endpoint_constructor;
-	}
-
-	private getAdapter(): Adapter {
-		return this.adapter;
 	}
 }
 

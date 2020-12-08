@@ -17,13 +17,13 @@ describe('PlaintextVersionEndpoint', () => {
 
 		beforeEach(() => {
 			server = HTTP.createServer((request, response) => {
-				const adapter = new MemoryAdapter();
-				const route = new PlaintextVersionRoute(adapter);
+				const route = new PlaintextVersionRoute();
+
 				const endpoint = new PlaintextVersionEndpoint(
 					request,
 					response,
 					route,
-					adapter
+					new MemoryAdapter()
 				);
 
 				endpoint.serve();

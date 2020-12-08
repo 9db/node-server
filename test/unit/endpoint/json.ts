@@ -23,18 +23,16 @@ describe('JsonEndpoint', () => {
 			}
 		}
 
-		const adapter = new MemoryAdapter();
-
-		const route = new JsonRoute(
-			HttpMethod.GET,
-			'/wizard',
-			MockEndpoint,
-			adapter
-		);
+		const route = new JsonRoute(HttpMethod.GET, '/wizard', MockEndpoint);
 
 		it('returns expected response data', async () => {
 			const server = HTTP.createServer((request, response) => {
-				const endpoint = new MockEndpoint(request, response, route, adapter);
+				const endpoint = new MockEndpoint(
+					request,
+					response,
+					route,
+					new MemoryAdapter()
+				);
 
 				endpoint.serve();
 			});
@@ -66,18 +64,16 @@ describe('JsonEndpoint', () => {
 			}
 		}
 
-		const adapter = new MemoryAdapter();
-
-		const route = new JsonRoute(
-			HttpMethod.GET,
-			'/wizard',
-			MockEndpoint,
-			adapter
-		);
+		const route = new JsonRoute(HttpMethod.GET, '/wizard', MockEndpoint);
 
 		it('returns expected JSON error', async () => {
 			const server = HTTP.createServer((request, response) => {
-				const endpoint = new MockEndpoint(request, response, route, adapter);
+				const endpoint = new MockEndpoint(
+					request,
+					response,
+					route,
+					new MemoryAdapter()
+				);
 
 				endpoint.serve();
 			});

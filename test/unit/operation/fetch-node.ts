@@ -7,7 +7,7 @@ describe('FetchNodeOperation', () => {
 	const input = {
 		namespace_key: 'public',
 		type_key: 'wizard',
-		key: 'gandalf'
+		key: 'gandalf',
 	};
 
 	describe('when specified node exists', () => {
@@ -15,7 +15,7 @@ describe('FetchNodeOperation', () => {
 			const adapter = new MemoryAdapter();
 
 			const node = NodeFactory.create({
-				...input
+				...input,
 			});
 
 			await adapter.storeNode(node);

@@ -17,14 +17,13 @@ describe('JsonNotFoundEndpoint', () => {
 
 		beforeEach(() => {
 			server = HTTP.createServer((request, response) => {
-				const adapter = new MemoryAdapter();
-				const route = new JsonNotFoundRoute(adapter);
+				const route = new JsonNotFoundRoute();
 
 				const endpoint = new JsonNotFoundEndpoint(
 					request,
 					response,
 					route,
-					adapter
+					new MemoryAdapter()
 				);
 
 				endpoint.serve();

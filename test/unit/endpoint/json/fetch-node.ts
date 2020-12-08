@@ -21,7 +21,8 @@ describe('JsonFetchNodeEndpoint', () => {
 			adapter = new MemoryAdapter();
 
 			server = HTTP.createServer((request, response) => {
-				const route = new JsonFetchNodeRoute(adapter);
+				const route = new JsonFetchNodeRoute();
+
 				const endpoint = new JsonFetchNodeEndpoint(
 					request,
 					response,
@@ -67,7 +68,7 @@ describe('JsonFetchNodeEndpoint', () => {
 				const result = await fetchJson(url);
 
 				expect(result.body).toStrictEqual({
-					message: 'File not found'
+					message: 'File not found',
 				});
 
 				expect(result.status_code).toStrictEqual(StatusCode.FILE_NOT_FOUND);

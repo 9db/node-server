@@ -1,13 +1,11 @@
 import HttpMethod from 'http/enum/method';
 import ContentType from 'http/enum/content-type';
-import MemoryAdapter from 'adapter/memory';
 import buildMockRequest from 'test/utility/build-mock-request';
 import JsonNotFoundRoute from 'route/json/not-found';
 
 describe('JsonNotFoundRoute', () => {
 	describe('accepts()', () => {
-		const adapter = new MemoryAdapter();
-		const route = new JsonNotFoundRoute(adapter);
+		const route = new JsonNotFoundRoute();
 
 		describe('when given a request whose URL does not match', () => {
 			const request = buildMockRequest(

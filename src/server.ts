@@ -36,7 +36,7 @@ class Server {
 		this.port = config.port;
 		this.adapter = config.adapter;
 		this.hostname = config.hostname;
-		this.routes = buildRoutes(config.adapter);
+		this.routes = buildRoutes();
 
 		this.server = HTTP.createServer((request, response) => {
 			this.handleRequest(request, response);
@@ -73,8 +73,9 @@ class Server {
 		response: HTTP.ServerResponse
 	): void {
 		const route = this.findRouteForRequest(request);
+		const adapter = this.getAdapter();
 
-		route.serve(request, response);
+		route.serve(request, response, adapter);
 	}
 
 	private findRouteForRequest(request: HTTP.IncomingMessage): Route {
