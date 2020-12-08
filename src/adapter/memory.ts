@@ -1,5 +1,6 @@
 import Node from 'type/node';
 import Adapter from 'interface/adapter';
+import NotFoundError from 'http/error/not-found';
 import FieldValue, { PrimitiveValue } from 'type/field-value';
 
 interface NodeCache {
@@ -32,11 +33,15 @@ class MemoryAdapter implements Adapter {
 		return Promise.resolve(node);
 	}
 
-	public setField(
-		node: Node,
+	public async setField(
+		namespace_key: string,
+		type_key: string,
+		node_key: string,
 		field_key: string,
 		value: FieldValue
 	): Promise<Node> {
+		const node = await this.fetchNodeUnsafe(namespace_key, type_key, node_key);
+
 		const updated_node = {
 			...node,
 			[field_key]: value,
@@ -46,10 +51,13 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public async addValueToSet(
-		node: Node,
+		namespace_key: string,
+		type_key: string,
+		node_key: string,
 		field_key: string,
 		value: PrimitiveValue
 	): Promise<Node> {
+		const node = await this.fetchNodeUnsafe(namespace_key, type_key, node_key);
 		const set_field = this.getArrayField(node, field_key);
 
 		if (set_field.includes(value)) {
@@ -67,10 +75,13 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public async removeValueFromSet(
-		node: Node,
+		namespace_key: string,
+		type_key: string,
+		node_key: string,
 		field_key: string,
 		value: PrimitiveValue
 	): Promise<Node> {
+		const node = await this.fetchNodeUnsafe(namespace_key, type_key, node_key);
 		const set_field = this.getArrayField(node, field_key);
 
 		if (!set_field.includes(value)) {
@@ -90,11 +101,14 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public async addValueToList(
-		node: Node,
+		namespace_key: string,
+		type_key: string,
+		node_key: string,
 		field_key: string,
 		value: PrimitiveValue,
 		position?: number
 	): Promise<Node> {
+		const node = await this.fetchNodeUnsafe(namespace_key, type_key, node_key);
 		const list_field = this.getArrayField(node, field_key);
 
 		if (position === undefined) {
@@ -131,11 +145,14 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public async removeValueFromList(
-		node: Node,
+		namespace_key: string,
+		type_key: string,
+		node_key: string,
 		field_key: string,
 		value: PrimitiveValue,
 		position?: number
 	): Promise<Node> {
+		const node = await this.fetchNodeUnsafe(namespace_key, type_key, node_key);
 		const list_field = this.getArrayField(node, field_key);
 
 		if (position === undefined) {
@@ -165,6 +182,20 @@ class MemoryAdapter implements Adapter {
 		};
 
 		return this.storeNode(updated_node);
+	}
+
+	private async fetchNodeUnsafe(
+		namespace_key: string,
+		type_key: string,
+		node_key: string
+	): Promise<Node> {
+		const node = await this.fetchNode(namespace_key, type_key, node_key);
+
+		if (node === undefined) {
+			throw new NotFoundError();
+		}
+
+		return node;
 	}
 
 	private getArrayField(node: Node, field_key: string): PrimitiveValue[] {

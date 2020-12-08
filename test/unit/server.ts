@@ -103,7 +103,7 @@ describe('Server', () => {
 			it('returns the default hostname', () => {
 				const server = new Server();
 
-				expect(server.getHostname()).toStrictEqual('localhost');
+				expect(server.getHostname()).toStrictEqual('http://localhost');
 			});
 		});
 	});

@@ -2,6 +2,7 @@ import HTTP from 'http';
 
 import Route from 'route';
 import Adapter from 'interface/adapter';
+import Repository from 'repository';
 import closeServer from 'http/utility/close-server';
 import buildRoutes from 'server/utility/build-routes';
 import MemoryAdapter from 'adapter/memory';
@@ -16,7 +17,7 @@ function buildDefaultConfig(): ServerConfig {
 	return {
 		port: 9999,
 		adapter: new MemoryAdapter(),
-		hostname: 'localhost',
+		hostname: 'http://localhost',
 	};
 }
 
@@ -24,6 +25,7 @@ class Server {
 	private port: number;
 	private adapter: Adapter;
 	private hostname: string;
+	private repository: Repository;
 	private server: HTTP.Server;
 	private routes: Route[];
 
@@ -34,8 +36,9 @@ class Server {
 		};
 
 		this.port = config.port;
-		this.adapter = config.adapter;
 		this.hostname = config.hostname;
+		this.adapter = config.adapter;
+		this.repository = new Repository(config.hostname, config.adapter);
 		this.routes = buildRoutes();
 
 		this.server = HTTP.createServer((request, response) => {
@@ -60,12 +63,16 @@ class Server {
 		return this.port;
 	}
 
-	public getAdapter(): Adapter {
-		return this.adapter;
+	public getRepository(): Repository {
+		return this.repository;
 	}
 
 	public getHostname(): string {
 		return this.hostname;
+	}
+
+	public getAdapter(): Adapter {
+		return this.adapter;
 	}
 
 	private handleRequest(
@@ -73,9 +80,9 @@ class Server {
 		response: HTTP.ServerResponse
 	): void {
 		const route = this.findRouteForRequest(request);
-		const adapter = this.getAdapter();
+		const repository = this.getRepository();
 
-		route.serve(request, response, adapter);
+		route.serve(request, response, repository);
 	}
 
 	private findRouteForRequest(request: HTTP.IncomingMessage): Route {

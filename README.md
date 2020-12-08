@@ -34,7 +34,7 @@ key        | description                                                        
 ---------- | ------------------------------------------------------------------------------------------- | -------------
 `port`     | The HTTP port that the 9DB server should bind to.                                           | `9999`
 `adapter`  | The database adapter to use for storing nodes. See the [Adapters](#adapters) section below. | `MemoryAdapter`
-`hostname` | The [FQDN](https://en.wikipedia.org/wiki/Fully_qualified_domain_name) that this server will be hosted from.                                              | `localhost`
+`hostname` | The hostname (protocol + [FQDN](https://en.wikipedia.org/wiki/Fully_qualified_domain_name)) that this server will be hosted from.                                              | `http://localhost`
 
 <br>
 

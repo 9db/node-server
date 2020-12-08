@@ -11,32 +11,42 @@ interface Adapter {
 	storeNode(node: Node): Promise<Node>;
 
 	setField(
-		node: Node,
+		namespace_key: string,
+		type_key: string,
+		node_key: string,
 		field_key: string,
 		field_value: FieldValue
 	): Promise<Node>;
 
 	addValueToSet(
-		node: Node,
+		namespace_key: string,
+		type_key: string,
+		node_key: string,
 		field_key: string,
 		value: PrimitiveValue
 	): Promise<Node>;
 
 	removeValueFromSet(
-		node: Node,
+		namespace_key: string,
+		type_key: string,
+		node_key: string,
 		field_key: string,
 		value: PrimitiveValue
 	): Promise<Node>;
 
 	addValueToList(
-		node: Node,
+		namespace_key: string,
+		type_key: string,
+		node_key: string,
 		field_key: string,
 		value: PrimitiveValue,
 		position?: number
 	): Promise<Node>;
 
 	removeValueFromList(
-		node: Node,
+		namespace_key: string,
+		type_key: string,
+		node_key: string,
 		field_key: string,
 		value: PrimitiveValue,
 		position?: number
