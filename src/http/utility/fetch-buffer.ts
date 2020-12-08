@@ -4,7 +4,12 @@ import HeaderMap from 'http/type/header-map';
 import HttpHeader from 'http/enum/header';
 import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
-import ResponseData from 'http/type/response-data';
+
+interface ResponseData {
+	body: Buffer;
+	headers: HeaderMap;
+	status_code: StatusCode;
+}
 
 function fetchBuffer(
 	url: string,

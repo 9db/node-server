@@ -4,6 +4,7 @@ import HttpError from 'http/error';
 import HeaderMap from 'http/type/header-map';
 import HttpHeader from 'http/enum/header';
 import HttpMethod from 'http/enum/method';
+import JsonObject from 'http/type/json-object';
 import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import ServerError from 'http/error/server-error';
@@ -69,7 +70,7 @@ abstract class Endpoint {
 		return this.status_code;
 	}
 
-	private handleResult(result: string | Buffer | object | void): void {
+	private handleResult(result: string | Buffer | JsonObject | void): void {
 		if (result === undefined) {
 			return;
 		}
@@ -122,8 +123,10 @@ abstract class Endpoint {
 		return <typeof Endpoint>this.constructor;
 	}
 
-	protected abstract process(): Promise<string | Buffer | void>;
-	protected abstract serializeError(error: HttpError): string | Buffer | object;
+	protected abstract process(): Promise<string | Buffer | JsonObject | void>;
+	protected abstract serializeError(
+		error: HttpError
+	): string | Buffer | JsonObject;
 }
 
 export default Endpoint;
