@@ -1,11 +1,17 @@
 import Node from 'type/node';
 import Adapter from 'interface/adapter';
+import transformNode from 'repository/utility/transform-node';
+import transformValue from 'repository/utility/transform-value';
+import standardizeUrl from 'repository/utility/standardize-url';
+import unstandardizeUrl from 'repository/utility/unstandardize-url';
 import FieldValue, { PrimitiveValue } from 'type/field-value';
 
 class Repository implements Adapter {
+	private hostname: string;
 	private adapter: Adapter;
 
-	public constructor(_hostname: string, adapter: Adapter) {
+	public constructor(hostname: string, adapter: Adapter) {
+		this.hostname = hostname;
 		this.adapter = adapter;
 	}
 
@@ -142,20 +148,32 @@ class Repository implements Adapter {
 		return this.unstandardizeNode(node);
 	}
 
-	private standardizeValue(value: FieldValue): FieldValue {
-		return value;
-	}
-
-	private standardizePrimitiveValue(value: PrimitiveValue): PrimitiveValue {
-		return value;
-	}
-
 	private standardizeNode(node: Node): Node {
-		return node;
+		const hostname = this.getHostname();
+
+		return transformNode(node, hostname, standardizeUrl);
 	}
 
 	private unstandardizeNode(node: Node): Node {
-		return node;
+		const hostname = this.getHostname();
+
+		return transformNode(node, hostname, unstandardizeUrl);
+	}
+
+	private standardizeValue(value: FieldValue): FieldValue {
+		const hostname = this.getHostname();
+
+		return transformValue(value, hostname, standardizeUrl);
+	}
+
+	private standardizePrimitiveValue(value: PrimitiveValue): PrimitiveValue {
+		const hostname = this.getHostname();
+
+		return standardizeUrl(value, hostname);
+	}
+
+	private getHostname(): string {
+		return this.hostname;
 	}
 
 	private getAdapter(): Adapter {

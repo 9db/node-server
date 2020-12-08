@@ -4,6 +4,7 @@ import MemoryAdapter from 'adapter/memory';
 
 describe('Repository', () => {
 	const hostname = 'https://9db.org';
+	const creator = `${hostname}/public/account/iluvatar`;
 
 	let adapter!: MemoryAdapter;
 	let repository!: Repository;
@@ -35,6 +36,27 @@ describe('Repository', () => {
 				expect(node).toStrictEqual(undefined);
 			});
 		});
+
+		describe('when node contains standardized hostname references', () => {
+			it('reinstates the original hostname before returning the node', async () => {
+				const expected_node = NodeFactory.create({
+					some_url: '<9dbhost>/foo/bar/baz',
+				});
+
+				await adapter.storeNode(expected_node);
+
+				const actual_node = await repository.fetchNode(
+					expected_node.namespace_key,
+					expected_node.type_key,
+					expected_node.key
+				);
+
+				expect(actual_node).toStrictEqual({
+					...expected_node,
+					some_url: `${hostname}/foo/bar/baz`,
+				});
+			});
+		});
 	});
 
 	describe('storeNode()', () => {
@@ -50,6 +72,29 @@ describe('Repository', () => {
 			);
 
 			expect(actual_node).toStrictEqual(expected_node);
+		});
+
+		it('replaces explicit hostname references with placeholders', async () => {
+			const expected_node = NodeFactory.create({
+				creator,
+				some_url: `${hostname}/foo/bar/baz`,
+				url_list: [`${hostname}/bam`, `${hostname}/wat`],
+			});
+
+			await repository.storeNode(expected_node);
+
+			const actual_node = await adapter.fetchNode(
+				expected_node.namespace_key,
+				expected_node.type_key,
+				expected_node.key
+			);
+
+			expect(actual_node).toStrictEqual({
+				...expected_node,
+				creator: '<9dbhost>/public/account/iluvatar',
+				some_url: '<9dbhost>/foo/bar/baz',
+				url_list: ['<9dbhost>/bam', '<9dbhost>/wat'],
+			});
 		});
 	});
 
@@ -113,6 +158,34 @@ describe('Repository', () => {
 			);
 
 			expect(node).toStrictEqual(original_node);
+		});
+
+		it('replaces explicit hostname references with placeholder', async () => {
+			const node = NodeFactory.create({
+				creator,
+			});
+
+			await repository.storeNode(node);
+
+			await repository.setField(
+				node.namespace_key,
+				node.type_key,
+				node.key,
+				'wizard_url',
+				`${hostname}/gandalf`
+			);
+
+			const persisted_node = await adapter.fetchNode(
+				node.namespace_key,
+				node.type_key,
+				node.key
+			);
+
+			expect(persisted_node).toStrictEqual({
+				...node,
+				creator: '<9dbhost>/public/account/iluvatar',
+				wizard_url: '<9dbhost>/gandalf',
+			});
 		});
 	});
 
@@ -275,6 +348,34 @@ describe('Repository', () => {
 				);
 
 				expect(node).toStrictEqual(original_node);
+			});
+
+			it('replaces explicit hostname references with placeholder', async () => {
+				const node = NodeFactory.create({
+					creator,
+					urls: [],
+				});
+
+				await repository.storeNode(node);
+				await repository.addValueToSet(
+					node.namespace_key,
+					node.type_key,
+					node.key,
+					'urls',
+					`${hostname}/gandalf`
+				);
+
+				const persisted_node = await adapter.fetchNode(
+					node.namespace_key,
+					node.type_key,
+					node.key
+				);
+
+				expect(persisted_node).toStrictEqual({
+					...node,
+					creator: '<9dbhost>/public/account/iluvatar',
+					urls: ['<9dbhost>/gandalf'],
+				});
 			});
 		});
 	});
@@ -496,6 +597,7 @@ describe('Repository', () => {
 		describe('when field exists and is an array', () => {
 			it('stores the updated node to the cache', async () => {
 				const node = NodeFactory.create({
+					creator,
 					wizards: ['saruman'],
 				});
 
@@ -558,6 +660,34 @@ describe('Repository', () => {
 				);
 
 				expect(node).toStrictEqual(original_node);
+			});
+
+			it('replaces explicit hostname with placeholder', async () => {
+				const node = NodeFactory.create({
+					creator,
+					wizard_urls: [],
+				});
+
+				await repository.storeNode(node);
+				await repository.addValueToList(
+					node.namespace_key,
+					node.type_key,
+					node.key,
+					'wizard_urls',
+					`${hostname}/gandalf`
+				);
+
+				const persisted_node = await adapter.fetchNode(
+					node.namespace_key,
+					node.type_key,
+					node.key
+				);
+
+				expect(persisted_node).toStrictEqual({
+					...node,
+					creator: '<9dbhost>/public/account/iluvatar',
+					wizard_urls: ['<9dbhost>/gandalf'],
+				});
 			});
 
 			describe('when position argument is zero', () => {
