@@ -5,55 +5,23 @@ import HttpMethod from 'http/enum/method';
 import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import closeServer from 'http/utility/close-server';
+import PlaintextRoute from 'route/plaintext';
 import fetchPlaintext from 'http/utility/fetch-plaintext';
-import buildMockRequest from 'test/utility/build-mock-request';
 import PlaintextEndpoint from 'endpoint/plaintext';
 
 describe('PlaintextEndpoint', () => {
-	describe('accepts()', () => {
-		class MockEndpoint extends PlaintextEndpoint {
-			protected static url = '/wizards';
-			protected static method = HttpMethod.GET;
-
-			protected process(): Promise<undefined> {
-				throw new Error('Not implemented');
-			}
-		}
-
-		it('accepts matching requests with a plaintext accept header', () => {
-			const request = buildMockRequest(
-				'/wizards',
-				HttpMethod.GET,
-				ContentType.TEXT
-			);
-
-			expect(MockEndpoint.accepts(request)).toBe(true);
-		});
-
-		it('does not accept requests without a plaintext accept header', () => {
-			const request = buildMockRequest(
-				'/wizards',
-				HttpMethod.GET,
-				ContentType.JSON
-			);
-
-			expect(MockEndpoint.accepts(request)).toBe(false);
-		});
-	});
-
 	describe('process()', () => {
 		class MockEndpoint extends PlaintextEndpoint {
-			protected static url = '/wizards';
-			protected static method = HttpMethod.GET;
-
 			protected async process(): Promise<string> {
 				return Promise.resolve('Speak friend and enter');
 			}
 		}
 
+		const route = new PlaintextRoute(HttpMethod.GET, '/wizards', MockEndpoint);
+
 		it('returns expected response data', async () => {
 			const server = HTTP.createServer((request, response) => {
-				const endpoint = new MockEndpoint(request, response);
+				const endpoint = new MockEndpoint(request, response, route);
 
 				endpoint.serve();
 			});
@@ -83,9 +51,11 @@ describe('PlaintextEndpoint', () => {
 			}
 		}
 
+		const route = new PlaintextRoute(HttpMethod.GET, '/wizards', MockEndpoint);
+
 		it('returns expected plaintext error', async () => {
 			const server = HTTP.createServer((request, response) => {
-				const endpoint = new MockEndpoint(request, response);
+				const endpoint = new MockEndpoint(request, response, route);
 
 				endpoint.serve();
 			});

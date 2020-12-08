@@ -1,5 +1,6 @@
 import HTTP from 'http';
 
+import Route from 'route';
 import sleep from 'utility/sleep';
 import Endpoint from 'endpoint';
 import HttpError from 'http/error';
@@ -14,70 +15,6 @@ import buildMockRequest from 'test/utility/build-mock-request';
 import buildMockResponse from 'test/utility/build-mock-response';
 
 describe('Endpoint', () => {
-	describe('accepts()', () => {
-		class MockEndpoint extends Endpoint {
-			protected static url = '/foo';
-			protected static method = HttpMethod.GET;
-			protected static content_type = ContentType.TEXT;
-
-			protected process(): Promise<undefined> {
-				throw new Error('Not implemented');
-			}
-
-			protected serializeError(_error: HttpError): string {
-				throw new Error('Not implemented');
-			}
-		}
-
-		describe('when given a request whose URL does not match', () => {
-			const request = buildMockRequest(
-				'/bar',
-				HttpMethod.GET,
-				ContentType.TEXT
-			);
-
-			it('returns false', () => {
-				expect(MockEndpoint.accepts(request)).toBe(false);
-			});
-		});
-
-		describe('when given a request whose method does not match', () => {
-			const request = buildMockRequest(
-				'/foo',
-				HttpMethod.POST,
-				ContentType.TEXT
-			);
-
-			it('returns false', () => {
-				expect(MockEndpoint.accepts(request)).toBe(false);
-			});
-		});
-
-		describe('when given a request whose content type does not match', () => {
-			const request = buildMockRequest(
-				'/foo',
-				HttpMethod.GET,
-				ContentType.JSON
-			);
-
-			it('returns false', () => {
-				expect(MockEndpoint.accepts(request)).toBe(false);
-			});
-		});
-
-		describe('when given a matching request', () => {
-			const request = buildMockRequest(
-				'/foo',
-				HttpMethod.GET,
-				ContentType.TEXT
-			);
-
-			it('returns true', () => {
-				expect(MockEndpoint.accepts(request)).toBe(true);
-			});
-		});
-	});
-
 	describe('serve()', () => {
 		describe('when process() method returns a buffer', () => {
 			const result = Buffer.from('speak friend and enter');
@@ -94,11 +31,18 @@ describe('Endpoint', () => {
 				}
 			}
 
+			const route = new Route(
+				ContentType.TEXT,
+				HttpMethod.GET,
+				'/',
+				MockEndpoint
+			);
+
 			it('sets expected status and headers on response', async () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
 				const write_head_spy = jest.spyOn(response, 'writeHead');
-				const endpoint = new MockEndpoint(request, response);
+				const endpoint = new MockEndpoint(request, response, route);
 
 				endpoint.serve();
 
@@ -113,7 +57,7 @@ describe('Endpoint', () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
 				const end_spy = jest.spyOn(response, 'end');
-				const endpoint = new MockEndpoint(request, response);
+				const endpoint = new MockEndpoint(request, response, route);
 
 				endpoint.serve();
 
@@ -138,11 +82,18 @@ describe('Endpoint', () => {
 				}
 			}
 
+			const route = new Route(
+				ContentType.TEXT,
+				HttpMethod.GET,
+				'/',
+				MockEndpoint
+			);
+
 			it('sets expected status and headers on response', async () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
 				const write_head_spy = jest.spyOn(response, 'writeHead');
-				const endpoint = new MockEndpoint(request, response);
+				const endpoint = new MockEndpoint(request, response, route);
 
 				endpoint.serve();
 
@@ -157,7 +108,7 @@ describe('Endpoint', () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
 				const end_spy = jest.spyOn(response, 'end');
-				const endpoint = new MockEndpoint(request, response);
+				const endpoint = new MockEndpoint(request, response, route);
 				const expected_buffer = Buffer.from(result);
 
 				endpoint.serve();
@@ -181,11 +132,18 @@ describe('Endpoint', () => {
 				}
 			}
 
+			const route = new Route(
+				ContentType.TEXT,
+				HttpMethod.GET,
+				'/',
+				MockEndpoint
+			);
+
 			it('does not set status or headers on response', async () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
 				const write_head_spy = jest.spyOn(response, 'writeHead');
-				const endpoint = new MockEndpoint(request, response);
+				const endpoint = new MockEndpoint(request, response, route);
 
 				endpoint.serve();
 
@@ -198,7 +156,7 @@ describe('Endpoint', () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
 				const end_spy = jest.spyOn(response, 'end');
-				const endpoint = new MockEndpoint(request, response);
+				const endpoint = new MockEndpoint(request, response, route);
 
 				endpoint.serve();
 
@@ -228,9 +186,16 @@ describe('Endpoint', () => {
 					}
 				}
 
+				const route = new Route(
+					ContentType.TEXT,
+					HttpMethod.GET,
+					'/',
+					MockEndpoint
+				);
+
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
-				const endpoint = new MockEndpoint(request, response);
+				const endpoint = new MockEndpoint(request, response, route);
 
 				endpoint.serve();
 
@@ -258,13 +223,21 @@ describe('Endpoint', () => {
 						}
 					}
 
+					const route = new Route(
+						ContentType.TEXT,
+						HttpMethod.GET,
+						'/',
+						MockEndpoint
+					);
+
 					const request = buildMockRequest(
 						'/',
 						HttpMethod.GET,
 						ContentType.TEXT
 					);
+
 					const response = buildMockResponse();
-					const endpoint = new MockEndpoint(request, response);
+					const endpoint = new MockEndpoint(request, response, route);
 
 					endpoint.serve();
 
@@ -292,9 +265,16 @@ describe('Endpoint', () => {
 				}
 			}
 
+			const route = new Route(
+				ContentType.JSON,
+				HttpMethod.GET,
+				'/x',
+				MockEndpoint
+			);
+
 			const request = buildMockRequest('/x', HttpMethod.GET, ContentType.JSON);
 			const response = buildMockResponse();
-			const endpoint = new MockEndpoint(request, response);
+			const endpoint = new MockEndpoint(request, response, route);
 			const actual_request = endpoint.privilegedGetRequest();
 
 			expect(actual_request).toStrictEqual(request);
@@ -319,9 +299,16 @@ describe('Endpoint', () => {
 				}
 			}
 
+			const route = new Route(
+				ContentType.JSON,
+				HttpMethod.GET,
+				'/x',
+				MockEndpoint
+			);
+
 			const request = buildMockRequest('/x', HttpMethod.GET, ContentType.JSON);
 			const response = buildMockResponse();
-			const endpoint = new MockEndpoint(request, response);
+			const endpoint = new MockEndpoint(request, response, route);
 			const actual_response = endpoint.privilegedGetResponse();
 
 			expect(actual_response).toStrictEqual(response);
@@ -346,9 +333,16 @@ describe('Endpoint', () => {
 				}
 			}
 
+			const route = new Route(
+				ContentType.JSON,
+				HttpMethod.GET,
+				'/x',
+				MockEndpoint
+			);
+
 			const request = buildMockRequest('/x', HttpMethod.GET, ContentType.JSON);
 			const response = buildMockResponse();
-			const endpoint = new MockEndpoint(request, response);
+			const endpoint = new MockEndpoint(request, response, route);
 			const headers = endpoint.privilegedGetResponseHeaders();
 
 			expect(headers).toStrictEqual({

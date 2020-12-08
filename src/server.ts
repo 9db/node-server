@@ -1,16 +1,10 @@
 import HTTP from 'http';
 
+import Route from 'route';
+import Routes from 'server/routes';
 import Adapter from 'interface/adapter';
 import closeServer from 'http/utility/close-server';
 import MemoryAdapter from 'adapter/memory';
-import EndpointConstructor from 'interface/endpoint-constructor';
-import VersionPlaintextEndpoint from 'endpoint/plaintext/version';
-import NotFoundPlaintextEndpoint from 'endpoint/plaintext/not-found';
-
-const ENDPOINT_CONSTRUCTORS: EndpointConstructor[] = [
-	VersionPlaintextEndpoint,
-	NotFoundPlaintextEndpoint,
-];
 
 interface ServerConfig {
 	readonly port: number;
@@ -31,6 +25,7 @@ class Server {
 	private adapter: Adapter;
 	private hostname: string;
 	private server: HTTP.Server;
+	private routes: Route[];
 
 	public constructor(partial_config?: Partial<ServerConfig>) {
 		const config: ServerConfig = {
@@ -41,6 +36,7 @@ class Server {
 		this.port = config.port;
 		this.adapter = config.adapter;
 		this.hostname = config.hostname;
+		this.routes = Routes;
 
 		this.server = HTTP.createServer((request, response) => {
 			this.handleRequest(request, response);
@@ -76,28 +72,31 @@ class Server {
 		request: HTTP.IncomingMessage,
 		response: HTTP.ServerResponse
 	): void {
-		const Endpoint = this.determineEndpointConstructorForRequest(request);
-		const endpoint = new Endpoint(request, response);
+		const route = this.findRouteForRequest(request);
 
-		endpoint.serve();
+		route.serve(request, response);
 	}
 
-	private determineEndpointConstructorForRequest(
-		request: HTTP.IncomingMessage
-	): EndpointConstructor {
-		const Constructor = ENDPOINT_CONSTRUCTORS.find((endpoint_constructor) => {
-			return endpoint_constructor.accepts(request);
+	private findRouteForRequest(request: HTTP.IncomingMessage): Route {
+		const routes = this.getRoutes();
+
+		const route = routes.find((route) => {
+			return route.accepts(request);
 		});
 
-		if (Constructor === undefined) {
-			return NotFoundPlaintextEndpoint;
+		if (route === undefined) {
+			throw new Error(`No route found for request: ${request.url}`);
 		}
 
-		return Constructor;
+		return route;
 	}
 
 	private getServer(): HTTP.Server {
 		return this.server;
+	}
+
+	private getRoutes(): Route[] {
+		return this.routes;
 	}
 }
 

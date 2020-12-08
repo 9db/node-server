@@ -1,44 +1,28 @@
 import HTTP from 'http';
 
+import Route from 'interface/route';
 import HttpError from 'http/error';
 import HeaderMap from 'http/type/header-map';
 import HttpHeader from 'http/enum/header';
-import HttpMethod from 'http/enum/method';
 import JsonObject from 'http/type/json-object';
 import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import ServerError from 'http/error/server-error';
-import getAcceptedContentTypes from 'http/utility/get-accepted-content-types';
 
 abstract class Endpoint {
-	protected static url: string;
-	protected static method: HttpMethod;
-	protected static content_type: ContentType;
-
-	public static accepts(request: HTTP.IncomingMessage): boolean {
-		if (this.url !== request.url) {
-			return false;
-		}
-
-		if (this.method !== request.method) {
-			return false;
-		}
-
-		const content_types = getAcceptedContentTypes(request);
-
-		return content_types.includes(this.content_type);
-	}
-
 	private request: HTTP.IncomingMessage;
 	private response: HTTP.ServerResponse;
+	private route: Route;
 	private status_code: StatusCode;
 
 	public constructor(
 		request: HTTP.IncomingMessage,
-		response: HTTP.ServerResponse
+		response: HTTP.ServerResponse,
+		route: Route
 	) {
 		this.request = request;
 		this.response = response;
+		this.route = route;
 		this.status_code = StatusCode.SUCCESS;
 	}
 
@@ -60,6 +44,10 @@ abstract class Endpoint {
 		return {
 			[HttpHeader.CONTENT_TYPE]: this.getContentType(),
 		};
+	}
+
+	protected getUrlParameter(_parameter: string): string | undefined {
+		return 'foo';
 	}
 
 	protected setStatusCode(status_code: StatusCode): void {
@@ -114,13 +102,13 @@ abstract class Endpoint {
 	}
 
 	private getContentType(): ContentType {
-		const Constructor = this.getConstructor();
+		const route = this.getRoute();
 
-		return Constructor.content_type;
+		return route.getContentType();
 	}
 
-	private getConstructor(): typeof Endpoint {
-		return <typeof Endpoint>this.constructor;
+	private getRoute(): Route {
+		return this.route;
 	}
 
 	protected abstract process(): Promise<string | Buffer | JsonObject | void>;

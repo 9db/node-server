@@ -1,65 +1,14 @@
 import HTTP from 'http';
 
 import HttpHeader from 'http/enum/header';
-import HttpMethod from 'http/enum/method';
 import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import closeServer from 'http/utility/close-server';
 import fetchPlaintext from 'http/utility/fetch-plaintext';
-import buildMockRequest from 'test/utility/build-mock-request';
-import VersionPlaintextEndpoint from 'endpoint/plaintext/version';
+import PlaintextVersionRoute from 'route/plaintext/version';
+import PlaintextVersionEndpoint from 'endpoint/plaintext/version';
 
-describe('VersionPlaintextEndpoint', () => {
-	describe('accepts()', () => {
-		describe('when given a request whose URL does not match', () => {
-			const request = buildMockRequest(
-				'/info',
-				HttpMethod.GET,
-				ContentType.TEXT
-			);
-
-			it('returns false', () => {
-				expect(VersionPlaintextEndpoint.accepts(request)).toBe(false);
-			});
-		});
-
-		describe('when given a request whose method does not match', () => {
-			const request = buildMockRequest(
-				'/version',
-				HttpMethod.POST,
-				ContentType.TEXT
-			);
-
-			it('returns false', () => {
-				expect(VersionPlaintextEndpoint.accepts(request)).toBe(false);
-			});
-		});
-
-		describe('when given a request whose content type does not match', () => {
-			const request = buildMockRequest(
-				'/version',
-				HttpMethod.GET,
-				ContentType.JSON
-			);
-
-			it('returns false', () => {
-				expect(VersionPlaintextEndpoint.accepts(request)).toBe(false);
-			});
-		});
-
-		describe('when given a matching request', () => {
-			const request = buildMockRequest(
-				'/version',
-				HttpMethod.GET,
-				ContentType.TEXT
-			);
-
-			it('returns true', () => {
-				expect(VersionPlaintextEndpoint.accepts(request)).toBe(true);
-			});
-		});
-	});
-
+describe('PlaintextVersionEndpoint', () => {
 	describe('process()', () => {
 		const port = 4482;
 
@@ -67,7 +16,8 @@ describe('VersionPlaintextEndpoint', () => {
 
 		beforeEach(() => {
 			server = HTTP.createServer((request, response) => {
-				const endpoint = new VersionPlaintextEndpoint(request, response);
+				const route = new PlaintextVersionRoute();
+				const endpoint = new PlaintextVersionEndpoint(request, response, route);
 
 				endpoint.serve();
 			});

@@ -1,5 +1,6 @@
 import HTTP from 'http';
 
+import JsonRoute from 'route/json';
 import fetchJson from 'http/utility/fetch-json';
 import HttpHeader from 'http/enum/header';
 import HttpMethod from 'http/enum/method';
@@ -8,45 +9,10 @@ import JsonObject from 'http/type/json-object';
 import ContentType from 'http/enum/content-type';
 import closeServer from 'http/utility/close-server';
 import JsonEndpoint from 'endpoint/json';
-import buildMockRequest from 'test/utility/build-mock-request';
 
 describe('JsonEndpoint', () => {
-	describe('accepts()', () => {
-		class MockEndpoint extends JsonEndpoint {
-			protected static url = '/wizard';
-			protected static method = HttpMethod.GET;
-
-			protected process(): Promise<undefined> {
-				throw new Error('Not implemented');
-			}
-		}
-
-		it('accepts matching requests with a JSON accept header', () => {
-			const request = buildMockRequest(
-				'/wizard',
-				HttpMethod.GET,
-				ContentType.JSON
-			);
-
-			expect(MockEndpoint.accepts(request)).toBe(true);
-		});
-
-		it('does not accept requests without a JSON accept header', () => {
-			const request = buildMockRequest(
-				'/wizard',
-				HttpMethod.GET,
-				ContentType.TEXT
-			);
-
-			expect(MockEndpoint.accepts(request)).toBe(false);
-		});
-	});
-
 	describe('process()', () => {
 		class MockEndpoint extends JsonEndpoint {
-			protected static url = '/wizard';
-			protected static method = HttpMethod.GET;
-
 			protected process(): Promise<JsonObject> {
 				return Promise.resolve({
 					name: 'gandalf',
@@ -56,9 +22,11 @@ describe('JsonEndpoint', () => {
 			}
 		}
 
+		const route = new JsonRoute(HttpMethod.GET, '/wizard', MockEndpoint);
+
 		it('returns expected response data', async () => {
 			const server = HTTP.createServer((request, response) => {
-				const endpoint = new MockEndpoint(request, response);
+				const endpoint = new MockEndpoint(request, response, route);
 
 				endpoint.serve();
 			});
@@ -85,17 +53,16 @@ describe('JsonEndpoint', () => {
 
 	describe('serializeError()', () => {
 		class MockEndpoint extends JsonEndpoint {
-			protected static url = '/wizard';
-			protected static method = HttpMethod.GET;
-
 			protected async process(): Promise<undefined> {
 				throw new Error('A strange thing has happened');
 			}
 		}
 
+		const route = new JsonRoute(HttpMethod.GET, '/wizard', MockEndpoint);
+
 		it('returns expected JSON error', async () => {
 			const server = HTTP.createServer((request, response) => {
-				const endpoint = new MockEndpoint(request, response);
+				const endpoint = new MockEndpoint(request, response, route);
 
 				endpoint.serve();
 			});
