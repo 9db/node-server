@@ -11,7 +11,7 @@ class JsonFetchNodeEndpoint extends JsonEndpoint {
 		const input = {
 			namespace_key,
 			type_key,
-			key
+			key,
 		};
 
 		const operation = new FetchNodeOperation(input);

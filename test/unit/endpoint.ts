@@ -302,9 +302,7 @@ describe('Endpoint', () => {
 
 	describe('getUrlParameter()', () => {
 		class ThrowawayEndpoint extends MockEndpoint {
-			public privilegedGetUrlParameter(
-				parameter: string
-			): string | undefined {
+			public privilegedGetUrlParameter(parameter: string): string | undefined {
 				return this.getUrlParameter(parameter);
 			}
 		}

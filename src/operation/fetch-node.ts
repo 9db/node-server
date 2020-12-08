@@ -20,7 +20,7 @@ class FetchNodeOperation extends Operation<Node> {
 	protected performInternal(): Promise<Node> {
 		const input = this.getInput();
 		const node = NodeFactory.create({
-			...input
+			...input,
 		});
 
 		return Promise.resolve(node);
