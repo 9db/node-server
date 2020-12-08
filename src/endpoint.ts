@@ -8,6 +8,7 @@ import JsonObject from 'http/type/json-object';
 import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import ServerError from 'http/error/server-error';
+import BadRequestError from 'http/error/bad-request';
 
 abstract class Endpoint {
 	private request: HTTP.IncomingMessage;
@@ -46,11 +47,16 @@ abstract class Endpoint {
 		};
 	}
 
-	protected getUrlParameter(parameter: string): string | undefined {
+	protected getUrlParameter(parameter: string): string {
 		const url = this.getUrl();
 		const route = this.getRoute();
+		const value = route.getUrlParameter(url, parameter);
 
-		return route.getUrlParameter(url, parameter);
+		if (value === undefined) {
+			throw new BadRequestError();
+		}
+
+		return value;
 	}
 
 	protected setStatusCode(status_code: StatusCode): void {

@@ -11,6 +11,7 @@ import ContentType from 'http/enum/content-type';
 import ServerError from 'http/error/server-error';
 import MockEndpoint from 'test/mock/endpoint';
 import NotFoundError from 'http/error/not-found';
+import BadRequestError from 'http/error/bad-request';
 import buildMockRequest from 'test/utility/build-mock-request';
 import buildMockResponse from 'test/utility/build-mock-response';
 
@@ -300,33 +301,42 @@ describe('Endpoint', () => {
 	});
 
 	describe('getUrlParameter()', () => {
-		it('delegates to the supplied route', () => {
-			class ThrowawayEndpoint extends MockEndpoint {
-				public privilegedGetUrlParameter(
-					parameter: string
-				): string | undefined {
-					return this.getUrlParameter(parameter);
-				}
+		class ThrowawayEndpoint extends MockEndpoint {
+			public privilegedGetUrlParameter(
+				parameter: string
+			): string | undefined {
+				return this.getUrlParameter(parameter);
 			}
+		}
 
-			const route = new Route(
-				ContentType.JSON,
-				HttpMethod.GET,
-				'/:wizard',
-				MockEndpoint
-			);
+		const route = new Route(
+			ContentType.JSON,
+			HttpMethod.GET,
+			'/:wizard',
+			MockEndpoint
+		);
 
-			const request = buildMockRequest(
-				'/gandalf',
-				HttpMethod.GET,
-				ContentType.JSON
-			);
+		const request = buildMockRequest(
+			'/gandalf',
+			HttpMethod.GET,
+			ContentType.JSON
+		);
 
-			const response = buildMockResponse();
-			const endpoint = new ThrowawayEndpoint(request, response, route);
+		const response = buildMockResponse();
+		const endpoint = new ThrowawayEndpoint(request, response, route);
+
+		it('delegates to the supplied route', () => {
 			const parameter = endpoint.privilegedGetUrlParameter('wizard');
 
 			expect(parameter).toStrictEqual('gandalf');
+		});
+
+		describe('when requested parameter is not present', () => {
+			it('raises an exception', () => {
+				expect(() => {
+					endpoint.privilegedGetUrlParameter('ringwraith');
+				}).toThrow(BadRequestError);
+			});
 		});
 	});
 });

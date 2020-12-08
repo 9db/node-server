@@ -201,7 +201,7 @@ describe('Route', () => {
 
 				const parameter = route.getUrlParameter(
 					'/v1/gandalf/passwords/mellon',
-					'hobbit'
+					'ringwraith'
 				);
 
 				expect(parameter).toStrictEqual(undefined);

@@ -1,20 +1,22 @@
 import Node from 'type/node';
-import NodeFactory from 'factory/node';
 import JsonEndpoint from 'endpoint/json';
+import FetchNodeOperation from 'operation/fetch-node';
 
 class JsonFetchNodeEndpoint extends JsonEndpoint {
-	protected process(): Promise<Node> {
+	protected async process(): Promise<Node> {
 		const namespace_key = this.getUrlParameter('namespace_key');
 		const type_key = this.getUrlParameter('type_key');
 		const key = this.getUrlParameter('key');
 
-		const node = NodeFactory.create({
+		const input = {
 			namespace_key,
 			type_key,
-			key,
-		});
+			key
+		};
 
-		return Promise.resolve(node);
+		const operation = new FetchNodeOperation(input);
+
+		return operation.perform();
 	}
 }
 
