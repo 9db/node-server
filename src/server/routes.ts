@@ -1,9 +1,11 @@
 import JsonNotFoundRoute from 'route/json/not-found';
+import JsonFetchNodeRoute from 'route/json/fetch-node';
 import PlaintextVersionRoute from 'route/plaintext/version';
 import PlaintextNotFoundRoute from 'route/plaintext/not-found';
 
 const ROUTES = [
 	new PlaintextVersionRoute(),
+	new JsonFetchNodeRoute(),
 	new PlaintextNotFoundRoute(),
 	new JsonNotFoundRoute(),
 ];

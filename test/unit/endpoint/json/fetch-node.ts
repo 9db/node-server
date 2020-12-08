@@ -5,10 +5,10 @@ import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import closeServer from 'http/utility/close-server';
 import fetchJson from 'http/utility/fetch-json';
-import JsonNotFoundRoute from 'route/json/not-found';
-import JsonNotFoundEndpoint from 'endpoint/json/not-found';
+import JsonFetchNodeRoute from 'route/json/fetch-node';
+import JsonFetchNodeEndpoint from 'endpoint/json/fetch-node';
 
-describe('JsonNotFoundEndpoint', () => {
+describe('JsonFetchNodeEndpoint', () => {
 	describe('process()', () => {
 		const port = 4482;
 
@@ -16,9 +16,9 @@ describe('JsonNotFoundEndpoint', () => {
 
 		beforeEach(() => {
 			server = HTTP.createServer((request, response) => {
-				const route = new JsonNotFoundRoute();
+				const route = new JsonFetchNodeRoute();
 
-				const endpoint = new JsonNotFoundEndpoint(request, response, route);
+				const endpoint = new JsonFetchNodeEndpoint(request, response, route);
 
 				endpoint.serve();
 			});
@@ -31,13 +31,17 @@ describe('JsonNotFoundEndpoint', () => {
 		});
 
 		it('returns expected response data', async () => {
-			const result = await fetchJson(`http://localhost:${port}`);
+			const url = `http://localhost:${port}/public/wizard/gandalf`;
+
+			const result = await fetchJson(url);
 
 			expect(result.body).toStrictEqual({
-				message: 'File not found',
+				namespace_key: 'public',
+				type_key: 'wizard',
+				key: 'gandalf',
 			});
 
-			expect(result.status_code).toStrictEqual(StatusCode.FILE_NOT_FOUND);
+			expect(result.status_code).toStrictEqual(StatusCode.SUCCESS);
 
 			expect(result.headers).toMatchObject({
 				[HttpHeader.CONTENT_TYPE]: ContentType.JSON,
