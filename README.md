@@ -75,7 +75,7 @@ cluster.
 import {FilesystemAdapter} from '@9db/server';
 
 const adapter = new FilesystemAdapter({
-	path: '/home/pachet/9db/cache'
+  path: '/home/pachet/9db/cache'
 });
 ```
 
@@ -88,8 +88,8 @@ to use for high-traffic sites.
 import {RedisAdapter} from '@9db/server';
 
 const adapter = new RedisAdapter({
-	hostname: 'localhost',
-	port: 6667
+  hostname: 'localhost',
+  port: 6667
 });
 ```
 
