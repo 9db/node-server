@@ -1,9 +1,10 @@
 import Server from 'server';
-import fetchString from 'utility/http/fetch-string';
+import StatusCode from 'http/enum/status-code';
 import MemoryAdapter from 'adapter/memory';
+import fetchPlaintext from 'http/utility/fetch-plaintext';
 
 describe('Server', () => {
-	describe('start()', () => {
+	describe('accepting requests', () => {
 		const port = 5823;
 
 		let server!: Server;
@@ -20,11 +21,23 @@ describe('Server', () => {
 			server.stop().then(done);
 		});
 
-		it('begins listening on the specified port', async () => {
-			const result = await fetchString(`http://localhost:${port}/version`);
-			const manifest = require('../../../package.json');
+		describe('when /version is requested', () => {
+			it('returns the expected data', async () => {
+				const result = await fetchPlaintext(`http://localhost:${port}/version`);
+				const manifest = require('../../../package.json');
 
-			expect(result).toStrictEqual(manifest.version);
+				expect(result.body).toStrictEqual(manifest.version);
+				expect(result.status_code).toStrictEqual(StatusCode.SUCCESS);
+			});
+		});
+
+		describe('when a nonexistent route is requested', () => {
+			it('returns a 404', async () => {
+				const result = await fetchPlaintext(`http://localhost:${port}/gandalf`);
+
+				expect(result.body).toStrictEqual('File not found');
+				expect(result.status_code).toStrictEqual(StatusCode.FILE_NOT_FOUND);
+			});
 		});
 	});
 

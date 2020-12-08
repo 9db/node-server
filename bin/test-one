@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+set -e
+
+RED='\033[0;31m'
+YELLOW='\033[0;33m'
+RESET='\033[0m'
+
+bin/compile-source-files
+
+FILE_TO_TEST=$1
+
+if [ -f "dist/$1.js" ]; then
+  TEST_FILEPATH="$FILE_TO_TEST.js"
+else
+  # If someone enters the path to the corresponding Typescript file for a test,
+  # we should map this to the associated JS file in the dist/test directory:
+  FILE_WITH_CORRECTED_EXTENSION=${FILE_TO_TEST/.ts/.js}
+
+  if [ -f "dist/$FILE_WITH_CORRECTED_EXTENSION" ]; then
+    TEST_FILEPATH=$FILE_WITH_CORRECTED_EXTENSION
+  fi
+fi
+
+# TODO: Check whether TEST_FILEPATH is empty, because that causes the entire
+# test suite to be executed.
+
+if [ -a "dist/$TEST_FILEPATH" ]; then
+  NODE_ENV=test ./node_modules/.bin/jest dist/$TEST_FILEPATH
+else
+  echo ""
+  echo -e "${RED}[ERROR]${RESET} No test file(s) found matching '$1'"
+  echo -e "${YELLOW}Example:${RESET} dev test test/unit/logger"
+  echo ""
+fi
