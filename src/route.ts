@@ -50,6 +50,10 @@ class Route implements RouteInterface {
 		endpoint.serve();
 	}
 
+	public getUrlParameter(url: string, parameter: string): string | undefined {
+		return 'foo';
+	}
+
 	protected matchesContentType(request: HTTP.IncomingMessage): boolean {
 		const content_types = getAcceptedContentTypes(request);
 

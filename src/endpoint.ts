@@ -46,12 +46,21 @@ abstract class Endpoint {
 		};
 	}
 
-	protected getUrlParameter(_parameter: string): string | undefined {
-		return 'foo';
+	protected getUrlParameter(parameter: string): string | undefined {
+		const url = this.getUrl();
+		const route = this.getRoute();
+
+		return route.getUrlParameter(url, parameter);
 	}
 
 	protected setStatusCode(status_code: StatusCode): void {
 		this.status_code = status_code;
+	}
+
+	private getUrl(): string {
+		const request = this.getRequest();
+
+		return request.url || '/';
 	}
 
 	private getStatusCode(): StatusCode {

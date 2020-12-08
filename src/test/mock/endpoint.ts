@@ -2,7 +2,7 @@ import Endpoint from 'endpoint';
 import HttpError from 'http/error';
 
 class MockEndpoint extends Endpoint {
-	protected process(): Promise<string> {
+	protected process(): Promise<string | Buffer | void> {
 		throw new Error('Not implemented');
 	}
 
