@@ -15,11 +15,13 @@ function buildRequest(headers: HeaderMap): HTTP.IncomingMessage {
 
 describe('getAcceptedContentTypes', () => {
 	describe('when no ACCEPT header is specified', () => {
-		it('returns an empty array', () => {
+		it('returns an array containing the JSON content type', () => {
 			const request = buildRequest({});
 			const content_types = getAcceptedContentTypes(request);
 
-			expect(content_types).toStrictEqual([]);
+			expect(content_types).toStrictEqual([
+				ContentType.JSON
+			]);
 		});
 	});
 

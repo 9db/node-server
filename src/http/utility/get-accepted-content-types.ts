@@ -10,7 +10,9 @@ function getAcceptedContentTypes(request: HTTP.IncomingMessage): ContentType[] {
 	const header_value = getHeaderValue(request, HttpHeader.ACCEPT);
 
 	if (header_value === undefined) {
-		return [];
+		return [
+			ContentType.JSON
+		];
 	}
 
 	const parts = header_value.split(';') as ContentType[];

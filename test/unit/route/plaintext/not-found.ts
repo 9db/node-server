@@ -38,8 +38,8 @@ describe('PlaintextNotFoundRoute', () => {
 				ContentType.JSON
 			);
 
-			it('returns false', () => {
-				expect(route.accepts(request)).toBe(false);
+			it('returns true', () => {
+				expect(route.accepts(request)).toBe(true);
 			});
 		});
 

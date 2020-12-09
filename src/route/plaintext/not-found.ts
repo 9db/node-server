@@ -9,8 +9,8 @@ class PlaintextNotFoundRoute extends PlaintextRoute {
 		super(HttpMethod.GET, '/404', PlaintextNotFoundEndpoint);
 	}
 
-	public accepts(request: HTTP.IncomingMessage): boolean {
-		return this.matchesContentType(request);
+	public accepts(_request: HTTP.IncomingMessage): boolean {
+		return true;
 	}
 }
 
