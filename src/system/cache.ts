@@ -13,7 +13,7 @@ const GENERATORS: GeneratorConstructor[] = [
 	NamespaceTypeGenerator,
 	SystemNamespaceGenerator,
 	SystemAccountGenerator,
-	AnonymousAccountGenerator
+	AnonymousAccountGenerator,
 ];
 
 interface NodeCache {

@@ -31,7 +31,7 @@ abstract class SystemNodeGenerator {
 		return this.buildUrlForKeys(namespace_key, type_key, node_key);
 	}
 
-	protected buildUrlForKeys(
+	private buildUrlForKeys(
 		namespace_key: string,
 		type_key: string,
 		node_key: string
@@ -41,13 +41,13 @@ abstract class SystemNodeGenerator {
 		return this.buildUrl(path);
 	}
 
-	protected buildUrl(path: string): string {
+	private buildUrl(path: string): string {
 		const hostname = this.getHostname();
 
 		return `${hostname}${path}`;
 	}
 
-	protected getHostname(): string {
+	private getHostname(): string {
 		return this.hostname;
 	}
 
