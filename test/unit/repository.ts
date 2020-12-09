@@ -1,3 +1,4 @@
+import SystemKey from 'system/enum/key';
 import Repository from 'repository';
 import NodeFactory from 'factory/node';
 import MemoryAdapter from 'adapter/memory';
@@ -54,6 +55,25 @@ describe('Repository', () => {
 				expect(actual_node).toStrictEqual({
 					...expected_node,
 					some_url: `${hostname}/foo/bar/baz`,
+				});
+			});
+		});
+
+		describe('when a system node is requested', () => {
+			it('returns the expected system node', async () => {
+				const node = await repository.fetchNode(
+					SystemKey.SYSTEM_NAMESPACE,
+					SystemKey.GENERIC_TYPE,
+					SystemKey.GENERIC_TYPE
+				);
+
+				expect(node).toStrictEqual({
+					namespace_key: SystemKey.SYSTEM_NAMESPACE,
+					type_key: SystemKey.GENERIC_TYPE,
+					key: SystemKey.GENERIC_TYPE,
+					creator: `${hostname}/system/account/system`,
+					created_at: 0,
+					updated_at: 0,
 				});
 			});
 		});

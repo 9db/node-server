@@ -1,5 +1,6 @@
 import Node from 'type/node';
 import Adapter from 'interface/adapter';
+import SystemCache from 'system/cache';
 import transformNode from 'repository/utility/transform-node';
 import transformValue from 'repository/utility/transform-value';
 import standardizeUrl from 'repository/utility/standardize-url';
@@ -9,10 +10,13 @@ import FieldValue, { PrimitiveValue } from 'type/field-value';
 class Repository implements Adapter {
 	private hostname: string;
 	private adapter: Adapter;
+	private system_cache: SystemCache;
 
 	public constructor(hostname: string, adapter: Adapter) {
 		this.hostname = hostname;
 		this.adapter = adapter;
+
+		this.system_cache = new SystemCache(hostname);
 	}
 
 	public async fetchNode(
@@ -20,6 +24,14 @@ class Repository implements Adapter {
 		type_key: string,
 		node_key: string
 	): Promise<Node | undefined> {
+		const system_node = this.fetchSystemNode(namespace_key, type_key, node_key);
+
+		if (system_node !== undefined) {
+			// NOTE: No transformation happens on system nodes, for performance
+			// reasons. They are generated upfront to use the correct hostname.
+			return Promise.resolve(system_node);
+		}
+
 		const adapter = this.getAdapter();
 		const node = await adapter.fetchNode(namespace_key, type_key, node_key);
 
@@ -148,6 +160,16 @@ class Repository implements Adapter {
 		return this.unstandardizeNode(node);
 	}
 
+	private fetchSystemNode(
+		namespace_key: string,
+		type_key: string,
+		node_key: string
+	): Node | undefined {
+		const system_cache = this.getSystemCache();
+
+		return system_cache.fetchNode(namespace_key, type_key, node_key);
+	}
+
 	private standardizeNode(node: Node): Node {
 		const hostname = this.getHostname();
 
@@ -178,6 +200,10 @@ class Repository implements Adapter {
 
 	private getAdapter(): Adapter {
 		return this.adapter;
+	}
+
+	private getSystemCache(): SystemCache {
+		return this.system_cache;
 	}
 }
 
