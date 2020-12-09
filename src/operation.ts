@@ -23,6 +23,10 @@ abstract class Operation<T> {
 		return this.adapter;
 	}
 
+	protected async loadAccountUrl(): Promise<string> {
+		return Promise.resolve('http://localhost/system/account/anonymous');
+	}
+
 	private logFailure(error: Error): void {
 		console.error(error);
 	}

@@ -19,9 +19,7 @@ describe('getAcceptedContentTypes', () => {
 			const request = buildRequest({});
 			const content_types = getAcceptedContentTypes(request);
 
-			expect(content_types).toStrictEqual([
-				ContentType.JSON
-			]);
+			expect(content_types).toStrictEqual([ContentType.JSON]);
 		});
 	});
 

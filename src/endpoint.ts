@@ -5,18 +5,21 @@ import Adapter from 'interface/adapter';
 import HttpError from 'http/error';
 import HeaderMap from 'http/type/header-map';
 import HttpHeader from 'http/enum/header';
+import HttpMethod from 'http/enum/method';
+import BodyParser from 'server/body-parser';
 import JsonObject from 'http/type/json-object';
 import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import ServerError from 'http/error/server-error';
 import BadRequestError from 'http/error/bad-request';
 
-abstract class Endpoint {
+abstract class Endpoint<T> {
 	private request: HTTP.IncomingMessage;
 	private response: HTTP.ServerResponse;
 	private route: Route;
 	private adapter: Adapter;
 	private status_code: StatusCode;
+	private request_body: T | undefined;
 
 	public constructor(
 		request: HTTP.IncomingMessage,
@@ -28,11 +31,12 @@ abstract class Endpoint {
 		this.response = response;
 		this.route = route;
 		this.adapter = adapter;
-		this.status_code = StatusCode.SUCCESS;
+		this.status_code = route.getSuccessfulStatusCode();
 	}
 
 	public serve(): void {
-		this.process()
+		this.parseBody()
+			.then(this.process.bind(this))
 			.then(this.handleResult.bind(this))
 			.catch(this.handleError.bind(this));
 	}
@@ -69,6 +73,31 @@ abstract class Endpoint {
 
 	protected getAdapter(): Adapter {
 		return this.adapter;
+	}
+
+	protected getRequestBody(): T {
+		if (this.request_body === undefined) {
+			throw new Error('Tried to read request body, but it was not set');
+		}
+
+		return this.request_body;
+	}
+
+	private async parseBody(): Promise<void> {
+		if (this.hasUnparsableMethod()) {
+			return Promise.resolve();
+		}
+
+		const body_parser = this.getBodyParser();
+
+		this.request_body = await body_parser.parse();
+	}
+
+	private hasUnparsableMethod(): boolean {
+		const route = this.getRoute();
+		const method = route.getMethod();
+
+		return method === HttpMethod.GET || method === HttpMethod.OPTIONS;
 	}
 
 	private getUrl(): string {
@@ -135,6 +164,7 @@ abstract class Endpoint {
 	}
 
 	protected abstract process(): Promise<string | Buffer | JsonObject | void>;
+	protected abstract getBodyParser(): BodyParser<T>;
 	protected abstract serializeError(
 		error: HttpError
 	): string | Buffer | JsonObject;

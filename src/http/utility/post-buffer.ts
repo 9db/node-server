@@ -10,11 +10,12 @@ interface ResponseData {
 	status_code: StatusCode;
 }
 
-function fetchBuffer(
+function postBuffer(
 	url: string,
-	content_type: ContentType
+	content_type: ContentType,
+	data: Buffer
 ): Promise<ResponseData> {
-	return transmit(url, HttpMethod.GET, content_type, Buffer.from(''));
+	return transmit(url, HttpMethod.POST, content_type, data);
 }
 
-export default fetchBuffer;
+export default postBuffer;
