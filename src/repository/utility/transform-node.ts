@@ -21,8 +21,10 @@ function transformNode(
 			case 'namespace_key':
 			case 'type_key':
 			case 'key':
+			case 'created_at':
+			case 'updated_at':
 				result[key] = value;
-				break;
+				return;
 		}
 
 		const transformed_value = transformValue(value, hostname, transformer);
