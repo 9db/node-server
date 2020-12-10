@@ -33,6 +33,10 @@ describe('Endpoint', () => {
 				protected process(): Promise<Buffer> {
 					return Promise.resolve(result);
 				}
+
+				protected getContentType(): ContentType {
+					return ContentType.TEXT;
+				}
 			}
 
 			const route = new Route(
@@ -92,6 +96,10 @@ describe('Endpoint', () => {
 				protected process(): Promise<string> {
 					return Promise.resolve(result);
 				}
+
+				protected getContentType(): ContentType {
+					return ContentType.TEXT;
+				}
 			}
 
 			const route = new Route(
@@ -149,6 +157,10 @@ describe('Endpoint', () => {
 			class ThrowawayEndpoint extends MockEndpoint {
 				protected process(): Promise<void> {
 					return Promise.resolve();
+				}
+
+				protected getContentType(): ContentType {
+					return ContentType.TEXT;
 				}
 			}
 
@@ -211,6 +223,10 @@ describe('Endpoint', () => {
 						return Promise.reject(expected_error);
 					}
 
+					protected getContentType(): ContentType {
+						return ContentType.TEXT;
+					}
+
 					protected serializeError(error: HttpError): string {
 						expect(error).toStrictEqual(expected_error);
 
@@ -250,6 +266,10 @@ describe('Endpoint', () => {
 							const error = new Error('A weird thing happened');
 
 							return Promise.reject(error);
+						}
+
+						protected getContentType(): ContentType {
+							return ContentType.TEXT;
 						}
 
 						protected serializeError(error: HttpError): string {
@@ -360,6 +380,10 @@ describe('Endpoint', () => {
 			class ThrowawayEndpoint extends MockEndpoint {
 				public privilegedGetResponseHeaders(): HeaderMap {
 					return this.getResponseHeaders();
+				}
+
+				protected getContentType(): ContentType {
+					return ContentType.JSON;
 				}
 			}
 

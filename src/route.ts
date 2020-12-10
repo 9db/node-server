@@ -52,10 +52,6 @@ class Route implements RouteInterface {
 		return this.matchesContentType(request);
 	}
 
-	public getContentType(): ContentType {
-		return this.content_type;
-	}
-
 	public serve(
 		request: HTTP.IncomingMessage,
 		response: HTTP.ServerResponse,

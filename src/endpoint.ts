@@ -154,18 +154,13 @@ abstract class Endpoint<T> {
 		return this.handleResult(serialized_error);
 	}
 
-	private getContentType(): ContentType {
-		const route = this.getRoute();
-
-		return route.getContentType();
-	}
-
 	private getRoute(): Route {
 		return this.route;
 	}
 
 	protected abstract process(): Promise<string | Buffer | JsonObject | void>;
 	protected abstract getBodyParser(): BodyParser<T>;
+	protected abstract getContentType(): ContentType;
 	protected abstract serializeError(
 		error: HttpError
 	): string | Buffer | JsonObject;
