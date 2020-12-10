@@ -4,13 +4,11 @@ import Repository from 'repository';
 import HttpMethod from 'http/enum/method';
 import PathParser from 'route/utility/path-parser';
 import ContentType from 'http/enum/content-type';
+import UrlParameters from 'http/type/url-parameters';
 import RouteInterface from 'interface/route';
 import EndpointConstructor from 'interface/endpoint-constructor';
 import getAcceptedContentTypes from 'http/utility/get-accepted-content-types';
 
-interface ParameterMap {
-	[key: string]: string;
-}
 
 class Route implements RouteInterface {
 	private content_type: ContentType;
@@ -75,10 +73,10 @@ class Route implements RouteInterface {
 		return content_types.includes(this.content_type);
 	}
 
-	private getParametersForUrl(url: string): ParameterMap {
+	private getParametersForUrl(url: string): UrlParameters {
 		const regex = this.getRegex();
 		const match = url.match(regex);
-		const result: ParameterMap = {};
+		const result: UrlParameters = {};
 
 		if (match === null) {
 			return result;
