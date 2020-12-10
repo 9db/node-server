@@ -4,6 +4,7 @@ import Route from 'route';
 import sleep from 'utility/sleep';
 import HttpError from 'http/error';
 import HeaderMap from 'http/type/header-map';
+import Repository from 'repository';
 import HttpHeader from 'http/enum/header';
 import HttpMethod from 'http/enum/method';
 import StatusCode from 'http/enum/status-code';
@@ -17,6 +18,13 @@ import buildMockRequest from 'test/utility/build-mock-request';
 import buildMockResponse from 'test/utility/build-mock-response';
 
 describe('Endpoint', () => {
+	function createRepository(): Repository {
+		const hostname = 'https://9db.org';
+		const adapter = new MemoryAdapter();
+
+		return new Repository(hostname, adapter);
+	}
+
 	describe('serve()', () => {
 		describe('when process() method returns a buffer', () => {
 			const result = Buffer.from('speak friend and enter');
@@ -38,12 +46,13 @@ describe('Endpoint', () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
 				const write_head_spy = jest.spyOn(response, 'writeHead');
+				const repository = createRepository();
 
 				const endpoint = new ThrowawayEndpoint(
 					request,
 					response,
 					route,
-					new MemoryAdapter()
+					repository
 				);
 
 				endpoint.serve();
@@ -59,12 +68,13 @@ describe('Endpoint', () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
 				const end_spy = jest.spyOn(response, 'end');
+				const repository = createRepository();
 
 				const endpoint = new ThrowawayEndpoint(
 					request,
 					response,
 					route,
-					new MemoryAdapter()
+					repository
 				);
 
 				endpoint.serve();
@@ -95,11 +105,13 @@ describe('Endpoint', () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
 				const write_head_spy = jest.spyOn(response, 'writeHead');
+				const repository = createRepository();
+
 				const endpoint = new ThrowawayEndpoint(
 					request,
 					response,
 					route,
-					new MemoryAdapter()
+					repository
 				);
 
 				endpoint.serve();
@@ -116,12 +128,13 @@ describe('Endpoint', () => {
 				const response = buildMockResponse();
 				const end_spy = jest.spyOn(response, 'end');
 				const expected_buffer = Buffer.from(result);
+				const repository = createRepository();
 
 				const endpoint = new ThrowawayEndpoint(
 					request,
 					response,
 					route,
-					new MemoryAdapter()
+					repository
 				);
 
 				endpoint.serve();
@@ -150,12 +163,13 @@ describe('Endpoint', () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
 				const write_head_spy = jest.spyOn(response, 'writeHead');
+				const repository = createRepository();
 
 				const endpoint = new ThrowawayEndpoint(
 					request,
 					response,
 					route,
-					new MemoryAdapter()
+					repository
 				);
 
 				endpoint.serve();
@@ -169,12 +183,13 @@ describe('Endpoint', () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
 				const end_spy = jest.spyOn(response, 'end');
+				const repository = createRepository();
 
 				const endpoint = new ThrowawayEndpoint(
 					request,
 					response,
 					route,
-					new MemoryAdapter()
+					repository
 				);
 
 				endpoint.serve();
@@ -212,12 +227,13 @@ describe('Endpoint', () => {
 
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
+				const repository = createRepository();
 
 				const endpoint = new ThrowawayEndpoint(
 					request,
 					response,
 					route,
-					new MemoryAdapter()
+					repository
 				);
 
 				endpoint.serve();
@@ -258,12 +274,13 @@ describe('Endpoint', () => {
 					);
 
 					const response = buildMockResponse();
+					const repository = createRepository();
 
 					const endpoint = new ThrowawayEndpoint(
 						request,
 						response,
 						route,
-						new MemoryAdapter()
+						repository
 					);
 
 					endpoint.serve();
@@ -291,12 +308,13 @@ describe('Endpoint', () => {
 
 			const request = buildMockRequest('/x', HttpMethod.GET, ContentType.JSON);
 			const response = buildMockResponse();
+			const repository = createRepository();
 
 			const endpoint = new ThrowawayEndpoint(
 				request,
 				response,
 				route,
-				new MemoryAdapter()
+				repository
 			);
 
 			const actual_request = endpoint.privilegedGetRequest();
@@ -322,12 +340,13 @@ describe('Endpoint', () => {
 
 			const request = buildMockRequest('/x', HttpMethod.GET, ContentType.JSON);
 			const response = buildMockResponse();
+			const repository = createRepository();
 
 			const endpoint = new ThrowawayEndpoint(
 				request,
 				response,
 				route,
-				new MemoryAdapter()
+				repository
 			);
 
 			const actual_response = endpoint.privilegedGetResponse();
@@ -353,12 +372,13 @@ describe('Endpoint', () => {
 
 			const request = buildMockRequest('/x', HttpMethod.GET, ContentType.JSON);
 			const response = buildMockResponse();
+			const repository = createRepository();
 
 			const endpoint = new ThrowawayEndpoint(
 				request,
 				response,
 				route,
-				new MemoryAdapter()
+				repository
 			);
 
 			const headers = endpoint.privilegedGetResponseHeaders();
@@ -390,11 +410,13 @@ describe('Endpoint', () => {
 		);
 
 		const response = buildMockResponse();
+		const repository = createRepository();
+
 		const endpoint = new ThrowawayEndpoint(
 			request,
 			response,
 			route,
-			new MemoryAdapter()
+			repository
 		);
 
 		it('delegates to the supplied route', () => {

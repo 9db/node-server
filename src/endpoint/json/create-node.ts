@@ -16,8 +16,8 @@ class JsonCreateNodeEndpoint extends JsonEndpoint {
 			key,
 		};
 
-		const adapter = this.getAdapter();
-		const operation = new CreateNodeOperation(adapter, input);
+		const repository = this.getRepository();
+		const operation = new CreateNodeOperation(repository, input);
 
 		return operation.perform();
 	}

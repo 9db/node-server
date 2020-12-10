@@ -1,6 +1,6 @@
 import Node from 'type/node';
-import Adapter from 'interface/adapter';
 import Operation from 'operation';
+import Repository from 'repository';
 import NotFoundError from 'http/error/not-found';
 
 interface Input {
@@ -12,17 +12,17 @@ interface Input {
 class FetchNodeOperation extends Operation<Node> {
 	private input: Input;
 
-	public constructor(adapter: Adapter, input: Input) {
-		super(adapter);
+	public constructor(repository: Repository, input: Input) {
+		super(repository);
 
 		this.input = input;
 	}
 
 	protected async performInternal(): Promise<Node> {
 		const input = this.getInput();
-		const adapter = this.getAdapter();
+		const repository = this.getRepository();
 
-		const node = await adapter.fetchNode(
+		const node = await repository.fetchNode(
 			input.namespace_key,
 			input.type_key,
 			input.key

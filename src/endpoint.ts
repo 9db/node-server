@@ -1,9 +1,9 @@
 import HTTP from 'http';
 
 import Route from 'interface/route';
-import Adapter from 'interface/adapter';
 import HttpError from 'http/error';
 import HeaderMap from 'http/type/header-map';
+import Repository from 'repository';
 import HttpHeader from 'http/enum/header';
 import HttpMethod from 'http/enum/method';
 import BodyParser from 'server/body-parser';
@@ -17,7 +17,7 @@ abstract class Endpoint<T> {
 	private request: HTTP.IncomingMessage;
 	private response: HTTP.ServerResponse;
 	private route: Route;
-	private adapter: Adapter;
+	private repository: Repository;
 	private status_code: StatusCode;
 	private request_body: T | undefined;
 
@@ -25,12 +25,12 @@ abstract class Endpoint<T> {
 		request: HTTP.IncomingMessage,
 		response: HTTP.ServerResponse,
 		route: Route,
-		adapter: Adapter
+		repository: Repository
 	) {
 		this.request = request;
 		this.response = response;
 		this.route = route;
-		this.adapter = adapter;
+		this.repository = repository;
 		this.status_code = route.getSuccessfulStatusCode();
 	}
 
@@ -71,8 +71,8 @@ abstract class Endpoint<T> {
 		this.status_code = status_code;
 	}
 
-	protected getAdapter(): Adapter {
-		return this.adapter;
+	protected getRepository(): Repository {
+		return this.repository;
 	}
 
 	protected getRequestBody(): T {

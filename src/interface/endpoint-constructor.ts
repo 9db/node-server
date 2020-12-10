@@ -1,7 +1,7 @@
 import HTTP from 'http';
 
-import Adapter from 'interface/adapter';
 import Endpoint from 'endpoint';
+import Repository from 'repository';
 import JsonObject from 'http/type/json-object';
 import RouteInterface from 'interface/route';
 
@@ -10,7 +10,7 @@ interface EndpointConstructor {
 		request: HTTP.IncomingMessage,
 		response: HTTP.ServerResponse,
 		route: RouteInterface,
-		adapter: Adapter
+		repository: Repository
 	): Endpoint<string | JsonObject>;
 }
 

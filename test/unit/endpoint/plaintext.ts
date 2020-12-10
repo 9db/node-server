@@ -1,5 +1,6 @@
 import HTTP from 'http';
 
+import Repository from 'repository';
 import HttpHeader from 'http/enum/header';
 import HttpMethod from 'http/enum/method';
 import StatusCode from 'http/enum/status-code';
@@ -11,6 +12,13 @@ import fetchPlaintext from 'http/utility/fetch-plaintext';
 import PlaintextEndpoint from 'endpoint/plaintext';
 
 describe('PlaintextEndpoint', () => {
+	function createRepository(): Repository {
+		const hostname = 'https://9db.org';
+		const adapter = new MemoryAdapter();
+
+		return new Repository(hostname, adapter);
+	}
+
 	describe('process()', () => {
 		class MockEndpoint extends PlaintextEndpoint {
 			protected async process(): Promise<string> {
@@ -22,11 +30,13 @@ describe('PlaintextEndpoint', () => {
 
 		it('returns expected response data', async () => {
 			const server = HTTP.createServer((request, response) => {
+				const repository = createRepository();
+
 				const endpoint = new MockEndpoint(
 					request,
 					response,
 					route,
-					new MemoryAdapter()
+					repository
 				);
 
 				endpoint.serve();
@@ -61,11 +71,13 @@ describe('PlaintextEndpoint', () => {
 
 		it('returns expected plaintext error', async () => {
 			const server = HTTP.createServer((request, response) => {
+				const repository = createRepository();
+
 				const endpoint = new MockEndpoint(
 					request,
 					response,
 					route,
-					new MemoryAdapter()
+					repository
 				);
 
 				endpoint.serve();

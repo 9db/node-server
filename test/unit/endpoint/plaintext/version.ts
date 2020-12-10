@@ -1,5 +1,6 @@
 import HTTP from 'http';
 
+import Repository from 'repository';
 import HttpHeader from 'http/enum/header';
 import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
@@ -12,18 +13,21 @@ import PlaintextVersionEndpoint from 'endpoint/plaintext/version';
 describe('PlaintextVersionEndpoint', () => {
 	describe('process()', () => {
 		const port = 4482;
+		const hostname = 'https://9db.org';
 
 		let server!: HTTP.Server;
 
 		beforeEach(() => {
 			server = HTTP.createServer((request, response) => {
 				const route = new PlaintextVersionRoute();
+				const adapter = new MemoryAdapter();
+				const repository = new Repository(hostname, adapter);
 
 				const endpoint = new PlaintextVersionEndpoint(
 					request,
 					response,
 					route,
-					new MemoryAdapter()
+					repository
 				);
 
 				endpoint.serve();

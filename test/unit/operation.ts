@@ -1,8 +1,15 @@
-import Adapter from 'interface/adapter';
 import Operation from 'operation';
+import Repository from 'repository';
 import MemoryAdapter from 'adapter/memory';
 
 describe('Operation', () => {
+	function createRepository(): Repository {
+		const hostname = 'https://9db.org';
+		const adapter = new MemoryAdapter();
+
+		return new Repository(hostname, adapter);
+	}
+
 	describe('perform()', () => {
 		describe('when performInternal() succeeds', () => {
 			class MockOperation extends Operation<string> {
@@ -12,8 +19,8 @@ describe('Operation', () => {
 			}
 
 			it('returns the expected result', async () => {
-				const adapter = new MemoryAdapter();
-				const operation = new MockOperation(adapter);
+				const repository = createRepository();
+				const operation = new MockOperation(repository);
 				const result = await operation.perform();
 
 				expect(result).toStrictEqual('speak friend and enter');
@@ -32,8 +39,8 @@ describe('Operation', () => {
 			it('logs and returns the exception', async () => {
 				expect.assertions(2);
 
-				const adapter = new MemoryAdapter();
-				const operation = new MockOperation(adapter);
+				const repository = createRepository();
+				const operation = new MockOperation(repository);
 				const spy = jest.spyOn(console, 'error');
 
 				spy.mockImplementation(() => {
@@ -64,8 +71,8 @@ describe('Operation', () => {
 			it('logs and returns the exception', async () => {
 				expect.assertions(2);
 
-				const adapter = new MemoryAdapter();
-				const operation = new MockOperation(adapter);
+				const repository = createRepository();
+				const operation = new MockOperation(repository);
 				const spy = jest.spyOn(console, 'error');
 
 				spy.mockImplementation(() => {
@@ -85,11 +92,11 @@ describe('Operation', () => {
 		});
 	});
 
-	describe('getAdapter()', () => {
-		it('returns the supplied adapter', () => {
+	describe('getRepository()', () => {
+		it('returns the supplied repository', () => {
 			class MockOperation extends Operation<void> {
-				public privilegedGetAdapter(): Adapter {
-					return this.getAdapter();
+				public privilegedGetRepository(): Repository {
+					return this.getRepository();
 				}
 
 				protected performInternal(): Promise<void> {
@@ -97,11 +104,11 @@ describe('Operation', () => {
 				}
 			}
 
-			const adapter = new MemoryAdapter();
-			const operation = new MockOperation(adapter);
-			const result = operation.privilegedGetAdapter();
+			const repository = createRepository();
+			const operation = new MockOperation(repository);
+			const result = operation.privilegedGetRepository();
 
-			expect(result).toStrictEqual(adapter);
+			expect(result).toStrictEqual(repository);
 		});
 	});
 });

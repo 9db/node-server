@@ -1,6 +1,7 @@
 import HTTP from 'http';
 
 import fetchJson from 'http/utility/fetch-json';
+import Repository from 'repository';
 import HttpHeader from 'http/enum/header';
 import StatusCode from 'http/enum/status-code';
 import NodeFactory from 'factory/node';
@@ -13,12 +14,15 @@ import JsonFetchNodeEndpoint from 'endpoint/json/fetch-node';
 describe('JsonFetchNodeEndpoint', () => {
 	describe('process()', () => {
 		const port = 4482;
+		const hostname = 'https://9db.org';
 
 		let server!: HTTP.Server;
-		let adapter!: MemoryAdapter;
+		let repository!: Repository;
 
 		beforeEach(() => {
-			adapter = new MemoryAdapter();
+			const adapter = new MemoryAdapter();
+
+			repository = new Repository(hostname, adapter);
 
 			server = HTTP.createServer((request, response) => {
 				const route = new JsonFetchNodeRoute();
@@ -27,7 +31,7 @@ describe('JsonFetchNodeEndpoint', () => {
 					request,
 					response,
 					route,
-					adapter
+					repository
 				);
 
 				endpoint.serve();
@@ -48,7 +52,7 @@ describe('JsonFetchNodeEndpoint', () => {
 					key: 'gandalf',
 				});
 
-				await adapter.storeNode(node);
+				await repository.storeNode(node);
 
 				const url = `http://localhost:${port}/public/wizard/gandalf`;
 				const result = await fetchJson(url);

@@ -1,6 +1,7 @@
 import HTTP from 'http';
 
 import fetchJson from 'http/utility/fetch-json';
+import Repository from 'repository';
 import HttpHeader from 'http/enum/header';
 import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
@@ -12,18 +13,21 @@ import JsonNotFoundEndpoint from 'endpoint/json/not-found';
 describe('JsonNotFoundEndpoint', () => {
 	describe('process()', () => {
 		const port = 4482;
+		const hostname = 'https://9db.org';
 
 		let server!: HTTP.Server;
 
 		beforeEach(() => {
 			server = HTTP.createServer((request, response) => {
 				const route = new JsonNotFoundRoute();
+				const adapter = new MemoryAdapter();
+				const repository = new Repository(hostname, adapter);
 
 				const endpoint = new JsonNotFoundEndpoint(
 					request,
 					response,
 					route,
-					new MemoryAdapter()
+					repository
 				);
 
 				endpoint.serve();

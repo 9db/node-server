@@ -1,6 +1,6 @@
 import HTTP from 'http';
 
-import Adapter from 'interface/adapter';
+import Repository from 'repository';
 import HttpMethod from 'http/enum/method';
 import PathParser from 'route/utility/path-parser';
 import StatusCode from 'http/enum/status-code';
@@ -74,10 +74,10 @@ class Route implements RouteInterface {
 	public serve(
 		request: HTTP.IncomingMessage,
 		response: HTTP.ServerResponse,
-		adapter: Adapter
+		repository: Repository
 	): void {
 		const Constructor = this.getEndpointConstructor();
-		const endpoint = new Constructor(request, response, this, adapter);
+		const endpoint = new Constructor(request, response, this, repository);
 
 		endpoint.serve();
 	}

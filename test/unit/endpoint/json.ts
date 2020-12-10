@@ -2,6 +2,7 @@ import HTTP from 'http';
 
 import JsonRoute from 'route/json';
 import fetchJson from 'http/utility/fetch-json';
+import Repository from 'repository';
 import HttpHeader from 'http/enum/header';
 import HttpMethod from 'http/enum/method';
 import StatusCode from 'http/enum/status-code';
@@ -12,6 +13,13 @@ import JsonEndpoint from 'endpoint/json';
 import MemoryAdapter from 'adapter/memory';
 
 describe('JsonEndpoint', () => {
+	function createRepository(): Repository {
+		const hostname = 'https://9db.org';
+		const adapter = new MemoryAdapter();
+
+		return new Repository(hostname, adapter);
+	}
+
 	describe('process()', () => {
 		class MockEndpoint extends JsonEndpoint {
 			protected process(): Promise<JsonObject> {
@@ -27,11 +35,13 @@ describe('JsonEndpoint', () => {
 
 		it('returns expected response data', async () => {
 			const server = HTTP.createServer((request, response) => {
+				const repository = createRepository();
+
 				const endpoint = new MockEndpoint(
 					request,
 					response,
 					route,
-					new MemoryAdapter()
+					repository
 				);
 
 				endpoint.serve();
@@ -68,11 +78,13 @@ describe('JsonEndpoint', () => {
 
 		it('returns expected JSON error', async () => {
 			const server = HTTP.createServer((request, response) => {
+				const repository = createRepository();
+
 				const endpoint = new MockEndpoint(
 					request,
 					response,
 					route,
-					new MemoryAdapter()
+					repository
 				);
 
 				endpoint.serve();

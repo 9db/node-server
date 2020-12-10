@@ -2,6 +2,7 @@ import HTTP from 'http';
 
 import postJson from 'http/utility/post-json';
 import SystemKey from 'system/enum/key';
+import Repository from 'repository';
 import HttpHeader from 'http/enum/header';
 import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
@@ -16,7 +17,7 @@ describe('JsonCreateNodeEndpoint', () => {
 	const current_timestamp = Date.now();
 
 	let date_spy!: jest.SpyInstance;
-	let adapter!: MemoryAdapter;
+	let repository!: Repository;
 	let server!: HTTP.Server;
 
 	beforeEach(() => {
@@ -25,7 +26,9 @@ describe('JsonCreateNodeEndpoint', () => {
 			return current_timestamp;
 		});
 
-		adapter = new MemoryAdapter();
+		const adapter = new MemoryAdapter();
+
+		repository = new Repository(hostname, adapter);
 
 		server = HTTP.createServer((request, response) => {
 			const route = new JsonCreateNodeRoute();
@@ -34,7 +37,7 @@ describe('JsonCreateNodeEndpoint', () => {
 				request,
 				response,
 				route,
-				adapter
+				repository
 			);
 
 			endpoint.serve();
@@ -85,7 +88,7 @@ describe('JsonCreateNodeEndpoint', () => {
 			expect(result.status_code).toStrictEqual(StatusCode.CREATED);
 		});
 
-		it('persists the node to the adapter', async () => {
+		it('persists the node to the repository', async () => {
 			const data = {
 				name: `${hostname}/system/type/string`,
 				age: `${hostname}/system/type/number`,
@@ -95,7 +98,7 @@ describe('JsonCreateNodeEndpoint', () => {
 
 			await postJson(url, data);
 
-			const persisted_node = await adapter.fetchNode(
+			const persisted_node = await repository.fetchNode(
 				'public',
 				'type',
 				'wizard'

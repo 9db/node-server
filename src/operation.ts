@@ -1,10 +1,10 @@
-import Adapter from 'interface/adapter';
+import Repository from 'repository';
 
 abstract class Operation<T> {
-	private adapter: Adapter;
+	private repository: Repository;
 
-	public constructor(adapter: Adapter) {
-		this.adapter = adapter;
+	public constructor(repository: Repository) {
+		this.repository = repository;
 	}
 
 	public async perform(): Promise<T> {
@@ -19,8 +19,8 @@ abstract class Operation<T> {
 		}
 	}
 
-	protected getAdapter(): Adapter {
-		return this.adapter;
+	protected getRepository(): Repository {
+		return this.repository;
 	}
 
 	protected async loadAccountUrl(): Promise<string> {

@@ -1,6 +1,6 @@
 import HTTP from 'http';
 
-import Adapter from 'interface/adapter';
+import Repository from 'repository';
 import HttpMethod from 'http/enum/method';
 import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
@@ -11,7 +11,7 @@ interface Route {
 	serve(
 		request: HTTP.IncomingMessage,
 		response: HTTP.ServerResponse,
-		adapter: Adapter
+		repository: Repository
 	): void;
 
 	getContentType(): ContentType;

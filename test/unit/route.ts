@@ -1,7 +1,7 @@
 import HTTP from 'http';
 
 import Route from 'route';
-import Adapter from 'interface/adapter';
+import Repository from 'repository';
 import HttpMethod from 'http/enum/method';
 import ContentType from 'http/enum/content-type';
 import MockEndpoint from 'test/mock/endpoint';
@@ -121,25 +121,27 @@ describe('Route', () => {
 
 			const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 			const response = buildMockResponse();
+			const hostname = 'https://9db.org';
 			const adapter = new MemoryAdapter();
+			const repository = new Repository(hostname, adapter);
 
 			class ThrowawayEndpoint extends MockEndpoint {
 				public constructor(
 					supplied_request: HTTP.IncomingMessage,
 					supplied_response: HTTP.ServerResponse,
 					supplied_route: RouteInterface,
-					supplied_adapter: Adapter
+					supplied_repository: Repository
 				) {
 					expect(supplied_request).toStrictEqual(request);
 					expect(supplied_response).toStrictEqual(response);
 					expect(supplied_route).toStrictEqual(route);
-					expect(supplied_adapter).toStrictEqual(adapter);
+					expect(supplied_repository).toStrictEqual(repository);
 
 					super(
 						supplied_request,
 						supplied_response,
 						supplied_route,
-						supplied_adapter
+						supplied_repository
 					);
 				}
 			}
@@ -157,7 +159,7 @@ describe('Route', () => {
 				return undefined;
 			});
 
-			route.serve(request, response, adapter);
+			route.serve(request, response, repository);
 
 			expect(serve_spy).toHaveBeenCalled();
 		});

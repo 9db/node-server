@@ -1,6 +1,6 @@
 import Node from 'type/node';
-import Adapter from 'interface/adapter';
 import Operation from 'operation';
+import Repository from 'repository';
 import FieldValue from 'type/field-value';
 
 interface Input {
@@ -13,17 +13,17 @@ interface Input {
 class CreateNodeOperation extends Operation<Node> {
 	private input: Input;
 
-	public constructor(adapter: Adapter, input: Input) {
-		super(adapter);
+	public constructor(repository: Repository, input: Input) {
+		super(repository);
 
 		this.input = input;
 	}
 
 	protected async performInternal(): Promise<Node> {
 		const node = await this.buildNode();
-		const adapter = this.getAdapter();
+		const repository = this.getRepository();
 
-		return adapter.storeNode(node);
+		return repository.storeNode(node);
 	}
 
 	private async buildNode(): Promise<Node> {

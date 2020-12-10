@@ -1,3 +1,4 @@
+import Repository from 'repository';
 import NodeFactory from 'factory/node';
 import MemoryAdapter from 'adapter/memory';
 import NotFoundError from 'http/error/not-found';
@@ -10,17 +11,24 @@ describe('FetchNodeOperation', () => {
 		key: 'gandalf',
 	};
 
+	function createRepository(): Repository {
+		const hostname = 'https://9db.org';
+		const adapter = new MemoryAdapter();
+
+		return new Repository(hostname, adapter);
+	}
+
 	describe('when specified node exists', () => {
 		it('returns expected node', async () => {
-			const adapter = new MemoryAdapter();
+			const repository = createRepository();
 
 			const node = NodeFactory.create({
 				...input,
 			});
 
-			await adapter.storeNode(node);
+			await repository.storeNode(node);
 
-			const operation = new FetchNodeOperation(adapter, input);
+			const operation = new FetchNodeOperation(repository, input);
 			const result = await operation.perform();
 
 			expect(result).toStrictEqual(node);
@@ -31,8 +39,8 @@ describe('FetchNodeOperation', () => {
 		it('returns an exception', async () => {
 			expect.assertions(1);
 
-			const adapter = new MemoryAdapter();
-			const operation = new FetchNodeOperation(adapter, input);
+			const repository = createRepository();
+			const operation = new FetchNodeOperation(repository, input);
 
 			try {
 				await operation.perform();
