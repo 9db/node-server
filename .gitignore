@@ -4,3 +4,4 @@ temp/*
 npm-debug.log
 *.sw*
 .nyc_output/*
+coverage/*

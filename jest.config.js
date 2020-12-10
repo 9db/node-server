@@ -1,11 +1,25 @@
 module.exports = {
 	clearMocks: true,
-	coverageDirectory: "coverage",
+	collectCoverage: true,
+	coverageDirectory: 'coverage',
+	coverageThreshold: {
+		global: {
+			statements: 100,
+			branches: 100,
+			functions: 100,
+			lines: 100
+		},
+	},
+	modulePaths: ['<rootDir>/src', 'node_modules'],
+	moduleFileExtensions: ['js', 'ts'],
 	roots: [
-		"dist/test"
+		'test'
 	],
-	testEnvironment: "node",
+	transform: {
+		'^.+\\.tsx?$': 'ts-jest'
+	},
+	testEnvironment: 'node',
 	testMatch: [
-		"**/*.js"
+		'**/test/**/*.ts'
 	]
 };

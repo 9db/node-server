@@ -40,10 +40,8 @@ describe('PlaintextVersionEndpoint', () => {
 
 		it('returns expected response data', async () => {
 			const result = await fetchPlaintext(`http://localhost:${port}`);
-			// eslint-disable-next-line @typescript-eslint/no-var-requires
-			const manifest = require('../../../../../package.json');
 
-			expect(result.body).toStrictEqual(manifest.version);
+			expect(result.body).toStrictEqual('0.0.1');
 			expect(result.status_code).toStrictEqual(StatusCode.SUCCESS);
 
 			expect(result.headers).toMatchObject({

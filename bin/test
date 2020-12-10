@@ -7,6 +7,4 @@
 
 set -e
 
-bin/compile-source-files --verify || bin/compile-source-files
-
-NODE_ENV=test ./node_modules/.bin/jest --runInBand
+NODE_ENV=test ./node_modules/.bin/jest --runInBand --coverage

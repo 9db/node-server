@@ -5,3 +5,4 @@
 - [ ] Move body parsing to `Route`
 - [ ] Reverse order of arguments to `buildMockRequest`
 - [ ] Consolidate HTTP transmit helpers into `transmit` and `transmitJson`
+- [ ] Reenable reading version endpoint response from package.json
