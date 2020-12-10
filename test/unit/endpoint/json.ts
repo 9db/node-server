@@ -1,8 +1,10 @@
 import HTTP from 'http';
 
+import postJson from 'http/utility/post-json';
 import fetchJson from 'http/utility/fetch-json';
 import Repository from 'repository';
 import HttpHeader from 'http/enum/header';
+import HttpMethod from 'http/enum/method';
 import StatusCode from 'http/enum/status-code';
 import JsonObject from 'http/type/json-object';
 import ContentType from 'http/enum/content-type';
@@ -83,6 +85,44 @@ describe('JsonEndpoint', () => {
 			});
 
 			expect(result.status_code).toStrictEqual(StatusCode.SERVER_ERROR);
+
+			await closeServer(server);
+		});
+	});
+
+	describe('parsing body', () => {
+		it('uses the JSON body parser', async () => {
+			expect.assertions(1);
+
+			class MockEndpoint extends JsonEndpoint {
+				protected static url = '/wizards';
+				protected static method = HttpMethod.POST;
+
+				protected async process(): Promise<string> {
+					const body = this.getRequestBody();
+
+					expect(body).toStrictEqual({
+						name: 'gandalf'
+					});
+
+					return Promise.resolve('{}');
+				}
+			}
+
+			const port = 4428;
+
+			const server = HTTP.createServer((request, response) => {
+				const repository = createRepository();
+				const endpoint = new MockEndpoint(request, response, {}, repository);
+
+				endpoint.serve();
+			});
+
+			server.listen(port);
+
+			await postJson(`http://localhost:${port}/wizards`, {
+				name: 'gandalf'
+			});
 
 			await closeServer(server);
 		});

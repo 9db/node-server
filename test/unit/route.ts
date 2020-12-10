@@ -185,5 +185,55 @@ describe('Route', () => {
 
 			expect(serve_spy).toHaveBeenCalled();
 		});
+
+		describe('when given a request with an undefined url', () => {
+			it('passes an empty request parameters to the endpoint', () => {
+				expect.assertions(1);
+
+				const request = buildMockRequest(
+					undefined,
+					HttpMethod.GET,
+					ContentType.TEXT
+				);
+
+				const response = buildMockResponse();
+				const hostname = 'https://9db.org';
+				const adapter = new MemoryAdapter();
+				const repository = new Repository(hostname, adapter);
+
+				class ThrowawayEndpoint extends MockEndpoint {
+					public constructor(
+						supplied_request: HTTP.IncomingMessage,
+						supplied_response: HTTP.ServerResponse,
+						supplied_parameters: UrlParameters,
+						supplied_repository: Repository
+					) {
+						expect(supplied_parameters).toStrictEqual({});
+
+						super(
+							supplied_request,
+							supplied_response,
+							supplied_parameters,
+							supplied_repository
+						);
+					}
+				}
+
+				const route = new Route(
+					ContentType.TEXT,
+					HttpMethod.GET,
+					'/wizards/:wizard/weapons/:weapon',
+					ThrowawayEndpoint
+				);
+
+				const serve_spy = jest.spyOn(ThrowawayEndpoint.prototype, 'serve');
+
+				serve_spy.mockImplementation(() => {
+					return undefined;
+				});
+
+				route.serve(request, response, repository);
+			});
+		});
 	});
 });

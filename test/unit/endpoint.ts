@@ -382,4 +382,116 @@ describe('Endpoint', () => {
 			});
 		});
 	});
+
+	describe('setStatusCode()', () => {
+		it('sets the status code that is sent back to the response', async () => {
+			expect.assertions(1);
+
+			class ThrowawayEndpoint extends MockEndpoint {
+				protected process(): Promise<string> {
+					this.setStatusCode(StatusCode.UNAUTHORIZED);
+
+					return Promise.resolve('Permission denied');
+				}
+
+				protected getContentType(): ContentType {
+					return ContentType.TEXT;
+				}
+			}
+
+			const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
+			const response = buildMockResponse();
+			const repository = createRepository();
+
+			const endpoint = new ThrowawayEndpoint(
+				request,
+				response,
+				{},
+				repository
+			);
+
+			const write_head_spy = jest.spyOn(response, 'writeHead');
+
+			write_head_spy.mockImplementation((status_code) => {
+				expect(status_code).toStrictEqual(StatusCode.UNAUTHORIZED);
+
+				return response;
+			});
+
+			endpoint.serve();
+
+			await sleep(10);
+		});
+	});
+
+	describe('getRepository()', () => {
+		it('returns supplied repository', () => {
+			class ThrowawayEndpoint extends MockEndpoint {
+				public privilegedGetRepository(): Repository {
+					return this.getRepository();
+				}
+			}
+
+			const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
+			const response = buildMockResponse();
+			const repository = createRepository();
+
+			const endpoint = new ThrowawayEndpoint(
+				request,
+				response,
+				{},
+				repository
+			);
+
+			const actual_repository = endpoint.privilegedGetRepository();
+
+			expect(actual_repository).toStrictEqual(repository);
+		});
+	});
+
+	describe('getRequestBody()', () => {
+		const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
+		const response = buildMockResponse();
+		const repository = createRepository();
+
+		class ThrowawayEndpoint extends MockEndpoint {
+			public privilegedGetRequestBody(): string {
+				return this.getRequestBody();
+			}
+		}
+
+		describe('when the request body has already been assigned', () => {
+			it('returns the request body', () => {
+				const endpoint = new ThrowawayEndpoint(
+					request,
+					response,
+					{},
+					repository
+				);
+
+				Object.assign(endpoint, {
+					request_body: 'speak friend and enter'
+				});
+
+				const request_body = endpoint.privilegedGetRequestBody();
+
+				expect(request_body).toStrictEqual('speak friend and enter');
+			});
+		});
+
+		describe('when the request body has not yet been assigned', () => {
+			it('raises an exception', () => {
+				const endpoint = new ThrowawayEndpoint(
+					request,
+					response,
+					{},
+					repository
+				);
+
+				expect(() => {
+					endpoint.privilegedGetRequestBody();
+				}).toThrow(/Tried to read request body, but it was not set/);
+			});
+		});
+	});
 });
