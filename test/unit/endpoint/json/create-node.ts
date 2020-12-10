@@ -36,7 +36,7 @@ describe('JsonCreateNodeEndpoint', () => {
 				{
 					namespace_key: 'public',
 					type_key: 'type',
-					key: 'wizard'
+					key: 'wizard',
 				},
 				repository
 			);

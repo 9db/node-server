@@ -287,12 +287,7 @@ describe('Endpoint', () => {
 			const response = buildMockResponse();
 			const repository = createRepository();
 
-			const endpoint = new ThrowawayEndpoint(
-				request,
-				response,
-				{},
-				repository
-			);
+			const endpoint = new ThrowawayEndpoint(request, response, {}, repository);
 
 			const actual_request = endpoint.privilegedGetRequest();
 
@@ -312,12 +307,7 @@ describe('Endpoint', () => {
 			const response = buildMockResponse();
 			const repository = createRepository();
 
-			const endpoint = new ThrowawayEndpoint(
-				request,
-				response,
-				{},
-				repository
-			);
+			const endpoint = new ThrowawayEndpoint(request, response, {}, repository);
 
 			const actual_response = endpoint.privilegedGetResponse();
 
@@ -341,12 +331,7 @@ describe('Endpoint', () => {
 			const response = buildMockResponse();
 			const repository = createRepository();
 
-			const endpoint = new ThrowawayEndpoint(
-				request,
-				response,
-				{},
-				repository
-			);
+			const endpoint = new ThrowawayEndpoint(request, response, {}, repository);
 
 			const headers = endpoint.privilegedGetResponseHeaders();
 
@@ -376,7 +361,7 @@ describe('Endpoint', () => {
 			request,
 			response,
 			{
-				wizard: 'gandalf'
+				wizard: 'gandalf',
 			},
 			repository
 		);

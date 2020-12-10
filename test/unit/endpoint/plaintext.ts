@@ -29,12 +29,7 @@ describe('PlaintextEndpoint', () => {
 			const server = HTTP.createServer((request, response) => {
 				const repository = createRepository();
 
-				const endpoint = new MockEndpoint(
-					request,
-					response,
-					{},
-					repository
-				);
+				const endpoint = new MockEndpoint(request, response, {}, repository);
 
 				endpoint.serve();
 			});
@@ -68,12 +63,7 @@ describe('PlaintextEndpoint', () => {
 			const server = HTTP.createServer((request, response) => {
 				const repository = createRepository();
 
-				const endpoint = new MockEndpoint(
-					request,
-					response,
-					{},
-					repository
-				);
+				const endpoint = new MockEndpoint(request, response, {}, repository);
 
 				endpoint.serve();
 			});

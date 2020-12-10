@@ -30,7 +30,7 @@ describe('JsonFetchNodeEndpoint', () => {
 					{
 						namespace_key: 'public',
 						type_key: 'wizard',
-						key: 'gandalf'
+						key: 'gandalf',
 					},
 					repository
 				);

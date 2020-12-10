@@ -8,7 +8,6 @@ import UrlParameters from 'http/type/url-parameters';
 import EndpointConstructor from 'interface/endpoint-constructor';
 import getAcceptedContentTypes from 'http/utility/get-accepted-content-types';
 
-
 class Route {
 	private content_type: ContentType;
 	private method: HttpMethod;
