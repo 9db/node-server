@@ -3,7 +3,6 @@ import HTTP from 'http';
 import Repository from 'repository';
 import HttpMethod from 'http/enum/method';
 import PathParser from 'route/utility/path-parser';
-import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import RouteInterface from 'interface/route';
 import EndpointConstructor from 'interface/endpoint-constructor';
@@ -55,20 +54,6 @@ class Route implements RouteInterface {
 
 	public getContentType(): ContentType {
 		return this.content_type;
-	}
-
-	public getMethod(): HttpMethod {
-		return this.method;
-	}
-
-	public getSuccessfulStatusCode(): StatusCode {
-		const method = this.getMethod();
-
-		if (method === HttpMethod.POST) {
-			return StatusCode.CREATED;
-		} else {
-			return StatusCode.SUCCESS;
-		}
 	}
 
 	public serve(

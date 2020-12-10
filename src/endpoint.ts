@@ -12,6 +12,7 @@ import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import ServerError from 'http/error/server-error';
 import BadRequestError from 'http/error/bad-request';
+import getSuccessfulStatusCode from 'http/utility/get-successful-status-code';
 
 abstract class Endpoint<T> {
 	private request: HTTP.IncomingMessage;
@@ -31,7 +32,7 @@ abstract class Endpoint<T> {
 		this.response = response;
 		this.route = route;
 		this.repository = repository;
-		this.status_code = route.getSuccessfulStatusCode();
+		this.status_code = getSuccessfulStatusCode(request);
 	}
 
 	public serve(): void {
@@ -94,8 +95,8 @@ abstract class Endpoint<T> {
 	}
 
 	private hasUnparsableMethod(): boolean {
-		const route = this.getRoute();
-		const method = route.getMethod();
+		const request = this.getRequest();
+		const method = request.method;
 
 		return method === HttpMethod.GET || method === HttpMethod.OPTIONS;
 	}
