@@ -8,7 +8,6 @@ import NodeFactory from 'factory/node';
 import ContentType from 'http/enum/content-type';
 import closeServer from 'http/utility/close-server';
 import MemoryAdapter from 'adapter/memory';
-import JsonFetchNodeRoute from 'route/json/fetch-node';
 import JsonFetchNodeEndpoint from 'endpoint/json/fetch-node';
 
 describe('JsonFetchNodeEndpoint', () => {
@@ -25,12 +24,14 @@ describe('JsonFetchNodeEndpoint', () => {
 			repository = new Repository(hostname, adapter);
 
 			server = HTTP.createServer((request, response) => {
-				const route = new JsonFetchNodeRoute();
-
 				const endpoint = new JsonFetchNodeEndpoint(
 					request,
 					response,
-					route,
+					{
+						namespace_key: 'public',
+						type_key: 'wizard',
+						key: 'gandalf'
+					},
 					repository
 				);
 

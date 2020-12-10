@@ -5,12 +5,11 @@ import HttpMethod from 'http/enum/method';
 import PathParser from 'route/utility/path-parser';
 import ContentType from 'http/enum/content-type';
 import UrlParameters from 'http/type/url-parameters';
-import RouteInterface from 'interface/route';
 import EndpointConstructor from 'interface/endpoint-constructor';
 import getAcceptedContentTypes from 'http/utility/get-accepted-content-types';
 
 
-class Route implements RouteInterface {
+class Route {
 	private content_type: ContentType;
 	private method: HttpMethod;
 	private endpoint_constructor: EndpointConstructor;
@@ -56,15 +55,16 @@ class Route implements RouteInterface {
 		repository: Repository
 	): void {
 		const Constructor = this.getEndpointConstructor();
-		const endpoint = new Constructor(request, response, this, repository);
+		const url_parameters = this.getUrlParametersForRequest(request);
+
+		const endpoint = new Constructor(
+			request,
+			response,
+			url_parameters,
+			repository
+		);
 
 		endpoint.serve();
-	}
-
-	public getUrlParameter(url: string, parameter: string): string | undefined {
-		const parameters = this.getParametersForUrl(url);
-
-		return parameters[parameter];
 	}
 
 	protected matchesContentType(request: HTTP.IncomingMessage): boolean {
@@ -73,7 +73,10 @@ class Route implements RouteInterface {
 		return content_types.includes(this.content_type);
 	}
 
-	private getParametersForUrl(url: string): UrlParameters {
+	private getUrlParametersForRequest(
+		request: HTTP.IncomingMessage
+	): UrlParameters {
+		const url = request.url || '/';
 		const regex = this.getRegex();
 		const match = url.match(regex);
 		const result: UrlParameters = {};

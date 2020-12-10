@@ -7,7 +7,6 @@ import ContentType from 'http/enum/content-type';
 import closeServer from 'http/utility/close-server';
 import MemoryAdapter from 'adapter/memory';
 import fetchPlaintext from 'http/utility/fetch-plaintext';
-import PlaintextVersionRoute from 'route/plaintext/version';
 import PlaintextVersionEndpoint from 'endpoint/plaintext/version';
 
 describe('PlaintextVersionEndpoint', () => {
@@ -19,14 +18,13 @@ describe('PlaintextVersionEndpoint', () => {
 
 		beforeEach(() => {
 			server = HTTP.createServer((request, response) => {
-				const route = new PlaintextVersionRoute();
 				const adapter = new MemoryAdapter();
 				const repository = new Repository(hostname, adapter);
 
 				const endpoint = new PlaintextVersionEndpoint(
 					request,
 					response,
-					route,
+					{},
 					repository
 				);
 

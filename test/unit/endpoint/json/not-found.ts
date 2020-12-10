@@ -7,7 +7,6 @@ import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import closeServer from 'http/utility/close-server';
 import MemoryAdapter from 'adapter/memory';
-import JsonNotFoundRoute from 'route/json/not-found';
 import JsonNotFoundEndpoint from 'endpoint/json/not-found';
 
 describe('JsonNotFoundEndpoint', () => {
@@ -19,14 +18,13 @@ describe('JsonNotFoundEndpoint', () => {
 
 		beforeEach(() => {
 			server = HTTP.createServer((request, response) => {
-				const route = new JsonNotFoundRoute();
 				const adapter = new MemoryAdapter();
 				const repository = new Repository(hostname, adapter);
 
 				const endpoint = new JsonNotFoundEndpoint(
 					request,
 					response,
-					route,
+					{},
 					repository
 				);
 

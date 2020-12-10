@@ -6,7 +6,7 @@ import HttpMethod from 'http/enum/method';
 import ContentType from 'http/enum/content-type';
 import MockEndpoint from 'test/mock/endpoint';
 import MemoryAdapter from 'adapter/memory';
-import RouteInterface from 'interface/route';
+import UrlParameters from 'http/type/url-parameters';
 import buildMockRequest from 'test/utility/build-mock-request';
 import buildMockResponse from 'test/utility/build-mock-response';
 
@@ -119,28 +119,38 @@ describe('Route', () => {
 		it('delegates to the supplied endpoint', () => {
 			expect.assertions(5);
 
-			const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
+			const request = buildMockRequest(
+				'/wizards/gandalf/weapons/glamdring',
+				HttpMethod.GET,
+				ContentType.TEXT
+			);
+
 			const response = buildMockResponse();
 			const hostname = 'https://9db.org';
 			const adapter = new MemoryAdapter();
 			const repository = new Repository(hostname, adapter);
 
+			const expected_parameters = {
+				wizard: 'gandalf',
+				weapon: 'glamdring'
+			};
+
 			class ThrowawayEndpoint extends MockEndpoint {
 				public constructor(
 					supplied_request: HTTP.IncomingMessage,
 					supplied_response: HTTP.ServerResponse,
-					supplied_route: RouteInterface,
+					supplied_parameters: UrlParameters,
 					supplied_repository: Repository
 				) {
 					expect(supplied_request).toStrictEqual(request);
 					expect(supplied_response).toStrictEqual(response);
-					expect(supplied_route).toStrictEqual(route);
+					expect(supplied_parameters).toStrictEqual(expected_parameters);
 					expect(supplied_repository).toStrictEqual(repository);
 
 					super(
 						supplied_request,
 						supplied_response,
-						supplied_route,
+						supplied_parameters,
 						supplied_repository
 					);
 				}
@@ -149,7 +159,7 @@ describe('Route', () => {
 			const route = new Route(
 				ContentType.TEXT,
 				HttpMethod.GET,
-				'/foo',
+				'/wizards/:wizard/weapons/:weapon',
 				ThrowawayEndpoint
 			);
 
@@ -162,62 +172,6 @@ describe('Route', () => {
 			route.serve(request, response, repository);
 
 			expect(serve_spy).toHaveBeenCalled();
-		});
-	});
-
-	describe('getUrlParameter()', () => {
-		describe('when the requested parameter exists', () => {
-			it('returns the value from the supplied URL', () => {
-				const route = new Route(
-					ContentType.TEXT,
-					HttpMethod.GET,
-					'/v1/:wizard/passwords/:password',
-					MockEndpoint
-				);
-
-				const parameter = route.getUrlParameter(
-					'/v1/gandalf/passwords/mellon',
-					'wizard'
-				);
-
-				expect(parameter).toStrictEqual('gandalf');
-			});
-		});
-
-		describe('when the supplied URL does not match the route', () => {
-			it('returns undefined', () => {
-				const route = new Route(
-					ContentType.TEXT,
-					HttpMethod.GET,
-					'/v1/:wizard/passwords/:password',
-					MockEndpoint
-				);
-
-				const parameter = route.getUrlParameter(
-					'/gandalf/passwords/mellon',
-					'wizard'
-				);
-
-				expect(parameter).toStrictEqual(undefined);
-			});
-		});
-
-		describe('when the requested parameter does not exist', () => {
-			it('returns undefined', () => {
-				const route = new Route(
-					ContentType.TEXT,
-					HttpMethod.GET,
-					'/v1/:wizard/passwords/:password',
-					MockEndpoint
-				);
-
-				const parameter = route.getUrlParameter(
-					'/v1/gandalf/passwords/mellon',
-					'ringwraith'
-				);
-
-				expect(parameter).toStrictEqual(undefined);
-			});
 		});
 	});
 });

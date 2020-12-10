@@ -7,7 +7,6 @@ import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import closeServer from 'http/utility/close-server';
 import MemoryAdapter from 'adapter/memory';
-import PlaintextRoute from 'route/plaintext';
 import fetchPlaintext from 'http/utility/fetch-plaintext';
 import PlaintextEndpoint from 'endpoint/plaintext';
 
@@ -26,8 +25,6 @@ describe('PlaintextEndpoint', () => {
 			}
 		}
 
-		const route = new PlaintextRoute(HttpMethod.GET, '/wizards', MockEndpoint);
-
 		it('returns expected response data', async () => {
 			const server = HTTP.createServer((request, response) => {
 				const repository = createRepository();
@@ -35,7 +32,7 @@ describe('PlaintextEndpoint', () => {
 				const endpoint = new MockEndpoint(
 					request,
 					response,
-					route,
+					{},
 					repository
 				);
 
@@ -67,8 +64,6 @@ describe('PlaintextEndpoint', () => {
 			}
 		}
 
-		const route = new PlaintextRoute(HttpMethod.GET, '/wizards', MockEndpoint);
-
 		it('returns expected plaintext error', async () => {
 			const server = HTTP.createServer((request, response) => {
 				const repository = createRepository();
@@ -76,7 +71,7 @@ describe('PlaintextEndpoint', () => {
 				const endpoint = new MockEndpoint(
 					request,
 					response,
-					route,
+					{},
 					repository
 				);
 

@@ -1,6 +1,5 @@
 import HTTP from 'http';
 
-import Route from 'route';
 import sleep from 'utility/sleep';
 import HttpError from 'http/error';
 import HeaderMap from 'http/type/header-map';
@@ -39,13 +38,6 @@ describe('Endpoint', () => {
 				}
 			}
 
-			const route = new Route(
-				ContentType.TEXT,
-				HttpMethod.GET,
-				'/',
-				MockEndpoint
-			);
-
 			it('sets expected status and headers on response', async () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
@@ -55,7 +47,7 @@ describe('Endpoint', () => {
 				const endpoint = new ThrowawayEndpoint(
 					request,
 					response,
-					route,
+					{},
 					repository
 				);
 
@@ -77,7 +69,7 @@ describe('Endpoint', () => {
 				const endpoint = new ThrowawayEndpoint(
 					request,
 					response,
-					route,
+					{},
 					repository
 				);
 
@@ -102,13 +94,6 @@ describe('Endpoint', () => {
 				}
 			}
 
-			const route = new Route(
-				ContentType.TEXT,
-				HttpMethod.GET,
-				'/',
-				MockEndpoint
-			);
-
 			it('sets expected status and headers on response', async () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
@@ -118,7 +103,7 @@ describe('Endpoint', () => {
 				const endpoint = new ThrowawayEndpoint(
 					request,
 					response,
-					route,
+					{},
 					repository
 				);
 
@@ -141,7 +126,7 @@ describe('Endpoint', () => {
 				const endpoint = new ThrowawayEndpoint(
 					request,
 					response,
-					route,
+					{},
 					repository
 				);
 
@@ -164,13 +149,6 @@ describe('Endpoint', () => {
 				}
 			}
 
-			const route = new Route(
-				ContentType.TEXT,
-				HttpMethod.GET,
-				'/',
-				MockEndpoint
-			);
-
 			it('does not set status or headers on response', async () => {
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
@@ -180,7 +158,7 @@ describe('Endpoint', () => {
 				const endpoint = new ThrowawayEndpoint(
 					request,
 					response,
-					route,
+					{},
 					repository
 				);
 
@@ -200,7 +178,7 @@ describe('Endpoint', () => {
 				const endpoint = new ThrowawayEndpoint(
 					request,
 					response,
-					route,
+					{},
 					repository
 				);
 
@@ -234,13 +212,6 @@ describe('Endpoint', () => {
 					}
 				}
 
-				const route = new Route(
-					ContentType.TEXT,
-					HttpMethod.GET,
-					'/',
-					MockEndpoint
-				);
-
 				const request = buildMockRequest('/', HttpMethod.GET, ContentType.TEXT);
 				const response = buildMockResponse();
 				const repository = createRepository();
@@ -248,7 +219,7 @@ describe('Endpoint', () => {
 				const endpoint = new ThrowawayEndpoint(
 					request,
 					response,
-					route,
+					{},
 					repository
 				);
 
@@ -280,13 +251,6 @@ describe('Endpoint', () => {
 						}
 					}
 
-					const route = new Route(
-						ContentType.TEXT,
-						HttpMethod.GET,
-						'/',
-						MockEndpoint
-					);
-
 					const request = buildMockRequest(
 						'/',
 						HttpMethod.GET,
@@ -299,7 +263,7 @@ describe('Endpoint', () => {
 					const endpoint = new ThrowawayEndpoint(
 						request,
 						response,
-						route,
+						{},
 						repository
 					);
 
@@ -319,13 +283,6 @@ describe('Endpoint', () => {
 				}
 			}
 
-			const route = new Route(
-				ContentType.JSON,
-				HttpMethod.GET,
-				'/x',
-				MockEndpoint
-			);
-
 			const request = buildMockRequest('/x', HttpMethod.GET, ContentType.JSON);
 			const response = buildMockResponse();
 			const repository = createRepository();
@@ -333,7 +290,7 @@ describe('Endpoint', () => {
 			const endpoint = new ThrowawayEndpoint(
 				request,
 				response,
-				route,
+				{},
 				repository
 			);
 
@@ -351,13 +308,6 @@ describe('Endpoint', () => {
 				}
 			}
 
-			const route = new Route(
-				ContentType.JSON,
-				HttpMethod.GET,
-				'/x',
-				MockEndpoint
-			);
-
 			const request = buildMockRequest('/x', HttpMethod.GET, ContentType.JSON);
 			const response = buildMockResponse();
 			const repository = createRepository();
@@ -365,7 +315,7 @@ describe('Endpoint', () => {
 			const endpoint = new ThrowawayEndpoint(
 				request,
 				response,
-				route,
+				{},
 				repository
 			);
 
@@ -387,13 +337,6 @@ describe('Endpoint', () => {
 				}
 			}
 
-			const route = new Route(
-				ContentType.JSON,
-				HttpMethod.GET,
-				'/x',
-				MockEndpoint
-			);
-
 			const request = buildMockRequest('/x', HttpMethod.GET, ContentType.JSON);
 			const response = buildMockResponse();
 			const repository = createRepository();
@@ -401,7 +344,7 @@ describe('Endpoint', () => {
 			const endpoint = new ThrowawayEndpoint(
 				request,
 				response,
-				route,
+				{},
 				repository
 			);
 
@@ -420,13 +363,6 @@ describe('Endpoint', () => {
 			}
 		}
 
-		const route = new Route(
-			ContentType.JSON,
-			HttpMethod.GET,
-			'/:wizard',
-			MockEndpoint
-		);
-
 		const request = buildMockRequest(
 			'/gandalf',
 			HttpMethod.GET,
@@ -439,14 +375,18 @@ describe('Endpoint', () => {
 		const endpoint = new ThrowawayEndpoint(
 			request,
 			response,
-			route,
+			{
+				wizard: 'gandalf'
+			},
 			repository
 		);
 
-		it('delegates to the supplied route', () => {
-			const parameter = endpoint.privilegedGetUrlParameter('wizard');
+		describe('when the requested parameter is present on the URL parameters', () => {
+			it('returns the expected value', () => {
+				const parameter = endpoint.privilegedGetUrlParameter('wizard');
 
-			expect(parameter).toStrictEqual('gandalf');
+				expect(parameter).toStrictEqual('gandalf');
+			});
 		});
 
 		describe('when requested parameter is not present', () => {

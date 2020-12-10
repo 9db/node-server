@@ -7,7 +7,6 @@ import ContentType from 'http/enum/content-type';
 import closeServer from 'http/utility/close-server';
 import MemoryAdapter from 'adapter/memory';
 import fetchPlaintext from 'http/utility/fetch-plaintext';
-import PlaintextNotFoundRoute from 'route/plaintext/not-found';
 import PlaintextNotFoundEndpoint from 'endpoint/plaintext/not-found';
 
 describe('PlaintextNotFoundEndpoint', () => {
@@ -19,14 +18,13 @@ describe('PlaintextNotFoundEndpoint', () => {
 
 		beforeEach(() => {
 			server = HTTP.createServer((request, response) => {
-				const route = new PlaintextNotFoundRoute();
 				const adapter = new MemoryAdapter();
 				const repository = new Repository(hostname, adapter);
 
 				const endpoint = new PlaintextNotFoundEndpoint(
 					request,
 					response,
-					route,
+					{},
 					repository
 				);
 

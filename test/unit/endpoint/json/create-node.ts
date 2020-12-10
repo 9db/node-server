@@ -8,7 +8,6 @@ import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import closeServer from 'http/utility/close-server';
 import MemoryAdapter from 'adapter/memory';
-import JsonCreateNodeRoute from 'route/json/create-node';
 import JsonCreateNodeEndpoint from 'endpoint/json/create-node';
 
 describe('JsonCreateNodeEndpoint', () => {
@@ -31,12 +30,14 @@ describe('JsonCreateNodeEndpoint', () => {
 		repository = new Repository(hostname, adapter);
 
 		server = HTTP.createServer((request, response) => {
-			const route = new JsonCreateNodeRoute();
-
 			const endpoint = new JsonCreateNodeEndpoint(
 				request,
 				response,
-				route,
+				{
+					namespace_key: 'public',
+					type_key: 'type',
+					key: 'wizard'
+				},
 				repository
 			);
 

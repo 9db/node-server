@@ -1,10 +1,8 @@
 import HTTP from 'http';
 
-import JsonRoute from 'route/json';
 import fetchJson from 'http/utility/fetch-json';
 import Repository from 'repository';
 import HttpHeader from 'http/enum/header';
-import HttpMethod from 'http/enum/method';
 import StatusCode from 'http/enum/status-code';
 import JsonObject from 'http/type/json-object';
 import ContentType from 'http/enum/content-type';
@@ -31,8 +29,6 @@ describe('JsonEndpoint', () => {
 			}
 		}
 
-		const route = new JsonRoute(HttpMethod.GET, '/wizard', MockEndpoint);
-
 		it('returns expected response data', async () => {
 			const server = HTTP.createServer((request, response) => {
 				const repository = createRepository();
@@ -40,7 +36,7 @@ describe('JsonEndpoint', () => {
 				const endpoint = new MockEndpoint(
 					request,
 					response,
-					route,
+					{},
 					repository
 				);
 
@@ -74,8 +70,6 @@ describe('JsonEndpoint', () => {
 			}
 		}
 
-		const route = new JsonRoute(HttpMethod.GET, '/wizard', MockEndpoint);
-
 		it('returns expected JSON error', async () => {
 			const server = HTTP.createServer((request, response) => {
 				const repository = createRepository();
@@ -83,7 +77,7 @@ describe('JsonEndpoint', () => {
 				const endpoint = new MockEndpoint(
 					request,
 					response,
-					route,
+					{},
 					repository
 				);
 

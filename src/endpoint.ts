@@ -1,6 +1,5 @@
 import HTTP from 'http';
 
-import Route from 'interface/route';
 import HttpError from 'http/error';
 import HeaderMap from 'http/type/header-map';
 import Repository from 'repository';
@@ -11,13 +10,14 @@ import JsonObject from 'http/type/json-object';
 import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import ServerError from 'http/error/server-error';
+import UrlParameters from 'http/type/url-parameters';
 import BadRequestError from 'http/error/bad-request';
 import getSuccessfulStatusCode from 'http/utility/get-successful-status-code';
 
 abstract class Endpoint<T> {
 	private request: HTTP.IncomingMessage;
 	private response: HTTP.ServerResponse;
-	private route: Route;
+	private url_parameters: UrlParameters;
 	private repository: Repository;
 	private status_code: StatusCode;
 	private request_body: T | undefined;
@@ -25,12 +25,12 @@ abstract class Endpoint<T> {
 	public constructor(
 		request: HTTP.IncomingMessage,
 		response: HTTP.ServerResponse,
-		route: Route,
+		url_parameters: UrlParameters,
 		repository: Repository
 	) {
 		this.request = request;
 		this.response = response;
-		this.route = route;
+		this.url_parameters = url_parameters;
 		this.repository = repository;
 		this.status_code = getSuccessfulStatusCode(request);
 	}
@@ -57,9 +57,8 @@ abstract class Endpoint<T> {
 	}
 
 	protected getUrlParameter(parameter: string): string {
-		const url = this.getUrl();
-		const route = this.getRoute();
-		const value = route.getUrlParameter(url, parameter);
+		const parameters = this.getUrlParameters();
+		const value = parameters[parameter];
 
 		if (value === undefined) {
 			throw new BadRequestError();
@@ -99,12 +98,6 @@ abstract class Endpoint<T> {
 		const method = request.method;
 
 		return method === HttpMethod.GET || method === HttpMethod.OPTIONS;
-	}
-
-	private getUrl(): string {
-		const request = this.getRequest();
-
-		return request.url || '/';
 	}
 
 	private getStatusCode(): StatusCode {
@@ -154,8 +147,8 @@ abstract class Endpoint<T> {
 		return this.handleResult(serialized_error);
 	}
 
-	private getRoute(): Route {
-		return this.route;
+	private getUrlParameters(): UrlParameters {
+		return this.url_parameters;
 	}
 
 	protected abstract process(): Promise<string | Buffer | JsonObject | void>;
