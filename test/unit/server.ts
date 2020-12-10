@@ -2,6 +2,7 @@ import Server from 'server';
 import StatusCode from 'http/enum/status-code';
 import MemoryAdapter from 'adapter/memory';
 import fetchPlaintext from 'http/utility/fetch-plaintext';
+import PlaintextNotFoundRoute from 'route/plaintext/not-found';
 
 describe('Server', () => {
 	describe('accepting requests', () => {
@@ -31,6 +32,28 @@ describe('Server', () => {
 		});
 
 		describe('when a nonexistent route is requested', () => {
+			it('returns a 404', async () => {
+				const result = await fetchPlaintext(`http://localhost:${port}/gandalf`);
+
+				expect(result.body).toStrictEqual('File not found');
+				expect(result.status_code).toStrictEqual(StatusCode.FILE_NOT_FOUND);
+			});
+		});
+
+		describe('when no matching route exists', () => {
+			let accepts_spy!: jest.SpyInstance;
+
+			beforeEach(() => {
+				accepts_spy = jest.spyOn(PlaintextNotFoundRoute.prototype, 'accepts');
+				accepts_spy.mockImplementation(() => {
+					return false;
+				});
+			});
+
+			afterEach(() => {
+				accepts_spy.mockRestore();
+			});
+
 			it('returns a 404', async () => {
 				const result = await fetchPlaintext(`http://localhost:${port}/gandalf`);
 

@@ -5,7 +5,7 @@ import HttpMethod from 'http/enum/method';
 import ContentType from 'http/enum/content-type';
 
 function buildMockRequest(
-	url: string,
+	url: string | undefined,
 	method: HttpMethod,
 	content_type: ContentType
 ): HTTP.IncomingMessage {

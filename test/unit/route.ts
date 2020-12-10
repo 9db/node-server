@@ -20,6 +20,18 @@ describe('Route', () => {
 				MockEndpoint
 			);
 
+			describe('when given a request with an undefined url', () => {
+				const request = buildMockRequest(
+					undefined,
+					HttpMethod.GET,
+					ContentType.TEXT
+				);
+
+				it('returns false', () => {
+					expect(route.accepts(request)).toBe(false);
+				});
+			});
+
 			describe('when given a request whose URL does not match', () => {
 				const request = buildMockRequest(
 					'/bar',

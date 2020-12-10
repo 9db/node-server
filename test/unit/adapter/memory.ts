@@ -1,5 +1,6 @@
 import NodeFactory from 'factory/node';
 import MemoryAdapter from 'adapter/memory';
+import NotFoundError from 'http/error/not-found';
 
 describe('MemoryAdapter', () => {
 	describe('fetchNode()', () => {
@@ -48,72 +49,114 @@ describe('MemoryAdapter', () => {
 	});
 
 	describe('setField()', () => {
-		it('updates the persisted node to include the new field', async () => {
-			const adapter = new MemoryAdapter();
-			const node = NodeFactory.create();
+		describe('when the specified node exists', () => {
+			it('updates the persisted node to include the new field', async () => {
+				const adapter = new MemoryAdapter();
+				const node = NodeFactory.create();
 
-			await adapter.storeNode(node);
+				await adapter.storeNode(node);
 
-			await adapter.setField(
-				node.namespace_key,
-				node.type_key,
-				node.key,
-				'wizard',
-				'gandalf'
-			);
+				await adapter.setField(
+					node.namespace_key,
+					node.type_key,
+					node.key,
+					'wizard',
+					'gandalf'
+				);
 
-			const persisted_node = await adapter.fetchNode(
-				node.namespace_key,
-				node.type_key,
-				node.key
-			);
+				const persisted_node = await adapter.fetchNode(
+					node.namespace_key,
+					node.type_key,
+					node.key
+				);
 
-			expect(persisted_node).toStrictEqual({
-				...node,
-				wizard: 'gandalf',
+				expect(persisted_node).toStrictEqual({
+					...node,
+					wizard: 'gandalf',
+				});
+			});
+
+			it('returns the new node', async () => {
+				const adapter = new MemoryAdapter();
+				const node = NodeFactory.create();
+
+				await adapter.storeNode(node);
+
+				const result = await adapter.setField(
+					node.namespace_key,
+					node.type_key,
+					node.key,
+					'wizard',
+					'gandalf'
+				);
+
+				expect(result).toStrictEqual({
+					...node,
+					wizard: 'gandalf',
+				});
+			});
+
+			it('does not destructively modify the input node', async () => {
+				const adapter = new MemoryAdapter();
+				const node = NodeFactory.create();
+				const original_node = { ...node };
+
+				await adapter.storeNode(node);
+
+				await adapter.setField(
+					node.namespace_key,
+					node.type_key,
+					node.key,
+					'wizard',
+					'gandalf'
+				);
+
+				expect(node).toStrictEqual(original_node);
 			});
 		});
 
-		it('returns the new node', async () => {
-			const adapter = new MemoryAdapter();
-			const node = NodeFactory.create();
+		describe('when specified node was not found', () => {
+			it('returns a NotFoundError', async () => {
+				const adapter = new MemoryAdapter();
+				const node = NodeFactory.create();
 
-			await adapter.storeNode(node);
-
-			const result = await adapter.setField(
-				node.namespace_key,
-				node.type_key,
-				node.key,
-				'wizard',
-				'gandalf'
-			);
-
-			expect(result).toStrictEqual({
-				...node,
-				wizard: 'gandalf',
+				try {
+					await adapter.setField(
+						node.namespace_key,
+						node.type_key,
+						node.key,
+						'wizard',
+						'gandalf'
+					);
+				} catch (error) {
+					expect(error).toBeInstanceOf(NotFoundError);
+				}
 			});
-		});
-
-		it('does not destructively modify the input node', async () => {
-			const adapter = new MemoryAdapter();
-			const node = NodeFactory.create();
-			const original_node = { ...node };
-
-			await adapter.storeNode(node);
-
-			await adapter.setField(
-				node.namespace_key,
-				node.type_key,
-				node.key,
-				'wizard',
-				'gandalf'
-			);
-
-			expect(node).toStrictEqual(original_node);
 		});
 	});
 
 	describe('addValueToSet()', () => {
+		describe('when the specified node does not exist', () => {
+			it('raises a NotFoundError', async () => {
+				expect.assertions(1);
+
+				const adapter = new MemoryAdapter();
+				const node = NodeFactory.create();
+
+				try {
+					await adapter.addValueToSet(
+						node.namespace_key,
+						node.type_key,
+						node.key,
+						'wizards',
+						'gandalf'
+					);
+				} catch (error) {
+					expect(error).toBeInstanceOf(NotFoundError);
+				}
+			});
+		});
+
 		describe('when field does not exist on node', () => {
 			it('raises an exception', async () => {
 				expect.assertions(1);
@@ -284,6 +327,27 @@ describe('MemoryAdapter', () => {
 	});
 
 	describe('removeValueFromSet()', () => {
+		describe('when the specified node is not found', () => {
+			it('raises a NotFoundError', async () => {
+				expect.assertions(1);
+
+				const adapter = new MemoryAdapter();
+				const node = NodeFactory.create();
+
+				try {
+					await adapter.removeValueFromSet(
+						node.namespace_key,
+						node.type_key,
+						node.key,
+						'wizards',
+						'gandalf'
+					);
+				} catch (error) {
+					expect(error).toBeInstanceOf(NotFoundError);
+				}
+			});
+		});
+
 		describe('when field does not exist on node', () => {
 			it('raises an exception', async () => {
 				expect.assertions(1);
@@ -454,6 +518,27 @@ describe('MemoryAdapter', () => {
 	});
 
 	describe('addValueToList()', () => {
+		describe('when the specified node is not found', () => {
+			it('raises a NotFoundError', async () => {
+				expect.assertions(1);
+
+				const adapter = new MemoryAdapter();
+				const node = NodeFactory.create();
+
+				try {
+					await adapter.addValueToList(
+						node.namespace_key,
+						node.type_key,
+						node.key,
+						'wizards',
+						'gandalf'
+					);
+				} catch (error) {
+					expect(error).toBeInstanceOf(NotFoundError);
+				}
+			});
+		});
+
 		describe('when field does not exist on node', () => {
 			it('raises an exception', async () => {
 				expect.assertions(1);
@@ -654,6 +739,27 @@ describe('MemoryAdapter', () => {
 	});
 
 	describe('removeValueFromList()', () => {
+		describe('when the specified node is not found', () => {
+			it('raises a NotFoundError', async () => {
+				expect.assertions(1);
+
+				const adapter = new MemoryAdapter();
+				const node = NodeFactory.create();
+
+				try {
+					await adapter.removeValueFromList(
+						node.namespace_key,
+						node.type_key,
+						node.key,
+						'wizards',
+						'gandalf'
+					);
+				} catch (error) {
+					expect(error).toBeInstanceOf(NotFoundError);
+				}
+			});
+		});
+
 		describe('when field does not exist on node', () => {
 			it('raises an exception', async () => {
 				expect.assertions(1);

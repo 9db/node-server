@@ -6,6 +6,7 @@ import Repository from 'repository';
 import closeServer from 'http/utility/close-server';
 import buildRoutes from 'server/utility/build-routes';
 import MemoryAdapter from 'adapter/memory';
+import PlaintextNotFoundRoute from 'route/plaintext/not-found';
 
 interface ServerConfig {
 	readonly port: number;
@@ -93,7 +94,7 @@ class Server {
 		});
 
 		if (route === undefined) {
-			throw new Error(`No route found for request: ${request.url}`);
+			return new PlaintextNotFoundRoute();
 		}
 
 		return route;
