@@ -13,7 +13,7 @@ class JsonCreateNodeEndpoint extends JsonEndpoint {
 			...body,
 			namespace_key,
 			type_key,
-			key,
+			key
 		};
 
 		const repository = this.getRepository();

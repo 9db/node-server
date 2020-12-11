@@ -11,7 +11,7 @@ function buildRoutes(): Route[] {
 		new JsonFetchNodeRoute(),
 		new JsonCreateNodeRoute(),
 		new PlaintextNotFoundRoute(),
-		new JsonNotFoundRoute(),
+		new JsonNotFoundRoute()
 	];
 }
 

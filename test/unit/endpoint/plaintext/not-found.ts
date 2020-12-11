@@ -45,7 +45,7 @@ describe('PlaintextNotFoundEndpoint', () => {
 			expect(result.status_code).toStrictEqual(StatusCode.FILE_NOT_FOUND);
 
 			expect(result.headers).toMatchObject({
-				[HttpHeader.CONTENT_TYPE]: ContentType.TEXT,
+				[HttpHeader.CONTENT_TYPE]: ContentType.TEXT
 			});
 		});
 	});

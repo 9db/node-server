@@ -43,7 +43,7 @@ describe('PlaintextEndpoint', () => {
 			expect(result.status_code).toStrictEqual(StatusCode.SUCCESS);
 
 			expect(result.headers).toMatchObject({
-				[HttpHeader.CONTENT_TYPE]: ContentType.TEXT,
+				[HttpHeader.CONTENT_TYPE]: ContentType.TEXT
 			});
 
 			await closeServer(server);

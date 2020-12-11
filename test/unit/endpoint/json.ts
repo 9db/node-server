@@ -26,7 +26,7 @@ describe('JsonEndpoint', () => {
 				return Promise.resolve({
 					name: 'gandalf',
 					color: 'grey',
-					horse: 'shadowfax',
+					horse: 'shadowfax'
 				});
 			}
 		}
@@ -47,13 +47,13 @@ describe('JsonEndpoint', () => {
 			expect(result.body).toStrictEqual({
 				name: 'gandalf',
 				color: 'grey',
-				horse: 'shadowfax',
+				horse: 'shadowfax'
 			});
 
 			expect(result.status_code).toStrictEqual(StatusCode.SUCCESS);
 
 			expect(result.headers).toMatchObject({
-				[HttpHeader.CONTENT_TYPE]: ContentType.JSON,
+				[HttpHeader.CONTENT_TYPE]: ContentType.JSON
 			});
 
 			await closeServer(server);
@@ -81,7 +81,7 @@ describe('JsonEndpoint', () => {
 			const result = await fetchJson('http://localhost:4428/wizard');
 
 			expect(result.body).toStrictEqual({
-				message: 'A strange thing has happened',
+				message: 'A strange thing has happened'
 			});
 
 			expect(result.status_code).toStrictEqual(StatusCode.SERVER_ERROR);

@@ -15,7 +15,7 @@ describe('AccountTypeGenerator', () => {
 				key: SystemKey.ACCOUNT_TYPE,
 				creator: `${hostname}/system/account/system`,
 				created_at: 0,
-				updated_at: 0,
+				updated_at: 0
 			});
 		});
 	});

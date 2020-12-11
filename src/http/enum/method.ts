@@ -5,7 +5,7 @@ enum Method {
 	POST = 'POST',
 	PUT = 'PUT',
 	DELETE = 'DELETE',
-	OPTIONS = 'OPTIONS',
+	OPTIONS = 'OPTIONS'
 }
 
 export default Method;

@@ -42,13 +42,13 @@ describe('JsonNotFoundEndpoint', () => {
 			const result = await fetchJson(`http://localhost:${port}`);
 
 			expect(result.body).toStrictEqual({
-				message: 'File not found',
+				message: 'File not found'
 			});
 
 			expect(result.status_code).toStrictEqual(StatusCode.FILE_NOT_FOUND);
 
 			expect(result.headers).toMatchObject({
-				[HttpHeader.CONTENT_TYPE]: ContentType.JSON,
+				[HttpHeader.CONTENT_TYPE]: ContentType.JSON
 			});
 		});
 	});

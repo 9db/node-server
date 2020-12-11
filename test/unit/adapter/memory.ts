@@ -72,7 +72,7 @@ describe('MemoryAdapter', () => {
 
 				expect(persisted_node).toStrictEqual({
 					...node,
-					wizard: 'gandalf',
+					wizard: 'gandalf'
 				});
 			});
 
@@ -92,7 +92,7 @@ describe('MemoryAdapter', () => {
 
 				expect(result).toStrictEqual({
 					...node,
-					wizard: 'gandalf',
+					wizard: 'gandalf'
 				});
 			});
 
@@ -188,7 +188,7 @@ describe('MemoryAdapter', () => {
 
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: 'apply inside',
+					wizards: 'apply inside'
 				});
 
 				await adapter.storeNode(node);
@@ -213,7 +213,7 @@ describe('MemoryAdapter', () => {
 			it('does not modify the node in the cache', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: ['gandalf'],
+					wizards: ['gandalf']
 				});
 
 				await adapter.storeNode(node);
@@ -237,7 +237,7 @@ describe('MemoryAdapter', () => {
 			it('returns the same node', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: ['gandalf'],
+					wizards: ['gandalf']
 				});
 
 				await adapter.storeNode(node);
@@ -258,7 +258,7 @@ describe('MemoryAdapter', () => {
 			it('stores the updated node to the cache', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 
 				await adapter.storeNode(node);
@@ -278,14 +278,14 @@ describe('MemoryAdapter', () => {
 
 				expect(persisted_node).toStrictEqual({
 					...node,
-					wizards: ['saruman', 'gandalf'],
+					wizards: ['saruman', 'gandalf']
 				});
 			});
 
 			it('returns the updated node', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 
 				await adapter.storeNode(node);
@@ -300,14 +300,14 @@ describe('MemoryAdapter', () => {
 
 				expect(result).toStrictEqual({
 					...node,
-					wizards: ['saruman', 'gandalf'],
+					wizards: ['saruman', 'gandalf']
 				});
 			});
 
 			it('does not destructively modify the input node', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 
 				const original_node = { ...node };
@@ -379,7 +379,7 @@ describe('MemoryAdapter', () => {
 
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: 'apply inside',
+					wizards: 'apply inside'
 				});
 
 				await adapter.storeNode(node);
@@ -404,7 +404,7 @@ describe('MemoryAdapter', () => {
 			it('does not modify the node in the cache', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 
 				await adapter.storeNode(node);
@@ -428,7 +428,7 @@ describe('MemoryAdapter', () => {
 			it('returns the same node', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 
 				await adapter.storeNode(node);
@@ -449,7 +449,7 @@ describe('MemoryAdapter', () => {
 			it('stores the updated node to the cache', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: ['saruman', 'gandalf'],
+					wizards: ['saruman', 'gandalf']
 				});
 
 				await adapter.storeNode(node);
@@ -469,14 +469,14 @@ describe('MemoryAdapter', () => {
 
 				expect(persisted_node).toStrictEqual({
 					...node,
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 			});
 
 			it('returns the updated node', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: ['saruman', 'gandalf'],
+					wizards: ['saruman', 'gandalf']
 				});
 
 				await adapter.storeNode(node);
@@ -491,14 +491,14 @@ describe('MemoryAdapter', () => {
 
 				expect(result).toStrictEqual({
 					...node,
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 			});
 
 			it('does not destructively modify the input node', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: ['saruman', 'gandalf'],
+					wizards: ['saruman', 'gandalf']
 				});
 
 				const original_node = { ...node };
@@ -570,7 +570,7 @@ describe('MemoryAdapter', () => {
 
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: 'apply inside',
+					wizards: 'apply inside'
 				});
 
 				await adapter.storeNode(node);
@@ -595,7 +595,7 @@ describe('MemoryAdapter', () => {
 			it('stores the updated node to the cache', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 
 				await adapter.storeNode(node);
@@ -615,14 +615,14 @@ describe('MemoryAdapter', () => {
 
 				expect(persisted_node).toStrictEqual({
 					...node,
-					wizards: ['saruman', 'gandalf'],
+					wizards: ['saruman', 'gandalf']
 				});
 			});
 
 			it('returns the updated node', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 
 				await adapter.storeNode(node);
@@ -637,14 +637,14 @@ describe('MemoryAdapter', () => {
 
 				expect(result).toStrictEqual({
 					...node,
-					wizards: ['saruman', 'gandalf'],
+					wizards: ['saruman', 'gandalf']
 				});
 			});
 
 			it('does not destructively modify the input node', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 
 				const original_node = { ...node };
@@ -665,7 +665,7 @@ describe('MemoryAdapter', () => {
 				it('places element at first position in the list', async () => {
 					const adapter = new MemoryAdapter();
 					const node = NodeFactory.create({
-						wizards: ['saruman'],
+						wizards: ['saruman']
 					});
 
 					await adapter.storeNode(node);
@@ -681,7 +681,7 @@ describe('MemoryAdapter', () => {
 
 					expect(result).toStrictEqual({
 						...node,
-						wizards: ['gandalf', 'saruman'],
+						wizards: ['gandalf', 'saruman']
 					});
 				});
 			});
@@ -690,7 +690,7 @@ describe('MemoryAdapter', () => {
 				it('places element at expected position in the list', async () => {
 					const adapter = new MemoryAdapter();
 					const node = NodeFactory.create({
-						wizards: ['saruman', 'radagast', 'alatar'],
+						wizards: ['saruman', 'radagast', 'alatar']
 					});
 
 					await adapter.storeNode(node);
@@ -706,7 +706,7 @@ describe('MemoryAdapter', () => {
 
 					expect(result).toStrictEqual({
 						...node,
-						wizards: ['saruman', 'radagast', 'gandalf', 'alatar'],
+						wizards: ['saruman', 'radagast', 'gandalf', 'alatar']
 					});
 				});
 			});
@@ -715,7 +715,7 @@ describe('MemoryAdapter', () => {
 				it('fills the intervening slots with null values', async () => {
 					const adapter = new MemoryAdapter();
 					const node = NodeFactory.create({
-						wizards: ['saruman', 'radagast'],
+						wizards: ['saruman', 'radagast']
 					});
 
 					await adapter.storeNode(node);
@@ -731,7 +731,7 @@ describe('MemoryAdapter', () => {
 
 					expect(result).toStrictEqual({
 						...node,
-						wizards: ['saruman', 'radagast', null, null, null, 'gandalf'],
+						wizards: ['saruman', 'radagast', null, null, null, 'gandalf']
 					});
 				});
 			});
@@ -791,7 +791,7 @@ describe('MemoryAdapter', () => {
 
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: 'apply inside',
+					wizards: 'apply inside'
 				});
 
 				await adapter.storeNode(node);
@@ -816,7 +816,7 @@ describe('MemoryAdapter', () => {
 			it('updates the persisted node in the cache', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: ['gandalf', 'saruman'],
+					wizards: ['gandalf', 'saruman']
 				});
 
 				await adapter.storeNode(node);
@@ -836,14 +836,14 @@ describe('MemoryAdapter', () => {
 
 				expect(persisted_node).toStrictEqual({
 					...node,
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 			});
 
 			it('returns the updated node', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: ['gandalf', 'saruman'],
+					wizards: ['gandalf', 'saruman']
 				});
 
 				await adapter.storeNode(node);
@@ -858,14 +858,14 @@ describe('MemoryAdapter', () => {
 
 				expect(result).toStrictEqual({
 					...node,
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 			});
 
 			it('does not destructively modify the original node', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create({
-					wizards: ['gandalf', 'saruman'],
+					wizards: ['gandalf', 'saruman']
 				});
 
 				const original_node = { ...node };
@@ -886,7 +886,7 @@ describe('MemoryAdapter', () => {
 				it('returns the original node', async () => {
 					const adapter = new MemoryAdapter();
 					const node = NodeFactory.create({
-						wizards: [],
+						wizards: []
 					});
 
 					await adapter.storeNode(node);
@@ -905,7 +905,7 @@ describe('MemoryAdapter', () => {
 				it('does not modify the persisted node in the cache', async () => {
 					const adapter = new MemoryAdapter();
 					const node = NodeFactory.create({
-						wizards: [],
+						wizards: []
 					});
 
 					await adapter.storeNode(node);
@@ -933,7 +933,7 @@ describe('MemoryAdapter', () => {
 
 					const adapter = new MemoryAdapter();
 					const node = NodeFactory.create({
-						wizards: ['saruman', 'gandalf'],
+						wizards: ['saruman', 'gandalf']
 					});
 
 					await adapter.storeNode(node);
@@ -959,7 +959,7 @@ describe('MemoryAdapter', () => {
 				it('removes the last value from the list', async () => {
 					const adapter = new MemoryAdapter();
 					const node = NodeFactory.create({
-						wizards: ['gandalf', 'saruman', 'gandalf', 'saruman'],
+						wizards: ['gandalf', 'saruman', 'gandalf', 'saruman']
 					});
 
 					await adapter.storeNode(node);
@@ -974,7 +974,7 @@ describe('MemoryAdapter', () => {
 
 					expect(result).toStrictEqual({
 						...node,
-						wizards: ['gandalf', 'saruman', 'saruman'],
+						wizards: ['gandalf', 'saruman', 'saruman']
 					});
 				});
 			});

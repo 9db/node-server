@@ -69,7 +69,7 @@ describe('transformNode', () => {
 			foo: 'bar',
 			bar: 123.45,
 			baz: null,
-			wat: [true, 'asdf'],
+			wat: [true, 'asdf']
 		});
 
 		let index = 0;
@@ -94,7 +94,7 @@ describe('transformNode', () => {
 			foo: 'bar',
 			bar: 123.45,
 			baz: null,
-			wat: [true, 'asdf'],
+			wat: [true, 'asdf']
 		});
 
 		const transformed_node = transformNode(node, hostname, (value) => {
@@ -119,7 +119,7 @@ describe('transformNode', () => {
 			foo: 'rab',
 			bar: 617.25,
 			baz: 'something else',
-			wat: [false, 'fdsa'],
+			wat: [false, 'fdsa']
 		});
 	});
 });

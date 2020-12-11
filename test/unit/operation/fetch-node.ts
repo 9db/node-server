@@ -8,7 +8,7 @@ describe('FetchNodeOperation', () => {
 	const input = {
 		namespace_key: 'public',
 		type_key: 'wizard',
-		key: 'gandalf',
+		key: 'gandalf'
 	};
 
 	function createRepository(): Repository {
@@ -23,7 +23,7 @@ describe('FetchNodeOperation', () => {
 			const repository = createRepository();
 
 			const node = NodeFactory.create({
-				...input,
+				...input
 			});
 
 			await repository.storeNode(node);

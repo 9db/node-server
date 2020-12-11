@@ -19,7 +19,7 @@ async function postJson(url: string, data: JsonObject): Promise<ResponseData> {
 
 	return {
 		...result,
-		body,
+		body
 	};
 }
 

@@ -132,7 +132,7 @@ enum SystemErrorCode {
 	ENOTRECOVERABLE = 'ENOTRECOVERABLE', // State not recoverable
 	ERFKILL = 'ERFKILL', // Operation not possible due to RF-kill
 	EHWPOISON = 'EHWPOISON', // Memory page has hardware error
-	ENOTSUP = 'ENOTSUP', // Not supported
+	ENOTSUP = 'ENOTSUP' // Not supported
 }
 
 export default SystemErrorCode;

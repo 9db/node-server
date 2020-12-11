@@ -18,7 +18,7 @@ function buildDefaultConfig(): ServerConfig {
 	return {
 		port: 9999,
 		adapter: new MemoryAdapter(),
-		hostname: 'http://localhost',
+		hostname: 'http://localhost'
 	};
 }
 
@@ -33,7 +33,7 @@ class Server {
 	public constructor(partial_config?: Partial<ServerConfig>) {
 		const config: ServerConfig = {
 			...buildDefaultConfig(),
-			...partial_config,
+			...partial_config
 		};
 
 		this.port = config.port;

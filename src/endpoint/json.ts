@@ -7,7 +7,7 @@ import JsonBodyParser from 'server/body-parser/json';
 abstract class JsonEndpoint extends Endpoint<JsonObject> {
 	protected serializeError(error: HttpError): JsonObject {
 		return {
-			message: error.message,
+			message: error.message
 		};
 	}
 

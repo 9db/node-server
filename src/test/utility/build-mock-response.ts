@@ -7,7 +7,7 @@ function buildMockResponse(): HTTP.ServerResponse {
 	return {
 		/* eslint-disable @typescript-eslint/no-empty-function */
 		writeHead(_status_code: StatusCode, _headers: HeaderMap): void {},
-		end(_data: string | Buffer): void {},
+		end(_data: string | Buffer): void {}
 		/* eslint-enable @typescript-eslint/no-empty-function */
 	} as HTTP.ServerResponse;
 }

@@ -32,7 +32,7 @@ class PathParser {
 
 		return {
 			regex,
-			parameter_keys,
+			parameter_keys
 		};
 	}
 

@@ -52,7 +52,7 @@ abstract class Endpoint<T> {
 
 	protected getResponseHeaders(): HeaderMap {
 		return {
-			[HttpHeader.CONTENT_TYPE]: this.getContentType(),
+			[HttpHeader.CONTENT_TYPE]: this.getContentType()
 		};
 	}
 

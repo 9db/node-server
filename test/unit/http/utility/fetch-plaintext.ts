@@ -12,7 +12,7 @@ describe('fetchPlaintext', () => {
 			expect(request.headers).toEqual({
 				[HttpHeader.ACCEPT]: ContentType.TEXT,
 				[HttpHeader.CONNECTION]: 'close',
-				[HttpHeader.HOST]: 'localhost:4428',
+				[HttpHeader.HOST]: 'localhost:4428'
 			});
 
 			response.writeHead(StatusCode.SUCCESS);
@@ -29,7 +29,7 @@ describe('fetchPlaintext', () => {
 		it('returns the expected data', async () => {
 			const server = HTTP.createServer((_request, response) => {
 				response.writeHead(StatusCode.SUCCESS, {
-					[HttpHeader.CONTENT_TYPE]: ContentType.TEXT,
+					[HttpHeader.CONTENT_TYPE]: ContentType.TEXT
 				});
 
 				response.end('speak friend and enter');
@@ -43,7 +43,7 @@ describe('fetchPlaintext', () => {
 			expect(result.status_code).toStrictEqual(StatusCode.SUCCESS);
 
 			expect(result.headers).toMatchObject({
-				[HttpHeader.CONTENT_TYPE]: ContentType.TEXT,
+				[HttpHeader.CONTENT_TYPE]: ContentType.TEXT
 			});
 
 			await closeServer(server);

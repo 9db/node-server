@@ -4,7 +4,7 @@ enum SystemKey {
 	ACCOUNT_TYPE = 'account',
 	NAMESPACE_TYPE = 'namespace',
 	SYSTEM_ACCOUNT = 'system',
-	ANONYMOUS_ACCOUNT = 'anonymous',
+	ANONYMOUS_ACCOUNT = 'anonymous'
 }
 
 export default SystemKey;

@@ -56,7 +56,7 @@ describe('Endpoint', () => {
 				await sleep(10);
 
 				expect(write_head_spy).toHaveBeenCalledWith(StatusCode.SUCCESS, {
-					[HttpHeader.CONTENT_TYPE]: ContentType.TEXT,
+					[HttpHeader.CONTENT_TYPE]: ContentType.TEXT
 				});
 			});
 
@@ -112,7 +112,7 @@ describe('Endpoint', () => {
 				await sleep(10);
 
 				expect(write_head_spy).toHaveBeenCalledWith(StatusCode.SUCCESS, {
-					[HttpHeader.CONTENT_TYPE]: ContentType.TEXT,
+					[HttpHeader.CONTENT_TYPE]: ContentType.TEXT
 				});
 			});
 
@@ -336,7 +336,7 @@ describe('Endpoint', () => {
 			const headers = endpoint.privilegedGetResponseHeaders();
 
 			expect(headers).toStrictEqual({
-				[HttpHeader.CONTENT_TYPE]: ContentType.JSON,
+				[HttpHeader.CONTENT_TYPE]: ContentType.JSON
 			});
 		});
 	});
@@ -361,7 +361,7 @@ describe('Endpoint', () => {
 			request,
 			response,
 			{
-				wizard: 'gandalf',
+				wizard: 'gandalf'
 			},
 			repository
 		);
@@ -403,12 +403,7 @@ describe('Endpoint', () => {
 			const response = buildMockResponse();
 			const repository = createRepository();
 
-			const endpoint = new ThrowawayEndpoint(
-				request,
-				response,
-				{},
-				repository
-			);
+			const endpoint = new ThrowawayEndpoint(request, response, {}, repository);
 
 			const write_head_spy = jest.spyOn(response, 'writeHead');
 
@@ -436,12 +431,7 @@ describe('Endpoint', () => {
 			const response = buildMockResponse();
 			const repository = createRepository();
 
-			const endpoint = new ThrowawayEndpoint(
-				request,
-				response,
-				{},
-				repository
-			);
+			const endpoint = new ThrowawayEndpoint(request, response, {}, repository);
 
 			const actual_repository = endpoint.privilegedGetRepository();
 

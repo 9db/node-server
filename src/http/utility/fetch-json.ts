@@ -17,7 +17,7 @@ async function fetchJson(url: string): Promise<ResponseData> {
 
 	return {
 		...result,
-		body,
+		body
 	};
 }
 

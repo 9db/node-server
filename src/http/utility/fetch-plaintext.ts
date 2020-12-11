@@ -15,7 +15,7 @@ async function fetchPlaintext(url: string): Promise<ResponseData> {
 
 	return {
 		...result,
-		body,
+		body
 	};
 }
 

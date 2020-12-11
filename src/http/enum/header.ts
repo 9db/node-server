@@ -20,7 +20,7 @@ enum Header {
 	ORIGIN = 'origin',
 	SET_COOKIE = 'set-cookie',
 	TRANSFER_ENCODING = 'transfer-encoding',
-	USER_AGENT = 'user-agent',
+	USER_AGENT = 'user-agent'
 }
 
 export default Header;

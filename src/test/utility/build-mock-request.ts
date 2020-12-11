@@ -10,13 +10,13 @@ function buildMockRequest(
 	content_type: ContentType
 ): HTTP.IncomingMessage {
 	const headers = {
-		[HttpHeader.ACCEPT]: content_type,
+		[HttpHeader.ACCEPT]: content_type
 	};
 
 	return {
 		url,
 		method,
-		headers,
+		headers
 	} as HTTP.IncomingMessage;
 }
 

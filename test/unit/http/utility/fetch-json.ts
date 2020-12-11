@@ -12,11 +12,11 @@ describe('fetchJson', () => {
 			expect(request.headers).toEqual({
 				[HttpHeader.ACCEPT]: ContentType.JSON,
 				[HttpHeader.CONNECTION]: 'close',
-				[HttpHeader.HOST]: 'localhost:4428',
+				[HttpHeader.HOST]: 'localhost:4428'
 			});
 
 			response.writeHead(StatusCode.SUCCESS, {
-				[HttpHeader.CONTENT_TYPE]: ContentType.JSON,
+				[HttpHeader.CONTENT_TYPE]: ContentType.JSON
 			});
 
 			response.end('{}');
@@ -33,12 +33,12 @@ describe('fetchJson', () => {
 			const expected_body = {
 				name: 'gandalf',
 				color: 'grey',
-				horse: 'shadowfax',
+				horse: 'shadowfax'
 			};
 
 			const server = HTTP.createServer((_request, response) => {
 				response.writeHead(StatusCode.SUCCESS, {
-					[HttpHeader.CONTENT_TYPE]: ContentType.JSON,
+					[HttpHeader.CONTENT_TYPE]: ContentType.JSON
 				});
 
 				const serialized_body = JSON.stringify(expected_body);
@@ -54,7 +54,7 @@ describe('fetchJson', () => {
 			expect(result.status_code).toStrictEqual(StatusCode.SUCCESS);
 
 			expect(result.headers).toMatchObject({
-				[HttpHeader.CONTENT_TYPE]: ContentType.JSON,
+				[HttpHeader.CONTENT_TYPE]: ContentType.JSON
 			});
 
 			await closeServer(server);

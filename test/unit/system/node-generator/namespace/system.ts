@@ -15,7 +15,7 @@ describe('SystemNamespaceGenerator', () => {
 				key: SystemKey.SYSTEM_NAMESPACE,
 				creator: `${hostname}/system/account/system`,
 				created_at: 0,
-				updated_at: 0,
+				updated_at: 0
 			});
 		});
 	});

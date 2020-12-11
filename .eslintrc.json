@@ -24,6 +24,7 @@
 		"project":     "./tsconfig.json"
 	},
 	"rules": {
+		"@typescript-eslint/comma-dangle": ["error", "never"],
 		"@typescript-eslint/camelcase": "off",
 		"@typescript-eslint/naming-convention": [
 			"error",

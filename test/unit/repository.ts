@@ -41,7 +41,7 @@ describe('Repository', () => {
 		describe('when node contains standardized hostname references', () => {
 			it('reinstates the original hostname before returning the node', async () => {
 				const expected_node = NodeFactory.create({
-					some_url: '<9dbhost>/foo/bar/baz',
+					some_url: '<9dbhost>/foo/bar/baz'
 				});
 
 				await adapter.storeNode(expected_node);
@@ -54,7 +54,7 @@ describe('Repository', () => {
 
 				expect(actual_node).toStrictEqual({
 					...expected_node,
-					some_url: `${hostname}/foo/bar/baz`,
+					some_url: `${hostname}/foo/bar/baz`
 				});
 			});
 		});
@@ -73,7 +73,7 @@ describe('Repository', () => {
 					key: SystemKey.GENERIC_TYPE,
 					creator: `${hostname}/system/account/system`,
 					created_at: 0,
-					updated_at: 0,
+					updated_at: 0
 				});
 			});
 		});
@@ -98,7 +98,7 @@ describe('Repository', () => {
 			const expected_node = NodeFactory.create({
 				creator,
 				some_url: `${hostname}/foo/bar/baz`,
-				url_list: [`${hostname}/bam`, `${hostname}/wat`],
+				url_list: [`${hostname}/bam`, `${hostname}/wat`]
 			});
 
 			await repository.storeNode(expected_node);
@@ -113,7 +113,7 @@ describe('Repository', () => {
 				...expected_node,
 				creator: '<9dbhost>/public/account/iluvatar',
 				some_url: '<9dbhost>/foo/bar/baz',
-				url_list: ['<9dbhost>/bam', '<9dbhost>/wat'],
+				url_list: ['<9dbhost>/bam', '<9dbhost>/wat']
 			});
 		});
 	});
@@ -140,7 +140,7 @@ describe('Repository', () => {
 
 			expect(persisted_node).toStrictEqual({
 				...node,
-				wizard: 'gandalf',
+				wizard: 'gandalf'
 			});
 		});
 
@@ -159,7 +159,7 @@ describe('Repository', () => {
 
 			expect(result).toStrictEqual({
 				...node,
-				wizard: 'gandalf',
+				wizard: 'gandalf'
 			});
 		});
 
@@ -182,7 +182,7 @@ describe('Repository', () => {
 
 		it('replaces explicit hostname references with placeholder', async () => {
 			const node = NodeFactory.create({
-				creator,
+				creator
 			});
 
 			await repository.storeNode(node);
@@ -204,7 +204,7 @@ describe('Repository', () => {
 			expect(persisted_node).toStrictEqual({
 				...node,
 				creator: '<9dbhost>/public/account/iluvatar',
-				wizard_url: '<9dbhost>/gandalf',
+				wizard_url: '<9dbhost>/gandalf'
 			});
 		});
 	});
@@ -239,7 +239,7 @@ describe('Repository', () => {
 				expect.assertions(1);
 
 				const node = NodeFactory.create({
-					wizards: 'apply inside',
+					wizards: 'apply inside'
 				});
 
 				await repository.storeNode(node);
@@ -263,7 +263,7 @@ describe('Repository', () => {
 		describe('when set already includes specified value', () => {
 			it('does not modify the node in the cache', async () => {
 				const node = NodeFactory.create({
-					wizards: ['gandalf'],
+					wizards: ['gandalf']
 				});
 
 				await repository.storeNode(node);
@@ -286,7 +286,7 @@ describe('Repository', () => {
 
 			it('returns the same node', async () => {
 				const node = NodeFactory.create({
-					wizards: ['gandalf'],
+					wizards: ['gandalf']
 				});
 
 				await repository.storeNode(node);
@@ -306,7 +306,7 @@ describe('Repository', () => {
 		describe('when set does not yet include specified value', () => {
 			it('stores the updated node to the cache', async () => {
 				const node = NodeFactory.create({
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 
 				await repository.storeNode(node);
@@ -326,13 +326,13 @@ describe('Repository', () => {
 
 				expect(persisted_node).toStrictEqual({
 					...node,
-					wizards: ['saruman', 'gandalf'],
+					wizards: ['saruman', 'gandalf']
 				});
 			});
 
 			it('returns the updated node', async () => {
 				const node = NodeFactory.create({
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 
 				await repository.storeNode(node);
@@ -347,13 +347,13 @@ describe('Repository', () => {
 
 				expect(result).toStrictEqual({
 					...node,
-					wizards: ['saruman', 'gandalf'],
+					wizards: ['saruman', 'gandalf']
 				});
 			});
 
 			it('does not destructively modify the input node', async () => {
 				const node = NodeFactory.create({
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 
 				const original_node = { ...node };
@@ -373,7 +373,7 @@ describe('Repository', () => {
 			it('replaces explicit hostname references with placeholder', async () => {
 				const node = NodeFactory.create({
 					creator,
-					urls: [],
+					urls: []
 				});
 
 				await repository.storeNode(node);
@@ -394,7 +394,7 @@ describe('Repository', () => {
 				expect(persisted_node).toStrictEqual({
 					...node,
 					creator: '<9dbhost>/public/account/iluvatar',
-					urls: ['<9dbhost>/gandalf'],
+					urls: ['<9dbhost>/gandalf']
 				});
 			});
 		});
@@ -430,7 +430,7 @@ describe('Repository', () => {
 				expect.assertions(1);
 
 				const node = NodeFactory.create({
-					wizards: 'apply inside',
+					wizards: 'apply inside'
 				});
 
 				await repository.storeNode(node);
@@ -454,7 +454,7 @@ describe('Repository', () => {
 		describe('when set does not yet include specified value', () => {
 			it('does not modify the node in the cache', async () => {
 				const node = NodeFactory.create({
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 
 				await repository.storeNode(node);
@@ -477,7 +477,7 @@ describe('Repository', () => {
 
 			it('returns the same node', async () => {
 				const node = NodeFactory.create({
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 
 				await repository.storeNode(node);
@@ -497,7 +497,7 @@ describe('Repository', () => {
 		describe('when set includes specified value', () => {
 			it('stores the updated node to the cache', async () => {
 				const node = NodeFactory.create({
-					wizards: ['saruman', 'gandalf'],
+					wizards: ['saruman', 'gandalf']
 				});
 
 				await repository.storeNode(node);
@@ -517,13 +517,13 @@ describe('Repository', () => {
 
 				expect(persisted_node).toStrictEqual({
 					...node,
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 			});
 
 			it('returns the updated node', async () => {
 				const node = NodeFactory.create({
-					wizards: ['saruman', 'gandalf'],
+					wizards: ['saruman', 'gandalf']
 				});
 
 				await repository.storeNode(node);
@@ -538,13 +538,13 @@ describe('Repository', () => {
 
 				expect(result).toStrictEqual({
 					...node,
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 			});
 
 			it('does not destructively modify the input node', async () => {
 				const node = NodeFactory.create({
-					wizards: ['saruman', 'gandalf'],
+					wizards: ['saruman', 'gandalf']
 				});
 
 				const original_node = { ...node };
@@ -593,7 +593,7 @@ describe('Repository', () => {
 				expect.assertions(1);
 
 				const node = NodeFactory.create({
-					wizards: 'apply inside',
+					wizards: 'apply inside'
 				});
 
 				await repository.storeNode(node);
@@ -618,7 +618,7 @@ describe('Repository', () => {
 			it('stores the updated node to the cache', async () => {
 				const node = NodeFactory.create({
 					creator,
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 
 				await repository.storeNode(node);
@@ -638,13 +638,13 @@ describe('Repository', () => {
 
 				expect(persisted_node).toStrictEqual({
 					...node,
-					wizards: ['saruman', 'gandalf'],
+					wizards: ['saruman', 'gandalf']
 				});
 			});
 
 			it('returns the updated node', async () => {
 				const node = NodeFactory.create({
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 
 				await repository.storeNode(node);
@@ -659,13 +659,13 @@ describe('Repository', () => {
 
 				expect(result).toStrictEqual({
 					...node,
-					wizards: ['saruman', 'gandalf'],
+					wizards: ['saruman', 'gandalf']
 				});
 			});
 
 			it('does not destructively modify the input node', async () => {
 				const node = NodeFactory.create({
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 
 				const original_node = { ...node };
@@ -685,7 +685,7 @@ describe('Repository', () => {
 			it('replaces explicit hostname with placeholder', async () => {
 				const node = NodeFactory.create({
 					creator,
-					wizard_urls: [],
+					wizard_urls: []
 				});
 
 				await repository.storeNode(node);
@@ -706,14 +706,14 @@ describe('Repository', () => {
 				expect(persisted_node).toStrictEqual({
 					...node,
 					creator: '<9dbhost>/public/account/iluvatar',
-					wizard_urls: ['<9dbhost>/gandalf'],
+					wizard_urls: ['<9dbhost>/gandalf']
 				});
 			});
 
 			describe('when position argument is zero', () => {
 				it('places element at first position in the list', async () => {
 					const node = NodeFactory.create({
-						wizards: ['saruman'],
+						wizards: ['saruman']
 					});
 
 					await repository.storeNode(node);
@@ -729,7 +729,7 @@ describe('Repository', () => {
 
 					expect(result).toStrictEqual({
 						...node,
-						wizards: ['gandalf', 'saruman'],
+						wizards: ['gandalf', 'saruman']
 					});
 				});
 			});
@@ -737,7 +737,7 @@ describe('Repository', () => {
 			describe('when position argument is mid-way through the list', () => {
 				it('places element at expected position in the list', async () => {
 					const node = NodeFactory.create({
-						wizards: ['saruman', 'radagast', 'alatar'],
+						wizards: ['saruman', 'radagast', 'alatar']
 					});
 
 					await repository.storeNode(node);
@@ -753,7 +753,7 @@ describe('Repository', () => {
 
 					expect(result).toStrictEqual({
 						...node,
-						wizards: ['saruman', 'radagast', 'gandalf', 'alatar'],
+						wizards: ['saruman', 'radagast', 'gandalf', 'alatar']
 					});
 				});
 			});
@@ -761,7 +761,7 @@ describe('Repository', () => {
 			describe('when position argument exceeds the length of the list', () => {
 				it('fills the intervening slots with null values', async () => {
 					const node = NodeFactory.create({
-						wizards: ['saruman', 'radagast'],
+						wizards: ['saruman', 'radagast']
 					});
 
 					await repository.storeNode(node);
@@ -777,7 +777,7 @@ describe('Repository', () => {
 
 					expect(result).toStrictEqual({
 						...node,
-						wizards: ['saruman', 'radagast', null, null, null, 'gandalf'],
+						wizards: ['saruman', 'radagast', null, null, null, 'gandalf']
 					});
 				});
 			});
@@ -814,7 +814,7 @@ describe('Repository', () => {
 				expect.assertions(1);
 
 				const node = NodeFactory.create({
-					wizards: 'apply inside',
+					wizards: 'apply inside'
 				});
 
 				await repository.storeNode(node);
@@ -838,7 +838,7 @@ describe('Repository', () => {
 		describe('when the list exists and is an array', () => {
 			it('updates the persisted node in the cache', async () => {
 				const node = NodeFactory.create({
-					wizards: ['gandalf', 'saruman'],
+					wizards: ['gandalf', 'saruman']
 				});
 
 				await repository.storeNode(node);
@@ -858,13 +858,13 @@ describe('Repository', () => {
 
 				expect(persisted_node).toStrictEqual({
 					...node,
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 			});
 
 			it('returns the updated node', async () => {
 				const node = NodeFactory.create({
-					wizards: ['gandalf', 'saruman'],
+					wizards: ['gandalf', 'saruman']
 				});
 
 				await repository.storeNode(node);
@@ -879,13 +879,13 @@ describe('Repository', () => {
 
 				expect(result).toStrictEqual({
 					...node,
-					wizards: ['saruman'],
+					wizards: ['saruman']
 				});
 			});
 
 			it('does not destructively modify the original node', async () => {
 				const node = NodeFactory.create({
-					wizards: ['gandalf', 'saruman'],
+					wizards: ['gandalf', 'saruman']
 				});
 
 				const original_node = { ...node };
@@ -905,7 +905,7 @@ describe('Repository', () => {
 			describe('when specified value does not exist in list', () => {
 				it('returns the original node', async () => {
 					const node = NodeFactory.create({
-						wizards: [],
+						wizards: []
 					});
 
 					await repository.storeNode(node);
@@ -923,7 +923,7 @@ describe('Repository', () => {
 
 				it('does not modify the persisted node in the cache', async () => {
 					const node = NodeFactory.create({
-						wizards: [],
+						wizards: []
 					});
 
 					await repository.storeNode(node);
@@ -950,7 +950,7 @@ describe('Repository', () => {
 					expect.assertions(1);
 
 					const node = NodeFactory.create({
-						wizards: ['saruman', 'gandalf'],
+						wizards: ['saruman', 'gandalf']
 					});
 
 					await repository.storeNode(node);
@@ -975,7 +975,7 @@ describe('Repository', () => {
 			describe('when the position argument is omitted', () => {
 				it('removes the last value from the list', async () => {
 					const node = NodeFactory.create({
-						wizards: ['gandalf', 'saruman', 'gandalf', 'saruman'],
+						wizards: ['gandalf', 'saruman', 'gandalf', 'saruman']
 					});
 
 					await repository.storeNode(node);
@@ -990,7 +990,7 @@ describe('Repository', () => {
 
 					expect(result).toStrictEqual({
 						...node,
-						wizards: ['gandalf', 'saruman', 'saruman'],
+						wizards: ['gandalf', 'saruman', 'saruman']
 					});
 				});
 			});

@@ -21,7 +21,7 @@ describe('SystemCache', () => {
 					key: SystemKey.GENERIC_TYPE,
 					creator,
 					created_at: 0,
-					updated_at: 0,
+					updated_at: 0
 				});
 			});
 		});
@@ -40,7 +40,7 @@ describe('SystemCache', () => {
 					key: SystemKey.ACCOUNT_TYPE,
 					creator,
 					created_at: 0,
-					updated_at: 0,
+					updated_at: 0
 				});
 			});
 		});
@@ -59,7 +59,7 @@ describe('SystemCache', () => {
 					key: SystemKey.NAMESPACE_TYPE,
 					creator,
 					created_at: 0,
-					updated_at: 0,
+					updated_at: 0
 				});
 			});
 		});
@@ -78,7 +78,7 @@ describe('SystemCache', () => {
 					key: SystemKey.SYSTEM_NAMESPACE,
 					creator,
 					created_at: 0,
-					updated_at: 0,
+					updated_at: 0
 				});
 			});
 		});
@@ -97,7 +97,7 @@ describe('SystemCache', () => {
 					key: SystemKey.SYSTEM_ACCOUNT,
 					creator,
 					created_at: 0,
-					updated_at: 0,
+					updated_at: 0
 				});
 			});
 		});
@@ -116,7 +116,7 @@ describe('SystemCache', () => {
 					key: SystemKey.ANONYMOUS_ACCOUNT,
 					creator,
 					created_at: 0,
-					updated_at: 0,
+					updated_at: 0
 				});
 			});
 		});

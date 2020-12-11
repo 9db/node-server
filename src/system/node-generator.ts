@@ -15,7 +15,7 @@ abstract class SystemNodeGenerator {
 			key: this.getNodeKey(),
 			creator: this.getCreator(),
 			created_at: 0,
-			updated_at: 0,
+			updated_at: 0
 		};
 	}
 

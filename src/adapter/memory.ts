@@ -44,7 +44,7 @@ class MemoryAdapter implements Adapter {
 
 		const updated_node = {
 			...node,
-			[field_key]: value,
+			[field_key]: value
 		};
 
 		return this.storeNode(updated_node);
@@ -68,7 +68,7 @@ class MemoryAdapter implements Adapter {
 
 		const updated_node = {
 			...node,
-			[field_key]: updated_set,
+			[field_key]: updated_set
 		};
 
 		return this.storeNode(updated_node);
@@ -94,7 +94,7 @@ class MemoryAdapter implements Adapter {
 
 		const updated_node = {
 			...node,
-			[field_key]: updated_set,
+			[field_key]: updated_set
 		};
 
 		return this.storeNode(updated_node);
@@ -138,7 +138,7 @@ class MemoryAdapter implements Adapter {
 
 		const updated_node = {
 			...node,
-			[field_key]: updated_list,
+			[field_key]: updated_list
 		};
 
 		return this.storeNode(updated_node);
@@ -173,12 +173,12 @@ class MemoryAdapter implements Adapter {
 
 		const updated_list = [
 			...list_field.slice(0, position),
-			...list_field.slice(position + 1),
+			...list_field.slice(position + 1)
 		];
 
 		const updated_node = {
 			...node,
-			[field_key]: updated_list,
+			[field_key]: updated_list
 		};
 
 		return this.storeNode(updated_node);

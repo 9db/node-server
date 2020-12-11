@@ -19,12 +19,12 @@ function transmit(
 	data: Buffer
 ): Promise<ResponseData> {
 	const headers = {
-		[HttpHeader.ACCEPT]: content_type,
+		[HttpHeader.ACCEPT]: content_type
 	};
 
 	const options = {
 		method,
-		headers,
+		headers
 	};
 
 	const request = HTTP.request(url, options);
@@ -45,7 +45,7 @@ function transmit(
 				resolve({
 					body,
 					headers,
-					status_code,
+					status_code
 				});
 			});
 		});

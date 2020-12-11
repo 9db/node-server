@@ -7,7 +7,7 @@ describe('PathParser', () => {
 
 		expect(result).toStrictEqual({
 			regex: /^\/v1\/([^\/]+)\/passwords\/([^\/]+)$/,
-			parameter_keys: ['wizard', 'password'],
+			parameter_keys: ['wizard', 'password']
 		});
 	});
 });

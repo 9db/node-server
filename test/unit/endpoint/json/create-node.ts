@@ -36,7 +36,7 @@ describe('JsonCreateNodeEndpoint', () => {
 				{
 					namespace_key: 'public',
 					type_key: 'type',
-					key: 'wizard',
+					key: 'wizard'
 				},
 				repository
 			);
@@ -56,7 +56,7 @@ describe('JsonCreateNodeEndpoint', () => {
 		it('returns the expected node data', async () => {
 			const data = {
 				name: `${hostname}/system/type/string`,
-				age: `${hostname}/system/type/number`,
+				age: `${hostname}/system/type/number`
 			};
 
 			const url = `http://localhost:${port}/public/type/wizard`;
@@ -69,7 +69,7 @@ describe('JsonCreateNodeEndpoint', () => {
 				creator: 'http://localhost/system/account/anonymous',
 				created_at: current_timestamp,
 				updated_at: current_timestamp,
-				...data,
+				...data
 			});
 		});
 
@@ -78,7 +78,7 @@ describe('JsonCreateNodeEndpoint', () => {
 			const result = await postJson(url, {});
 
 			expect(result.headers).toMatchObject({
-				[HttpHeader.CONTENT_TYPE]: ContentType.JSON,
+				[HttpHeader.CONTENT_TYPE]: ContentType.JSON
 			});
 		});
 
@@ -92,7 +92,7 @@ describe('JsonCreateNodeEndpoint', () => {
 		it('persists the node to the repository', async () => {
 			const data = {
 				name: `${hostname}/system/type/string`,
-				age: `${hostname}/system/type/number`,
+				age: `${hostname}/system/type/number`
 			};
 
 			const url = `http://localhost:${port}/public/type/wizard`;
@@ -112,7 +112,7 @@ describe('JsonCreateNodeEndpoint', () => {
 				creator: 'http://localhost/system/account/anonymous',
 				created_at: current_timestamp,
 				updated_at: current_timestamp,
-				...data,
+				...data
 			});
 		});
 	});

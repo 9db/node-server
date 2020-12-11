@@ -144,7 +144,7 @@ describe('Route', () => {
 
 			const expected_parameters = {
 				wizard: 'gandalf',
-				weapon: 'glamdring',
+				weapon: 'glamdring'
 			};
 
 			class ThrowawayEndpoint extends MockEndpoint {

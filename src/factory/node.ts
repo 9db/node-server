@@ -19,7 +19,7 @@ class NodeFactory {
 			creator: randomCreator(),
 			created_at: Date.now(),
 			updated_at: Date.now(),
-			...node,
+			...node
 		};
 	}
 }

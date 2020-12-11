@@ -12,7 +12,7 @@ describe('Server', () => {
 
 		beforeEach(() => {
 			server = new Server({
-				port,
+				port
 			});
 
 			server.start();
@@ -69,7 +69,7 @@ describe('Server', () => {
 				const port = 4492;
 
 				const server = new Server({
-					port,
+					port
 				});
 
 				expect(server.getPort()).toStrictEqual(port);
@@ -91,7 +91,7 @@ describe('Server', () => {
 				const adapter = new MemoryAdapter();
 
 				const server = new Server({
-					adapter,
+					adapter
 				});
 
 				expect(server.getAdapter()).toStrictEqual(adapter);
@@ -113,7 +113,7 @@ describe('Server', () => {
 				const hostname = 'foo.bar.com';
 
 				const server = new Server({
-					hostname,
+					hostname
 				});
 
 				expect(server.getHostname()).toStrictEqual(hostname);

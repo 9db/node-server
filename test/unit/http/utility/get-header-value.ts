@@ -6,7 +6,7 @@ import getHeaderValue from 'http/utility/get-header-value';
 
 function buildRequest(headers: HeaderMap): HTTP.IncomingMessage {
 	const request = {
-		headers,
+		headers
 	};
 
 	return request as HTTP.IncomingMessage;
@@ -25,7 +25,7 @@ describe('getHeaderValue', () => {
 	describe('when specified header was supplied', () => {
 		it('returns the expected value', () => {
 			const request = buildRequest({
-				[HttpHeader.ORIGIN]: '9db.org',
+				[HttpHeader.ORIGIN]: '9db.org'
 			});
 
 			const header_value = getHeaderValue(request, HttpHeader.ORIGIN);
@@ -38,8 +38,8 @@ describe('getHeaderValue', () => {
 		it('returns the first value in the array', () => {
 			const request = {
 				headers: {
-					[HttpHeader.ORIGIN]: ['9db.org', 'gatewaker.com'],
-				},
+					[HttpHeader.ORIGIN]: ['9db.org', 'gatewaker.com']
+				}
 			} as unknown;
 
 			const header_value = getHeaderValue(

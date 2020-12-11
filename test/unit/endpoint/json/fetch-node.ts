@@ -30,7 +30,7 @@ describe('JsonFetchNodeEndpoint', () => {
 					{
 						namespace_key: 'public',
 						type_key: 'wizard',
-						key: 'gandalf',
+						key: 'gandalf'
 					},
 					repository
 				);
@@ -50,7 +50,7 @@ describe('JsonFetchNodeEndpoint', () => {
 				const node = NodeFactory.create({
 					namespace_key: 'public',
 					type_key: 'wizard',
-					key: 'gandalf',
+					key: 'gandalf'
 				});
 
 				await repository.storeNode(node);
@@ -62,7 +62,7 @@ describe('JsonFetchNodeEndpoint', () => {
 				expect(result.status_code).toStrictEqual(StatusCode.SUCCESS);
 
 				expect(result.headers).toMatchObject({
-					[HttpHeader.CONTENT_TYPE]: ContentType.JSON,
+					[HttpHeader.CONTENT_TYPE]: ContentType.JSON
 				});
 			});
 		});
@@ -73,13 +73,13 @@ describe('JsonFetchNodeEndpoint', () => {
 				const result = await fetchJson(url);
 
 				expect(result.body).toStrictEqual({
-					message: 'File not found',
+					message: 'File not found'
 				});
 
 				expect(result.status_code).toStrictEqual(StatusCode.FILE_NOT_FOUND);
 
 				expect(result.headers).toMatchObject({
-					[HttpHeader.CONTENT_TYPE]: ContentType.JSON,
+					[HttpHeader.CONTENT_TYPE]: ContentType.JSON
 				});
 			});
 		});
