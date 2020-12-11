@@ -15,7 +15,8 @@ describe('SystemAccountGenerator', () => {
 				key: SystemKey.SYSTEM_ACCOUNT,
 				creator: `${hostname}/system/account/system`,
 				created_at: 0,
-				updated_at: 0
+				updated_at: 0,
+				changes: []
 			});
 		});
 	});

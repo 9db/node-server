@@ -1,6 +1,7 @@
 import Node from 'type/node';
 import Adapter from 'interface/adapter';
 import SystemCache from 'system/cache';
+import buildNodeUrl from 'utility/build-node-url';
 import transformNode from 'repository/utility/transform-node';
 import transformValue from 'repository/utility/transform-value';
 import standardizeUrl from 'repository/utility/standardize-url';
@@ -158,6 +159,12 @@ class Repository implements Adapter {
 		);
 
 		return this.unstandardizeNode(node);
+	}
+
+	public buildNodeUrl(node: Node): string {
+		const hostname = this.getHostname();
+
+		return buildNodeUrl(hostname, node);
 	}
 
 	private fetchSystemNode(

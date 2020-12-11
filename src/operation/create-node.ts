@@ -36,7 +36,8 @@ class CreateNodeOperation extends Operation<Node> {
 			...input,
 			creator,
 			created_at,
-			updated_at
+			updated_at,
+			changes: []
 		};
 	}
 

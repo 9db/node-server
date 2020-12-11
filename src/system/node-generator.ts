@@ -1,5 +1,6 @@
 import Node from 'type/node';
 import SystemKey from 'system/enum/key';
+import buildNodeUrl from 'utility/build-node-url';
 
 abstract class SystemNodeGenerator {
 	private hostname: string;
@@ -15,7 +16,8 @@ abstract class SystemNodeGenerator {
 			key: this.getNodeKey(),
 			creator: this.getCreator(),
 			created_at: 0,
-			updated_at: 0
+			updated_at: 0,
+			changes: []
 		};
 	}
 
@@ -24,27 +26,16 @@ abstract class SystemNodeGenerator {
 	}
 
 	protected getCreator(): string {
+		const hostname = this.getHostname();
 		const namespace_key = this.getNamespaceKey();
 		const type_key = SystemKey.ACCOUNT_TYPE;
-		const node_key = SystemKey.SYSTEM_ACCOUNT;
+		const key = SystemKey.SYSTEM_ACCOUNT;
 
-		return this.buildUrlForKeys(namespace_key, type_key, node_key);
-	}
-
-	private buildUrlForKeys(
-		namespace_key: string,
-		type_key: string,
-		node_key: string
-	): string {
-		const path = `/${namespace_key}/${type_key}/${node_key}`;
-
-		return this.buildUrl(path);
-	}
-
-	private buildUrl(path: string): string {
-		const hostname = this.getHostname();
-
-		return `${hostname}${path}`;
+		return buildNodeUrl(hostname, {
+			namespace_key,
+			type_key,
+			key
+		});
 	}
 
 	private getHostname(): string {

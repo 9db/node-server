@@ -69,6 +69,7 @@ describe('JsonCreateNodeEndpoint', () => {
 				creator: 'http://localhost/system/account/anonymous',
 				created_at: current_timestamp,
 				updated_at: current_timestamp,
+				changes: [],
 				...data
 			});
 		});
@@ -112,6 +113,7 @@ describe('JsonCreateNodeEndpoint', () => {
 				creator: 'http://localhost/system/account/anonymous',
 				created_at: current_timestamp,
 				updated_at: current_timestamp,
+				changes: [],
 				...data
 			});
 		});
