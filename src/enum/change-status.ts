@@ -1,5 +1,5 @@
 enum ChangeStatus {
-	ACCEPTED = 'accepted',
+	APPROVED = 'approved',
 	PENDING = 'pending',
 	REJECTED = 'rejected'
 }

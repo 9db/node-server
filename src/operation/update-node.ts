@@ -3,7 +3,7 @@ import Operation from 'operation';
 import Repository from 'repository';
 import ChangeType from 'enum/change-type';
 import BadRequestError from 'http/error/bad-request';
-import {PrimitiveValue} from 'type/field-value';
+import { PrimitiveValue } from 'type/field-value';
 import ChangeFieldOperation from 'operation/change-field';
 
 export interface ChangeInput {

@@ -5,7 +5,7 @@ interface NodeParameters {
 }
 
 function buildNodeUrl(hostname: string, parameters: NodeParameters): string {
-	const {namespace_key, type_key, key} = parameters;
+	const { namespace_key, type_key, key } = parameters;
 
 	return `${hostname}/${namespace_key}/${type_key}/${key}`;
 }

@@ -1,22 +1,16 @@
-import HTTP from 'http';
-
-import Node from 'type/node';
-import postJson from 'http/utility/post-json';
 import SystemKey from 'system/enum/key';
 import Repository from 'repository';
 import ChangeType from 'enum/change-type';
-import closeServer from 'http/utility/close-server';
 import ChangeStatus from 'enum/change-status';
 import KeyGenerator from 'utility/key-generator';
 import MemoryAdapter from 'adapter/memory';
-import JsonUpdateNodeEndpoint from 'endpoint/json/update-node';
+import BadRequestError from 'http/error/bad-request';
+import UpdateNodeOperation from 'operation/update-node';
 
-describe('JsonUpdateNodeEndpoint', () => {
+describe('UpdateNodeOperation', () => {
 	const hostname = 'https://9db.org';
-	const port = 4428;
 	const current_timestamp = Date.now();
 
-	let server!: HTTP.Server;
 	let repository!: Repository;
 	let date_spy!: jest.SpyInstance;
 	let id_spy!: jest.SpyInstance;
@@ -27,23 +21,6 @@ describe('JsonUpdateNodeEndpoint', () => {
 
 		const adapter = new MemoryAdapter();
 		repository = new Repository(hostname, adapter);
-
-		server = HTTP.createServer((request, response) => {
-			const endpoint = new JsonUpdateNodeEndpoint(
-				request,
-				response,
-				{
-					namespace_key: 'public',
-					type_key: 'wizard',
-					key: 'gandalf'
-				},
-				repository
-			);
-
-			endpoint.serve();
-		});
-
-		server.listen(port);
 
 		date_spy = jest.spyOn(Date, 'now');
 
@@ -60,14 +37,12 @@ describe('JsonUpdateNodeEndpoint', () => {
 		});
 	});
 
-	afterEach((done) => {
+	afterEach(() => {
 		date_spy.mockRestore();
 		id_spy.mockRestore();
-
-		closeServer(server).then(done);
 	});
 
-	describe('serve()', () => {
+	describe('perform()', () => {
 		it('processes multiple node changes', async () => {
 			const node = {
 				namespace_key: 'public',
@@ -84,7 +59,10 @@ describe('JsonUpdateNodeEndpoint', () => {
 
 			await repository.storeNode(node);
 
-			const data = {
+			const input = {
+				namespace_key: 'public',
+				type_key: 'wizard',
+				key: 'gandalf',
 				changes: [
 					{
 						change_type: ChangeType.SET_FIELD_VALUE,
@@ -95,25 +73,28 @@ describe('JsonUpdateNodeEndpoint', () => {
 					{
 						change_type: ChangeType.ADD_SET_VALUE,
 						field: 'horses',
-						value: 'Shadowfax'
+						value: 'Shadowfax',
+						previous_value: null
 					},
 					{
 						change_type: ChangeType.ADD_LIST_VALUE,
 						field: 'colors',
-						value: 'white'
+						value: 'white',
+						previous_value: null
 					},
 					{
 						change_type: ChangeType.REMOVE_LIST_VALUE,
 						field: 'colors',
-						value: 'grey'
+						value: 'grey',
+						previous_value: null
 					}
 				]
 			};
 
-			const url = `http://localhost:${port}/public/wizard/gandalf`;
-			const result = await postJson(url, data);
+			const operation = new UpdateNodeOperation(repository, input);
+			const result = await operation.perform();
 
-			expect(result.body).toStrictEqual({
+			expect(result).toStrictEqual({
 				namespace_key: 'public',
 				type_key: 'wizard',
 				key: 'gandalf',
@@ -148,7 +129,10 @@ describe('JsonUpdateNodeEndpoint', () => {
 
 			await repository.storeNode(node);
 
-			const data = {
+			const input = {
+				namespace_key: 'public',
+				type_key: 'wizard',
+				key: 'gandalf',
 				changes: [
 					{
 						change_type: ChangeType.SET_FIELD_VALUE,
@@ -159,25 +143,28 @@ describe('JsonUpdateNodeEndpoint', () => {
 					{
 						change_type: ChangeType.ADD_SET_VALUE,
 						field: 'horses',
-						value: 'Shadowfax'
+						value: 'Shadowfax',
+						previous_value: null
 					},
 					{
 						change_type: ChangeType.ADD_LIST_VALUE,
 						field: 'colors',
-						value: 'white'
+						value: 'white',
+						previous_value: null
 					},
 					{
 						change_type: ChangeType.REMOVE_LIST_VALUE,
 						field: 'colors',
-						value: 'grey'
+						value: 'grey',
+						previous_value: null
 					}
 				]
 			};
 
-			const url = `http://localhost:${port}/public/wizard/gandalf`;
-			const result = await postJson(url, data);
-			const result_node = result.body as Node;
-			const promises = result_node.changes.map((change_url) => {
+			const operation = new UpdateNodeOperation(repository, input);
+			const result = await operation.perform();
+
+			const promises = result.changes.map((change_url) => {
 				const path = change_url.replace(hostname, '');
 				const parts = path.split('/');
 				const key = parts.pop() as string;
@@ -251,6 +238,40 @@ describe('JsonUpdateNodeEndpoint', () => {
 					changes: []
 				}
 			]);
+		});
+
+		describe('when no changes are supplied', () => {
+			it('raises a BadRequestError', async () => {
+				const node = {
+					namespace_key: 'public',
+					type_key: 'wizard',
+					key: 'gandalf',
+					name: 'Gandalf the Grey',
+					horses: [],
+					colors: ['grey'],
+					creator: `${hostname}/public/account/iluvatar`,
+					created_at: 1607692722005,
+					updated_at: 1607692722005,
+					changes: []
+				};
+
+				await repository.storeNode(node);
+
+				const input = {
+					namespace_key: 'public',
+					type_key: 'wizard',
+					key: 'gandalf',
+					changes: []
+				};
+
+				const operation = new UpdateNodeOperation(repository, input);
+
+				try {
+					await operation.perform();
+				} catch (error) {
+					expect(error).toBeInstanceOf(BadRequestError);
+				}
+			});
 		});
 	});
 });

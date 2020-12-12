@@ -1,6 +1,6 @@
 import Node from 'type/node';
 import JsonEndpoint from 'endpoint/json';
-import UpdateNodeOperation, {Input, ChangeInput} from 'operation/update-node';
+import UpdateNodeOperation, { Input, ChangeInput } from 'operation/update-node';
 
 class JsonUpdateNodeEndpoint extends JsonEndpoint {
 	protected async process(): Promise<Node> {

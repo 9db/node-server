@@ -5,18 +5,17 @@ import Repository from 'repository';
 import ChangeType from 'enum/change-type';
 import ChangeStatus from 'enum/change-status';
 import KeyGenerator from 'utility/key-generator';
-// import NotFoundError from 'http/error/not-found';
 import BadRequestError from 'http/error/bad-request';
-import {PrimitiveValue} from 'type/field-value';
+import { PrimitiveValue } from 'type/field-value';
 
 interface Input {
-	readonly change_type: ChangeType;
 	readonly namespace_key: string;
 	readonly type_key: string;
 	readonly key: string;
+	readonly change_type: ChangeType;
 	readonly field: string;
 	readonly value: PrimitiveValue;
-	readonly previous_value: PrimitiveValue;
+	readonly previous_value?: PrimitiveValue;
 }
 
 class ChangeFieldOperation extends Operation<Node> {
@@ -79,7 +78,7 @@ class ChangeFieldOperation extends Operation<Node> {
 			input.type_key,
 			input.key,
 			input.field,
-			input.value,
+			input.value
 		);
 	}
 
@@ -92,7 +91,7 @@ class ChangeFieldOperation extends Operation<Node> {
 			input.type_key,
 			input.key,
 			input.field,
-			input.value,
+			input.value
 		);
 	}
 
@@ -105,7 +104,7 @@ class ChangeFieldOperation extends Operation<Node> {
 			input.type_key,
 			input.key,
 			input.field,
-			input.value,
+			input.value
 		);
 	}
 
@@ -118,7 +117,7 @@ class ChangeFieldOperation extends Operation<Node> {
 			input.type_key,
 			input.key,
 			input.field,
-			input.value,
+			input.value
 		);
 	}
 
@@ -131,7 +130,7 @@ class ChangeFieldOperation extends Operation<Node> {
 			input.type_key,
 			input.key,
 			input.field,
-			input.value,
+			input.value
 		);
 	}
 
@@ -139,7 +138,7 @@ class ChangeFieldOperation extends Operation<Node> {
 		const namespace_key = SystemKey.SYSTEM_NAMESPACE;
 		const type_key = SystemKey.CHANGE_TYPE;
 		const key = KeyGenerator.id();
-		const status = ChangeStatus.ACCEPTED;
+		const status = ChangeStatus.APPROVED;
 		const change_type = this.getInputChangeType();
 		const field = this.getInputField();
 		const value = this.getInputValue();
@@ -165,25 +164,6 @@ class ChangeFieldOperation extends Operation<Node> {
 			changes: []
 		};
 	}
-
-	/*
-	private async fetchNode(): Promise<Node> {
-		const input = this.getInput();
-		const repository = this.getRepository();
-
-		const node = await repository.fetchNode(
-			input.namespace_key,
-			input.type_key,
-			input.key
-		);
-
-		if (node === undefined) {
-			throw new NotFoundError();
-		}
-
-		return node;
-	}
-	*/
 
 	private getInputField(): string {
 		const input = this.getInput();
