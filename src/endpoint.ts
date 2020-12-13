@@ -6,17 +6,16 @@ import Repository from 'repository';
 import HttpHeader from 'http/enum/header';
 import HttpMethod from 'http/enum/method';
 import BodyParser from 'server/body-parser';
-import JsonObject from 'http/type/json-object';
 import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import ServerError from 'http/error/server-error';
 import UrlParameters from 'http/type/url-parameters';
-import HtmlBodyParser from 'server/body-parser/html';
 import JsonBodyParser from 'server/body-parser/json';
 import BadRequestError from 'http/error/bad-request';
+import UrlEncodedBodyParser from 'server/body-parser/url-encoded';
 import getSuccessfulStatusCode from 'http/utility/get-successful-status-code';
 
-type AllowedOutputs = string | Buffer | JsonObject;
+type AllowedOutputs = string | Buffer | object;
 
 abstract class Endpoint<Input, Output extends AllowedOutputs> {
 	private request: HTTP.IncomingMessage;
@@ -99,6 +98,8 @@ abstract class Endpoint<Input, Output extends AllowedOutputs> {
 	protected redirectToUrl(url: string): void {
 		this.setStatusCode(StatusCode.REDIRECT);
 		this.setHeaderValue(HttpHeader.LOCATION, url);
+
+		this.sendString('');
 	}
 
 	private async parseBody(): Promise<void> {
@@ -204,8 +205,8 @@ abstract class Endpoint<Input, Output extends AllowedOutputs> {
 		const content_type = this.getRequestContentType();
 
 		switch (content_type) {
-			case ContentType.HTML:
-				return new HtmlBodyParser(request);
+			case ContentType.URL_ENCODED:
+				return new UrlEncodedBodyParser(request);
 			case ContentType.JSON:
 			default:
 				return new JsonBodyParser(request);

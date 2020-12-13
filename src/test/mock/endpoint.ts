@@ -1,9 +1,8 @@
 import Endpoint from 'endpoint';
 import HttpError from 'http/error';
-import JsonObject from 'http/type/json-object';
 import ContentType from 'http/enum/content-type';
 
-type AllowedOutput = string | Buffer | JsonObject;
+type AllowedOutput = string | Buffer | object;
 
 class MockEndpoint<Input, Output extends AllowedOutput> extends Endpoint<
 	Input,

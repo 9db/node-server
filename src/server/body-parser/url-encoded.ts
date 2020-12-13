@@ -1,10 +1,10 @@
 import BodyParser from 'server/body-parser';
 import JsonObject from 'http/type/json-object';
 
-class HtmlBodyParser extends BodyParser {
+class UrlEncodedBodyParser extends BodyParser {
 	protected transformBuffer(_buffer: Buffer): JsonObject {
 		return {};
 	}
 }
 
-export default HtmlBodyParser;
+export default UrlEncodedBodyParser;
