@@ -2,6 +2,7 @@ import TimeInterval from 'enum/time-interval';
 import CookieAttribute from 'http/enum/cookie-attribute';
 
 function buildCookie(session_key: string): string {
+	// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 	const milliseconds = Date.now() + TimeInterval.ONE_DAY;
 	const expiration_timestamp = new Date(milliseconds).toUTCString();
 

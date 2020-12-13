@@ -7,3 +7,4 @@
 - [ ] Consolidate HTTP transmit helpers into `transmit` and `transmitJson`
 - [ ] Reenable reading version endpoint response from package.json
 - [ ] See if it's possible to use generic types to avoid coercing request bodies
+- [ ] Figure out workaround for `@typescript-eslint/restrict-plus-operands` number enum issue

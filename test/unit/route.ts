@@ -3,6 +3,7 @@ import HTTP from 'http';
 import Route from 'route';
 import Repository from 'repository';
 import HttpMethod from 'http/enum/method';
+import JsonObject from 'http/type/json-object';
 import ContentType from 'http/enum/content-type';
 import MockEndpoint from 'test/mock/endpoint';
 import MemoryAdapter from 'adapter/memory';
@@ -147,7 +148,7 @@ describe('Route', () => {
 				weapon: 'glamdring'
 			};
 
-			class ThrowawayEndpoint extends MockEndpoint<object> {
+			class ThrowawayEndpoint extends MockEndpoint<JsonObject, string> {
 				public constructor(
 					supplied_request: HTTP.IncomingMessage,
 					supplied_response: HTTP.ServerResponse,
@@ -205,7 +206,7 @@ describe('Route', () => {
 				const adapter = new MemoryAdapter();
 				const repository = new Repository(hostname, adapter);
 
-				class ThrowawayEndpoint extends MockEndpoint<object> {
+				class ThrowawayEndpoint extends MockEndpoint<JsonObject, string> {
 					public constructor(
 						supplied_request: HTTP.IncomingMessage,
 						supplied_response: HTTP.ServerResponse,

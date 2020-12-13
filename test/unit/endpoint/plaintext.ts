@@ -4,6 +4,7 @@ import Repository from 'repository';
 import HttpHeader from 'http/enum/header';
 import HttpMethod from 'http/enum/method';
 import StatusCode from 'http/enum/status-code';
+import JsonObject from 'http/type/json-object';
 import ContentType from 'http/enum/content-type';
 import closeServer from 'http/utility/close-server';
 import MemoryAdapter from 'adapter/memory';
@@ -19,7 +20,7 @@ describe('PlaintextEndpoint', () => {
 	}
 
 	describe('process()', () => {
-		class MockEndpoint extends PlaintextEndpoint<object> {
+		class MockEndpoint extends PlaintextEndpoint<JsonObject> {
 			protected async process(): Promise<string> {
 				return Promise.resolve('Speak friend and enter');
 			}
@@ -50,7 +51,7 @@ describe('PlaintextEndpoint', () => {
 	});
 
 	describe('serializeError()', () => {
-		class MockEndpoint extends PlaintextEndpoint<object> {
+		class MockEndpoint extends PlaintextEndpoint<JsonObject> {
 			protected static url = '/wizards';
 			protected static method = HttpMethod.GET;
 

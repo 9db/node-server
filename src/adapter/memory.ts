@@ -185,8 +185,8 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public fetchAccountKey(
-		username: string,
-		password: string
+		_username: string,
+		_password: string
 	): Promise<string | undefined> {
 		return Promise.resolve('system');
 	}

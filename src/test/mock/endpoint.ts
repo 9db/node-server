@@ -1,13 +1,19 @@
 import Endpoint from 'endpoint';
 import HttpError from 'http/error';
+import JsonObject from 'http/type/json-object';
 import ContentType from 'http/enum/content-type';
 
-class MockEndpoint<Input extends object> extends Endpoint<Input, string> {
-	protected process(): Promise<string | Buffer | void> {
+type AllowedOutput = string | Buffer | JsonObject;
+
+class MockEndpoint<Input, Output extends AllowedOutput> extends Endpoint<
+	Input,
+	Output
+> {
+	protected process(): Promise<Output | void> {
 		throw new Error('Not implemented');
 	}
 
-	protected serializeError(_error: HttpError): string {
+	protected serializeError(_error: HttpError): Output {
 		throw new Error('Not implemented');
 	}
 

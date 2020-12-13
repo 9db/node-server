@@ -7,6 +7,7 @@ import Repository from 'repository';
 import HttpHeader from 'http/enum/header';
 import HttpMethod from 'http/enum/method';
 import StatusCode from 'http/enum/status-code';
+import JsonObject from 'http/type/json-object';
 import ContentType from 'http/enum/content-type';
 import ServerError from 'http/error/server-error';
 import MockEndpoint from 'test/mock/endpoint';
@@ -28,7 +29,7 @@ describe('Endpoint', () => {
 		describe('when process() method returns a buffer', () => {
 			const result = Buffer.from('speak friend and enter');
 
-			class ThrowawayEndpoint extends MockEndpoint<object> {
+			class ThrowawayEndpoint extends MockEndpoint<JsonObject, Buffer> {
 				protected process(): Promise<Buffer> {
 					return Promise.resolve(result);
 				}
@@ -84,7 +85,7 @@ describe('Endpoint', () => {
 		describe('when process() method returns a string', () => {
 			const result = 'speak friend and enter';
 
-			class ThrowawayEndpoint extends MockEndpoint<object> {
+			class ThrowawayEndpoint extends MockEndpoint<JsonObject, string> {
 				protected process(): Promise<string> {
 					return Promise.resolve(result);
 				}
@@ -139,7 +140,7 @@ describe('Endpoint', () => {
 		});
 
 		describe('when process() method returns undefined', () => {
-			class ThrowawayEndpoint extends MockEndpoint<object> {
+			class ThrowawayEndpoint extends MockEndpoint<JsonObject, string> {
 				protected process(): Promise<void> {
 					return Promise.resolve();
 				}
@@ -196,7 +197,7 @@ describe('Endpoint', () => {
 
 				const expected_error = new NotFoundError();
 
-				class ThrowawayEndpoint extends MockEndpoint<object> {
+				class ThrowawayEndpoint extends MockEndpoint<JsonObject, string> {
 					protected process(): Promise<void> {
 						return Promise.reject(expected_error);
 					}
@@ -232,7 +233,7 @@ describe('Endpoint', () => {
 				it('converts it to a generic HTTP error before passing to serializeError()', async () => {
 					expect.assertions(2);
 
-					class ThrowawayEndpoint extends MockEndpoint<object> {
+					class ThrowawayEndpoint extends MockEndpoint<JsonObject, string> {
 						protected process(): Promise<void> {
 							const error = new Error('A weird thing happened');
 
@@ -277,7 +278,7 @@ describe('Endpoint', () => {
 
 	describe('getRequest()', () => {
 		it('returns request', () => {
-			class ThrowawayEndpoint extends MockEndpoint<object> {
+			class ThrowawayEndpoint extends MockEndpoint<JsonObject, string> {
 				public privilegedGetRequest(): HTTP.IncomingMessage {
 					return this.getRequest();
 				}
@@ -301,7 +302,7 @@ describe('Endpoint', () => {
 
 	describe('getResponse()', () => {
 		it('returns response', () => {
-			class ThrowawayEndpoint extends MockEndpoint<object> {
+			class ThrowawayEndpoint extends MockEndpoint<JsonObject, string> {
 				public privilegedGetResponse(): HTTP.ServerResponse {
 					return this.getResponse();
 				}
@@ -325,7 +326,7 @@ describe('Endpoint', () => {
 
 	describe('getResponseHeaders()', () => {
 		it('returns expected response headers', () => {
-			class ThrowawayEndpoint extends MockEndpoint<object> {
+			class ThrowawayEndpoint extends MockEndpoint<JsonObject, JsonObject> {
 				public privilegedGetResponseHeaders(): HeaderMap {
 					return this.getResponseHeaders();
 				}
@@ -350,7 +351,7 @@ describe('Endpoint', () => {
 	});
 
 	describe('getUrlParameter()', () => {
-		class ThrowawayEndpoint extends MockEndpoint<object> {
+		class ThrowawayEndpoint extends MockEndpoint<JsonObject, string> {
 			public privilegedGetUrlParameter(parameter: string): string | undefined {
 				return this.getUrlParameter(parameter);
 			}
@@ -399,7 +400,7 @@ describe('Endpoint', () => {
 		it('sets the status code that is sent back to the response', async () => {
 			expect.assertions(1);
 
-			class ThrowawayEndpoint extends MockEndpoint<object> {
+			class ThrowawayEndpoint extends MockEndpoint<JsonObject, string> {
 				protected process(): Promise<string> {
 					this.setStatusCode(StatusCode.UNAUTHORIZED);
 
@@ -433,7 +434,7 @@ describe('Endpoint', () => {
 
 	describe('getRepository()', () => {
 		it('returns supplied repository', () => {
-			class ThrowawayEndpoint extends MockEndpoint<object> {
+			class ThrowawayEndpoint extends MockEndpoint<JsonObject, string> {
 				public privilegedGetRepository(): Repository {
 					return this.getRepository();
 				}
@@ -460,8 +461,8 @@ describe('Endpoint', () => {
 		const response = buildMockResponse();
 		const repository = createRepository();
 
-		class ThrowawayEndpoint extends MockEndpoint<object> {
-			public privilegedGetRequestBody(): object {
+		class ThrowawayEndpoint extends MockEndpoint<JsonObject, string> {
+			public privilegedGetRequestBody(): JsonObject {
 				return this.getRequestBody();
 			}
 

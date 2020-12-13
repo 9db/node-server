@@ -3,7 +3,7 @@ import HttpError from 'http/error';
 import ContentType from 'http/enum/content-type';
 import ErrorPageTemplate from 'template/page/error';
 
-abstract class HtmlEndpoint<Input extends object> extends Endpoint<Input, string> {
+abstract class HtmlEndpoint<Input> extends Endpoint<Input, string> {
 	protected serializeError(error: HttpError): string {
 		const template = new ErrorPageTemplate({
 			error

@@ -16,7 +16,9 @@ import JsonBodyParser from 'server/body-parser/json';
 import BadRequestError from 'http/error/bad-request';
 import getSuccessfulStatusCode from 'http/utility/get-successful-status-code';
 
-abstract class Endpoint<Input extends object, Output> {
+type AllowedOutputs = string | Buffer | JsonObject;
+
+abstract class Endpoint<Input, Output extends AllowedOutputs> {
 	private request: HTTP.IncomingMessage;
 	private response: HTTP.ServerResponse;
 	private url_parameters: UrlParameters;
@@ -121,7 +123,7 @@ abstract class Endpoint<Input extends object, Output> {
 		return this.status_code;
 	}
 
-	private handleResult(result: string | Buffer | object | void): void {
+	private handleResult(result: Output | void): void {
 		if (result === undefined) {
 			return;
 		}
@@ -130,10 +132,16 @@ abstract class Endpoint<Input extends object, Output> {
 			return this.sendData(result);
 		}
 
-		if (typeof result !== 'string') {
-			result = JSON.stringify(result);
+		if (typeof result === 'string') {
+			return this.sendString(result);
 		}
 
+		const serialized_result = JSON.stringify(result);
+
+		return this.sendString(serialized_result);
+	}
+
+	private sendString(result: string): void {
 		const buffer = Buffer.from(result);
 
 		return this.sendData(buffer);
@@ -204,11 +212,9 @@ abstract class Endpoint<Input extends object, Output> {
 		}
 	}
 
-	protected abstract process(): Promise<string | Buffer | JsonObject | void>;
+	protected abstract process(): Promise<Output | void>;
 	protected abstract getResponseContentType(): ContentType;
-	protected abstract serializeError(
-		error: HttpError
-	): string | Buffer | JsonObject;
+	protected abstract serializeError(error: HttpError): Output;
 }
 
 export default Endpoint;

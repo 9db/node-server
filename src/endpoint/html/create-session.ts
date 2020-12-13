@@ -37,11 +37,13 @@ class HtmlCreateSessionEndpoint extends HtmlEndpoint<Input> {
 	private createSession(account: Node): Promise<Node> {
 		const key = KeyGenerator.id();
 		const repository = this.getRepository();
+		const account_url = repository.buildNodeUrl(account);
 
 		const input = {
 			namespace_key: SystemKey.SYSTEM_NAMESPACE,
 			type_key: SystemKey.SESSION_TYPE,
-			key
+			key,
+			account: account_url
 		};
 
 		const operation = new CreateNodeOperation(repository, input);

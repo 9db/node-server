@@ -2,7 +2,7 @@ import Node from 'type/node';
 import JsonEndpoint from 'endpoint/json';
 import FetchNodeOperation from 'operation/fetch-node';
 
-class JsonFetchNodeEndpoint extends JsonEndpoint<{}> {
+class JsonFetchNodeEndpoint extends JsonEndpoint<Record<string, never>> {
 	protected async process(): Promise<Node> {
 		const namespace_key = this.getUrlParameter('namespace_key');
 		const type_key = this.getUrlParameter('type_key');

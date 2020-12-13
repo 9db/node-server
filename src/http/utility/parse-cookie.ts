@@ -4,11 +4,13 @@ type CookieValue = string | boolean;
 
 type ParsedCookie = {
 	[key in CookieAttribute]?: CookieValue;
-}
+};
 
 const SUPPORTED_ATTRIBUTES = Object.values(CookieAttribute);
 
-function parseCookiePart(cookie_part: string): [CookieAttribute, CookieValue] | null {
+function parseCookiePart(
+	cookie_part: string
+): [CookieAttribute, CookieValue] | null {
 	const delimiter_index = cookie_part.indexOf('=');
 
 	let cookie_attribute;

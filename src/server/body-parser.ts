@@ -1,5 +1,7 @@
 import HTTP from 'http';
 
+import JsonObject from 'http/type/json-object';
+
 abstract class BodyParser {
 	private request: HTTP.IncomingMessage;
 
@@ -7,7 +9,7 @@ abstract class BodyParser {
 		this.request = request;
 	}
 
-	public async parse(): Promise<object> {
+	public async parse(): Promise<JsonObject> {
 		const buffer = await this.readBuffer();
 
 		return this.transformBuffer(buffer);
@@ -36,7 +38,7 @@ abstract class BodyParser {
 		return this.request;
 	}
 
-	protected abstract transformBuffer(buffer: Buffer): object;
+	protected abstract transformBuffer(buffer: Buffer): JsonObject;
 }
 
 export default BodyParser;
