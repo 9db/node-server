@@ -184,6 +184,13 @@ class MemoryAdapter implements Adapter {
 		return this.storeNode(updated_node);
 	}
 
+	public fetchAccountKey(
+		username: string,
+		password: string
+	): Promise<string | undefined> {
+		return Promise.resolve('system');
+	}
+
 	private async fetchNodeUnsafe(
 		namespace_key: string,
 		type_key: string,

@@ -2,12 +2,12 @@ import Node from 'type/node';
 import JsonEndpoint from 'endpoint/json';
 import CreateNodeOperation from 'operation/create-node';
 
-class JsonCreateNodeEndpoint extends JsonEndpoint {
+class JsonCreateNodeEndpoint extends JsonEndpoint<Node> {
 	protected async process(): Promise<Node> {
 		const namespace_key = this.getUrlParameter('namespace_key');
 		const type_key = this.getUrlParameter('type_key');
 		const key = this.getUrlParameter('key');
-		const body = this.getRequestBody() as Node;
+		const body = this.getRequestBody();
 
 		const input = {
 			...body,

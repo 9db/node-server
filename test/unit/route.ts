@@ -147,7 +147,7 @@ describe('Route', () => {
 				weapon: 'glamdring'
 			};
 
-			class ThrowawayEndpoint extends MockEndpoint {
+			class ThrowawayEndpoint extends MockEndpoint<object> {
 				public constructor(
 					supplied_request: HTTP.IncomingMessage,
 					supplied_response: HTTP.ServerResponse,
@@ -165,6 +165,10 @@ describe('Route', () => {
 						supplied_parameters,
 						supplied_repository
 					);
+				}
+
+				protected getResponseContentType(): ContentType {
+					return ContentType.TEXT;
 				}
 			}
 
@@ -201,7 +205,7 @@ describe('Route', () => {
 				const adapter = new MemoryAdapter();
 				const repository = new Repository(hostname, adapter);
 
-				class ThrowawayEndpoint extends MockEndpoint {
+				class ThrowawayEndpoint extends MockEndpoint<object> {
 					public constructor(
 						supplied_request: HTTP.IncomingMessage,
 						supplied_response: HTTP.ServerResponse,
@@ -216,6 +220,10 @@ describe('Route', () => {
 							supplied_parameters,
 							supplied_repository
 						);
+					}
+
+					protected getResponseContentType(): ContentType {
+						return ContentType.TEXT;
 					}
 				}
 

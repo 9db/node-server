@@ -1,13 +1,13 @@
 import HTTP from 'http';
 
-abstract class BodyParser<T> {
+abstract class BodyParser {
 	private request: HTTP.IncomingMessage;
 
 	public constructor(request: HTTP.IncomingMessage) {
 		this.request = request;
 	}
 
-	public async parse(): Promise<T> {
+	public async parse(): Promise<object> {
 		const buffer = await this.readBuffer();
 
 		return this.transformBuffer(buffer);
@@ -36,7 +36,7 @@ abstract class BodyParser<T> {
 		return this.request;
 	}
 
-	protected abstract transformBuffer(buffer: Buffer): T;
+	protected abstract transformBuffer(buffer: Buffer): object;
 }
 
 export default BodyParser;

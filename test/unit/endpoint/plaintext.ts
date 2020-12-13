@@ -1,6 +1,5 @@
 import HTTP from 'http';
 
-import postJson from 'http/utility/post-json';
 import Repository from 'repository';
 import HttpHeader from 'http/enum/header';
 import HttpMethod from 'http/enum/method';
@@ -20,7 +19,7 @@ describe('PlaintextEndpoint', () => {
 	}
 
 	describe('process()', () => {
-		class MockEndpoint extends PlaintextEndpoint {
+		class MockEndpoint extends PlaintextEndpoint<object> {
 			protected async process(): Promise<string> {
 				return Promise.resolve('Speak friend and enter');
 			}
@@ -51,7 +50,7 @@ describe('PlaintextEndpoint', () => {
 	});
 
 	describe('serializeError()', () => {
-		class MockEndpoint extends PlaintextEndpoint {
+		class MockEndpoint extends PlaintextEndpoint<object> {
 			protected static url = '/wizards';
 			protected static method = HttpMethod.GET;
 
@@ -76,42 +75,6 @@ describe('PlaintextEndpoint', () => {
 
 			expect(result.body).toStrictEqual('A strange thing has happened');
 			expect(result.status_code).toStrictEqual(StatusCode.SERVER_ERROR);
-
-			await closeServer(server);
-		});
-	});
-
-	describe('parsing body', () => {
-		it('uses the string body parser', async () => {
-			expect.assertions(1);
-
-			class MockEndpoint extends PlaintextEndpoint {
-				protected static url = '/wizards';
-				protected static method = HttpMethod.POST;
-
-				protected async process(): Promise<string> {
-					const body = this.getRequestBody();
-
-					expect(body).toStrictEqual('{"name":"gandalf"}');
-
-					return Promise.resolve('{}');
-				}
-			}
-
-			const port = 4428;
-
-			const server = HTTP.createServer((request, response) => {
-				const repository = createRepository();
-				const endpoint = new MockEndpoint(request, response, {}, repository);
-
-				endpoint.serve();
-			});
-
-			server.listen(port);
-
-			await postJson(`http://localhost:${port}/wizards`, {
-				name: 'gandalf'
-			});
 
 			await closeServer(server);
 		});

@@ -1,14 +1,18 @@
 import Node from 'type/node';
 import JsonEndpoint from 'endpoint/json';
-import UpdateNodeOperation, { Input, ChangeInput } from 'operation/update-node';
+import UpdateNodeOperation, { ChangeInput } from 'operation/update-node';
 
-class JsonUpdateNodeEndpoint extends JsonEndpoint {
+interface Input {
+	readonly changes: ChangeInput[];
+}
+
+class JsonUpdateNodeEndpoint extends JsonEndpoint<Input> {
 	protected async process(): Promise<Node> {
 		const namespace_key = this.getUrlParameter('namespace_key');
 		const type_key = this.getUrlParameter('type_key');
 		const key = this.getUrlParameter('key');
-		const body = this.getRequestBody() as Partial<Input>;
-		const changes = body.changes as ChangeInput[];
+		const body = this.getRequestBody();
+		const changes = body.changes;
 
 		const input = {
 			namespace_key,

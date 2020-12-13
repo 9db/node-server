@@ -1,4 +1,6 @@
 import Route from 'route';
+import HtmlLoginRoute from 'route/html/login';
+import HtmlNotFoundRoute from 'route/html/not-found';
 import JsonNotFoundRoute from 'route/json/not-found';
 import JsonFetchNodeRoute from 'route/json/fetch-node';
 import JsonCreateNodeRoute from 'route/json/create-node';
@@ -10,8 +12,11 @@ function buildRoutes(): Route[] {
 		new PlaintextVersionRoute(),
 		new JsonFetchNodeRoute(),
 		new JsonCreateNodeRoute(),
-		new PlaintextNotFoundRoute(),
-		new JsonNotFoundRoute()
+		new HtmlLoginRoute(),
+
+		new JsonNotFoundRoute(),
+		new HtmlNotFoundRoute(),
+		new PlaintextNotFoundRoute()
 	];
 }
 

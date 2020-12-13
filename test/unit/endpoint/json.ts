@@ -21,7 +21,7 @@ describe('JsonEndpoint', () => {
 	}
 
 	describe('process()', () => {
-		class MockEndpoint extends JsonEndpoint {
+		class MockEndpoint extends JsonEndpoint<{}> {
 			protected process(): Promise<JsonObject> {
 				return Promise.resolve({
 					name: 'gandalf',
@@ -61,7 +61,7 @@ describe('JsonEndpoint', () => {
 	});
 
 	describe('serializeError()', () => {
-		class MockEndpoint extends JsonEndpoint {
+		class MockEndpoint extends JsonEndpoint<{}> {
 			protected async process(): Promise<undefined> {
 				throw new Error('A strange thing has happened');
 			}
@@ -94,7 +94,7 @@ describe('JsonEndpoint', () => {
 		it('uses the JSON body parser', async () => {
 			expect.assertions(1);
 
-			class MockEndpoint extends JsonEndpoint {
+			class MockEndpoint extends JsonEndpoint<{}> {
 				protected static url = '/wizards';
 				protected static method = HttpMethod.POST;
 

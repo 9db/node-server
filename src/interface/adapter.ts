@@ -51,6 +51,11 @@ interface Adapter {
 		value: PrimitiveValue,
 		position?: number
 	): Promise<Node>;
+
+	fetchAccountKey(
+		username: string,
+		password: string
+	): Promise<string | undefined>;
 }
 
 export default Adapter;

@@ -11,16 +11,19 @@ import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import ServerError from 'http/error/server-error';
 import UrlParameters from 'http/type/url-parameters';
+import HtmlBodyParser from 'server/body-parser/html';
+import JsonBodyParser from 'server/body-parser/json';
 import BadRequestError from 'http/error/bad-request';
 import getSuccessfulStatusCode from 'http/utility/get-successful-status-code';
 
-abstract class Endpoint<T> {
+abstract class Endpoint<Input extends object, Output> {
 	private request: HTTP.IncomingMessage;
 	private response: HTTP.ServerResponse;
 	private url_parameters: UrlParameters;
 	private repository: Repository;
 	private status_code: StatusCode;
-	private request_body: T | undefined;
+	private response_headers: HeaderMap;
+	private request_body: Input | undefined;
 
 	public constructor(
 		request: HTTP.IncomingMessage,
@@ -33,6 +36,10 @@ abstract class Endpoint<T> {
 		this.url_parameters = url_parameters;
 		this.repository = repository;
 		this.status_code = getSuccessfulStatusCode(request);
+
+		this.response_headers = {
+			[HttpHeader.CONTENT_TYPE]: this.getResponseContentType()
+		};
 	}
 
 	public serve(): void {
@@ -50,10 +57,14 @@ abstract class Endpoint<T> {
 		return this.response;
 	}
 
+	protected setHeaderValue(header: HttpHeader, value: string): void {
+		const headers = this.getResponseHeaders();
+
+		headers[header] = value;
+	}
+
 	protected getResponseHeaders(): HeaderMap {
-		return {
-			[HttpHeader.CONTENT_TYPE]: this.getContentType()
-		};
+		return this.response_headers;
 	}
 
 	protected getUrlParameter(parameter: string): string {
@@ -75,12 +86,17 @@ abstract class Endpoint<T> {
 		return this.repository;
 	}
 
-	protected getRequestBody(): T {
+	protected getRequestBody(): Input {
 		if (this.request_body === undefined) {
 			throw new Error('Tried to read request body, but it was not set');
 		}
 
 		return this.request_body;
+	}
+
+	protected redirectToUrl(url: string): void {
+		this.setStatusCode(StatusCode.REDIRECT);
+		this.setHeaderValue(HttpHeader.LOCATION, url);
 	}
 
 	private async parseBody(): Promise<void> {
@@ -89,8 +105,9 @@ abstract class Endpoint<T> {
 		}
 
 		const body_parser = this.getBodyParser();
+		const body = await body_parser.parse();
 
-		this.request_body = await body_parser.parse();
+		this.request_body = body as Input;
 	}
 
 	private hasUnparsableMethod(): boolean {
@@ -104,7 +121,7 @@ abstract class Endpoint<T> {
 		return this.status_code;
 	}
 
-	private handleResult(result: string | Buffer | JsonObject | void): void {
+	private handleResult(result: string | Buffer | object | void): void {
 		if (result === undefined) {
 			return;
 		}
@@ -127,6 +144,8 @@ abstract class Endpoint<T> {
 		const status_code = this.getStatusCode();
 		const headers = this.getResponseHeaders();
 
+		this.logCompletion();
+
 		response.writeHead(status_code, headers);
 		response.end(data);
 	}
@@ -147,13 +166,46 @@ abstract class Endpoint<T> {
 		return this.handleResult(serialized_error);
 	}
 
+	private logCompletion(): void {
+		const url = this.getRequestUrl();
+		const status_code = this.getStatusCode();
+
+		console.log(`[${status_code}] ${url}`);
+	}
+
+	private getRequestUrl(): string {
+		const request = this.getRequest();
+
+		return request.url || '/';
+	}
+
+	private getRequestContentType(): ContentType {
+		const request = this.getRequest();
+		const header_value = request.headers[HttpHeader.CONTENT_TYPE];
+		const content_type = header_value as ContentType;
+
+		return content_type || ContentType.JSON;
+	}
+
 	private getUrlParameters(): UrlParameters {
 		return this.url_parameters;
 	}
 
+	private getBodyParser(): BodyParser {
+		const request = this.getRequest();
+		const content_type = this.getRequestContentType();
+
+		switch (content_type) {
+			case ContentType.HTML:
+				return new HtmlBodyParser(request);
+			case ContentType.JSON:
+			default:
+				return new JsonBodyParser(request);
+		}
+	}
+
 	protected abstract process(): Promise<string | Buffer | JsonObject | void>;
-	protected abstract getBodyParser(): BodyParser<T>;
-	protected abstract getContentType(): ContentType;
+	protected abstract getResponseContentType(): ContentType;
 	protected abstract serializeError(
 		error: HttpError
 	): string | Buffer | JsonObject;

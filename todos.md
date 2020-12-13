@@ -6,3 +6,4 @@
 - [ ] Reverse order of arguments to `buildMockRequest`
 - [ ] Consolidate HTTP transmit helpers into `transmit` and `transmitJson`
 - [ ] Reenable reading version endpoint response from package.json
+- [ ] See if it's possible to use generic types to avoid coercing request bodies

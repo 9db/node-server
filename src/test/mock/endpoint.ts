@@ -1,9 +1,8 @@
 import Endpoint from 'endpoint';
 import HttpError from 'http/error';
-import BodyParser from 'server/body-parser';
 import ContentType from 'http/enum/content-type';
 
-class MockEndpoint extends Endpoint<string> {
+class MockEndpoint<Input extends object> extends Endpoint<Input, string> {
 	protected process(): Promise<string | Buffer | void> {
 		throw new Error('Not implemented');
 	}
@@ -12,11 +11,7 @@ class MockEndpoint extends Endpoint<string> {
 		throw new Error('Not implemented');
 	}
 
-	protected getContentType(): ContentType {
-		throw new Error('Not implemented');
-	}
-
-	protected getBodyParser(): BodyParser<string> {
+	protected getResponseContentType(): ContentType {
 		throw new Error('Not implemented');
 	}
 }

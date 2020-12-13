@@ -26,7 +26,7 @@ describe('getAcceptedContentTypes', () => {
 	describe('when ACCEPT header is specified', () => {
 		it('returns array of supported content types', () => {
 			const request = buildRequest({
-				[HttpHeader.ACCEPT]: 'application/json;text/css;text/html'
+				[HttpHeader.ACCEPT]: 'application/json,text/css,text/html'
 			});
 
 			const content_types = getAcceptedContentTypes(request);

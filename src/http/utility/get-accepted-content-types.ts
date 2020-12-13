@@ -13,7 +13,7 @@ function getAcceptedContentTypes(request: HTTP.IncomingMessage): ContentType[] {
 		return [ContentType.JSON];
 	}
 
-	const parts = header_value.split(';') as ContentType[];
+	const parts = header_value.split(',') as ContentType[];
 
 	return parts.filter((part) => {
 		return KNOWN_CONTENT_TYPES.includes(part);

@@ -8,7 +8,7 @@ import standardizeUrl from 'repository/utility/standardize-url';
 import unstandardizeUrl from 'repository/utility/unstandardize-url';
 import FieldValue, { PrimitiveValue } from 'type/field-value';
 
-class Repository implements Adapter {
+class Repository {
 	private hostname: string;
 	private adapter: Adapter;
 	private system_cache: SystemCache;
@@ -165,6 +165,15 @@ class Repository implements Adapter {
 		const hostname = this.getHostname();
 
 		return buildNodeUrl(hostname, node);
+	}
+
+	public async fetchAccountKey(
+		username: string,
+		password: string
+	): Promise<string | undefined> {
+		const adapter = this.getAdapter();
+
+		return adapter.fetchAccountKey(username, password);
 	}
 
 	private fetchSystemNode(

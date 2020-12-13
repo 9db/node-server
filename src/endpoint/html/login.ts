@@ -1,0 +1,13 @@
+import HtmlEndpoint from 'endpoint/html';
+import LoginPageTemplate from 'template/page/login';
+
+class HtmlLoginEndpoint extends HtmlEndpoint<{}> {
+	protected async process(): Promise<string> {
+		const template = new LoginPageTemplate();
+		const html = template.render();
+
+		return Promise.resolve(html);
+	}
+}
+
+export default HtmlLoginEndpoint;

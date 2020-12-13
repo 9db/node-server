@@ -1,21 +1,14 @@
 import Endpoint from 'endpoint';
 import HttpError from 'http/error';
 import ContentType from 'http/enum/content-type';
-import StringBodyParser from 'server/body-parser/string';
 
-abstract class PlaintextEndpoint extends Endpoint<string> {
+abstract class PlaintextEndpoint<Input extends object> extends Endpoint<Input, string> {
 	protected serializeError(error: HttpError): string {
 		return error.message;
 	}
 
-	protected getContentType(): ContentType {
+	protected getResponseContentType(): ContentType {
 		return ContentType.TEXT;
-	}
-
-	protected getBodyParser(): StringBodyParser {
-		const request = this.getRequest();
-
-		return new StringBodyParser(request);
 	}
 }
 

@@ -28,12 +28,12 @@ describe('Endpoint', () => {
 		describe('when process() method returns a buffer', () => {
 			const result = Buffer.from('speak friend and enter');
 
-			class ThrowawayEndpoint extends MockEndpoint {
+			class ThrowawayEndpoint extends MockEndpoint<object> {
 				protected process(): Promise<Buffer> {
 					return Promise.resolve(result);
 				}
 
-				protected getContentType(): ContentType {
+				protected getResponseContentType(): ContentType {
 					return ContentType.TEXT;
 				}
 			}
@@ -84,12 +84,12 @@ describe('Endpoint', () => {
 		describe('when process() method returns a string', () => {
 			const result = 'speak friend and enter';
 
-			class ThrowawayEndpoint extends MockEndpoint {
+			class ThrowawayEndpoint extends MockEndpoint<object> {
 				protected process(): Promise<string> {
 					return Promise.resolve(result);
 				}
 
-				protected getContentType(): ContentType {
+				protected getResponseContentType(): ContentType {
 					return ContentType.TEXT;
 				}
 			}
@@ -139,12 +139,12 @@ describe('Endpoint', () => {
 		});
 
 		describe('when process() method returns undefined', () => {
-			class ThrowawayEndpoint extends MockEndpoint {
+			class ThrowawayEndpoint extends MockEndpoint<object> {
 				protected process(): Promise<void> {
 					return Promise.resolve();
 				}
 
-				protected getContentType(): ContentType {
+				protected getResponseContentType(): ContentType {
 					return ContentType.TEXT;
 				}
 			}
@@ -196,12 +196,12 @@ describe('Endpoint', () => {
 
 				const expected_error = new NotFoundError();
 
-				class ThrowawayEndpoint extends MockEndpoint {
+				class ThrowawayEndpoint extends MockEndpoint<object> {
 					protected process(): Promise<void> {
 						return Promise.reject(expected_error);
 					}
 
-					protected getContentType(): ContentType {
+					protected getResponseContentType(): ContentType {
 						return ContentType.TEXT;
 					}
 
@@ -232,14 +232,14 @@ describe('Endpoint', () => {
 				it('converts it to a generic HTTP error before passing to serializeError()', async () => {
 					expect.assertions(2);
 
-					class ThrowawayEndpoint extends MockEndpoint {
+					class ThrowawayEndpoint extends MockEndpoint<object> {
 						protected process(): Promise<void> {
 							const error = new Error('A weird thing happened');
 
 							return Promise.reject(error);
 						}
 
-						protected getContentType(): ContentType {
+						protected getResponseContentType(): ContentType {
 							return ContentType.TEXT;
 						}
 
@@ -277,9 +277,13 @@ describe('Endpoint', () => {
 
 	describe('getRequest()', () => {
 		it('returns request', () => {
-			class ThrowawayEndpoint extends MockEndpoint {
+			class ThrowawayEndpoint extends MockEndpoint<object> {
 				public privilegedGetRequest(): HTTP.IncomingMessage {
 					return this.getRequest();
+				}
+
+				protected getResponseContentType(): ContentType {
+					return ContentType.TEXT;
 				}
 			}
 
@@ -297,9 +301,13 @@ describe('Endpoint', () => {
 
 	describe('getResponse()', () => {
 		it('returns response', () => {
-			class ThrowawayEndpoint extends MockEndpoint {
+			class ThrowawayEndpoint extends MockEndpoint<object> {
 				public privilegedGetResponse(): HTTP.ServerResponse {
 					return this.getResponse();
+				}
+
+				protected getResponseContentType(): ContentType {
+					return ContentType.TEXT;
 				}
 			}
 
@@ -317,12 +325,12 @@ describe('Endpoint', () => {
 
 	describe('getResponseHeaders()', () => {
 		it('returns expected response headers', () => {
-			class ThrowawayEndpoint extends MockEndpoint {
+			class ThrowawayEndpoint extends MockEndpoint<object> {
 				public privilegedGetResponseHeaders(): HeaderMap {
 					return this.getResponseHeaders();
 				}
 
-				protected getContentType(): ContentType {
+				protected getResponseContentType(): ContentType {
 					return ContentType.JSON;
 				}
 			}
@@ -342,9 +350,13 @@ describe('Endpoint', () => {
 	});
 
 	describe('getUrlParameter()', () => {
-		class ThrowawayEndpoint extends MockEndpoint {
+		class ThrowawayEndpoint extends MockEndpoint<object> {
 			public privilegedGetUrlParameter(parameter: string): string | undefined {
 				return this.getUrlParameter(parameter);
+			}
+
+			protected getResponseContentType(): ContentType {
+				return ContentType.TEXT;
 			}
 		}
 
@@ -387,14 +399,14 @@ describe('Endpoint', () => {
 		it('sets the status code that is sent back to the response', async () => {
 			expect.assertions(1);
 
-			class ThrowawayEndpoint extends MockEndpoint {
+			class ThrowawayEndpoint extends MockEndpoint<object> {
 				protected process(): Promise<string> {
 					this.setStatusCode(StatusCode.UNAUTHORIZED);
 
 					return Promise.resolve('Permission denied');
 				}
 
-				protected getContentType(): ContentType {
+				protected getResponseContentType(): ContentType {
 					return ContentType.TEXT;
 				}
 			}
@@ -421,9 +433,13 @@ describe('Endpoint', () => {
 
 	describe('getRepository()', () => {
 		it('returns supplied repository', () => {
-			class ThrowawayEndpoint extends MockEndpoint {
+			class ThrowawayEndpoint extends MockEndpoint<object> {
 				public privilegedGetRepository(): Repository {
 					return this.getRepository();
+				}
+
+				protected getResponseContentType(): ContentType {
+					return ContentType.TEXT;
 				}
 			}
 
@@ -444,9 +460,13 @@ describe('Endpoint', () => {
 		const response = buildMockResponse();
 		const repository = createRepository();
 
-		class ThrowawayEndpoint extends MockEndpoint {
-			public privilegedGetRequestBody(): string {
+		class ThrowawayEndpoint extends MockEndpoint<object> {
+			public privilegedGetRequestBody(): object {
 				return this.getRequestBody();
+			}
+
+			protected getResponseContentType(): ContentType {
+				return ContentType.TEXT;
 			}
 		}
 
@@ -460,12 +480,16 @@ describe('Endpoint', () => {
 				);
 
 				Object.assign(endpoint, {
-					request_body: 'speak friend and enter'
+					request_body: {
+						message: 'speak friend and enter'
+					}
 				});
 
 				const request_body = endpoint.privilegedGetRequestBody();
 
-				expect(request_body).toStrictEqual('speak friend and enter');
+				expect(request_body).toStrictEqual({
+					message: 'speak friend and enter'
+				});
 			});
 		});
 

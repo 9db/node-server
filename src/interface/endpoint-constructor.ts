@@ -11,7 +11,7 @@ interface EndpointConstructor {
 		response: HTTP.ServerResponse,
 		url_parameters: UrlParameters,
 		repository: Repository
-	): Endpoint<string | JsonObject>;
+	): Endpoint<object, string | JsonObject>;
 }
 
 export default EndpointConstructor;
