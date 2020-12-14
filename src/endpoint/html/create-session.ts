@@ -3,6 +3,7 @@ import SystemKey from 'system/enum/key';
 import HttpHeader from 'http/enum/header';
 import buildCookie from 'http/utility/build-cookie';
 import HtmlEndpoint from 'endpoint/html';
+import TimeInterval from 'enum/time-interval';
 import KeyGenerator from 'utility/key-generator';
 import CreateNodeOperation from 'operation/create-node';
 import FetchAccountOperation from 'operation/fetch-account';
@@ -52,7 +53,7 @@ class HtmlCreateSessionEndpoint extends HtmlEndpoint<Input> {
 	}
 
 	private setCookieFromSession(session: Node): void {
-		const cookie = buildCookie(session.key);
+		const cookie = buildCookie(session.key, TimeInterval.ONE_DAY);
 
 		this.setHeaderValue(HttpHeader.SET_COOKIE, cookie);
 	}

@@ -1,10 +1,13 @@
+import getManifest from 'utility/get-manifest';
 import PlaintextEndpoint from 'endpoint/plaintext';
 
 class PlaintextVersionEndpoint extends PlaintextEndpoint<
 	Record<string, never>
 > {
 	protected process(): Promise<string> {
-		return Promise.resolve('0.0.1');
+		const manifest = getManifest();
+
+		return Promise.resolve(manifest.version);
 	}
 }
 

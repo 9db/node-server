@@ -9,6 +9,10 @@ class StaticCssEndpoint extends StaticEndpoint {
 				float: right;
 			}
 
+			main {
+				min-height: 85vh;
+			}
+
 			hr {
 				clear: both;
 			}

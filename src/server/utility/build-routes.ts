@@ -1,6 +1,8 @@
 import Route from 'route';
 import StaticCssRoute from 'route/static/css';
+import HtmlHomeRoute from 'route/html/home';
 import HtmlLoginRoute from 'route/html/login';
+import HtmlLogoutRoute from 'route/html/logout';
 import HtmlNodePageRoute from 'route/html/node-page';
 import HtmlNotFoundRoute from 'route/html/not-found';
 import JsonNotFoundRoute from 'route/json/not-found';
@@ -21,7 +23,9 @@ function buildRoutes(): Route[] {
 		new JsonCreateNodeRoute(),
 
 		// HTML:
+		new HtmlHomeRoute(),
 		new HtmlLoginRoute(),
+		new HtmlLogoutRoute(),
 		new HtmlNodePageRoute(),
 		new HtmlCreateSessionRoute(),
 

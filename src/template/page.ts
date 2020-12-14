@@ -1,5 +1,6 @@
 import Node from 'type/node';
 import Template from 'template';
+import getManifest from 'utility/get-manifest';
 import AccountMenuTemplate from 'template/partial/account-menu';
 
 export interface Breadcrumb {
@@ -18,6 +19,7 @@ abstract class PageTemplate<T extends PageTemplateInput> extends Template<T> {
 		const breadcrumbs_html = this.getBreadcrumbsHtml();
 		const content_title = this.getContentTitle();
 		const content_html = this.getContentHtml();
+		const footer_html = this.getFooterHtml();
 
 		return `
 			<!DOCTYPE html>
@@ -40,6 +42,12 @@ abstract class PageTemplate<T extends PageTemplateInput> extends Template<T> {
 						<h1>${content_title}</h1>
 						${content_html}
 					</main>
+
+					<hr />
+
+					<footer>
+						${footer_html}
+					</footer>
 				</body>
 			</html>
 		`;
@@ -86,6 +94,16 @@ abstract class PageTemplate<T extends PageTemplateInput> extends Template<T> {
 			<a href="${breadcrumb.url}">
 				${breadcrumb.label}
 			</a>
+		`;
+	}
+
+	private getFooterHtml(): string {
+		const manifest = getManifest();
+		const project_name = manifest.name;
+		const version = manifest.version;
+
+		return `
+			<span>Running ${project_name} v${version}.</span>
 		`;
 	}
 
