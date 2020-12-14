@@ -5,8 +5,11 @@ import ErrorPageTemplate from 'template/page/error';
 
 abstract class HtmlEndpoint<Input> extends Endpoint<Input, string> {
 	protected serializeError(error: HttpError): string {
+		const account = this.getAccount();
+
 		const template = new ErrorPageTemplate({
-			error
+			error,
+			account
 		});
 
 		return template.render();

@@ -1,12 +1,20 @@
-import PageTemplate from 'template/page';
+import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
-class LoginPageTemplate extends PageTemplate {
+class LoginPageTemplate extends PageTemplate<PageTemplateInput> {
 	protected getContentTitle(): string {
 		return 'Log in';
 	}
 
-	protected getHeaderHtml(): string {
-		return 'xxx';
+	protected getBreadcrumbs(): Breadcrumb[] {
+		return [
+			{
+				label: 'Home',
+				url: '/'
+			},
+			{
+				label: 'Log in'
+			}
+		];
 	}
 
 	protected getContentHtml(): string {

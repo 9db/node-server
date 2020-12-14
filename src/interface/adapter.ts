@@ -56,6 +56,12 @@ interface Adapter {
 		username: string,
 		password: string
 	): Promise<string | undefined>;
+
+	storeAccountKey(
+		username: string,
+		password: string,
+		account_key: string
+	): Promise<void>;
 }
 
 export default Adapter;

@@ -1,5 +1,6 @@
 import HTTP from 'http';
 
+import Node from 'type/node';
 import HttpError from 'http/error';
 import HeaderMap from 'http/type/header-map';
 import Repository from 'repository';
@@ -14,6 +15,7 @@ import JsonBodyParser from 'server/body-parser/json';
 import BadRequestError from 'http/error/bad-request';
 import UrlEncodedBodyParser from 'server/body-parser/url-encoded';
 import getSuccessfulStatusCode from 'http/utility/get-successful-status-code';
+import LoadAccountForRequestOperation from 'operation/load-account-for-request';
 
 type AllowedOutputs = string | Buffer | object;
 
@@ -25,6 +27,7 @@ abstract class Endpoint<Input, Output extends AllowedOutputs> {
 	private status_code: StatusCode;
 	private response_headers: HeaderMap;
 	private request_body: Input | undefined;
+	private account: Node | undefined;
 
 	public constructor(
 		request: HTTP.IncomingMessage,
@@ -44,8 +47,7 @@ abstract class Endpoint<Input, Output extends AllowedOutputs> {
 	}
 
 	public serve(): void {
-		this.parseBody()
-			.then(this.process.bind(this))
+		this.serveInternal()
 			.then(this.handleResult.bind(this))
 			.catch(this.handleError.bind(this));
 	}
@@ -95,11 +97,26 @@ abstract class Endpoint<Input, Output extends AllowedOutputs> {
 		return this.request_body;
 	}
 
+	protected getAccount(): Node {
+		if (this.account === undefined) {
+			throw new Error('Tried to read account, but it was not set');
+		}
+
+		return this.account;
+	}
+
 	protected redirectToUrl(url: string): void {
 		this.setStatusCode(StatusCode.REDIRECT);
 		this.setHeaderValue(HttpHeader.LOCATION, url);
 
 		this.sendString('');
+	}
+
+	private async serveInternal(): Promise<Output | void> {
+		await this.parseBody();
+		await this.loadAccount();
+
+		return this.process();
 	}
 
 	private async parseBody(): Promise<void> {
@@ -111,6 +128,15 @@ abstract class Endpoint<Input, Output extends AllowedOutputs> {
 		const body = await body_parser.parse();
 
 		this.request_body = body as Input;
+	}
+
+	private async loadAccount(): Promise<void> {
+		const repository = this.getRepository();
+		const request = this.getRequest();
+		const operation = new LoadAccountForRequestOperation(repository, request);
+		const account = await operation.perform();
+
+		this.account = account;
 	}
 
 	private hasUnparsableMethod(): boolean {

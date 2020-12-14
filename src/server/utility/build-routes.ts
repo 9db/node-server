@@ -1,4 +1,5 @@
 import Route from 'route';
+import StaticCssRoute from 'route/static/css';
 import HtmlLoginRoute from 'route/html/login';
 import HtmlNodePageRoute from 'route/html/node-page';
 import HtmlNotFoundRoute from 'route/html/not-found';
@@ -11,13 +12,20 @@ import PlaintextNotFoundRoute from 'route/plaintext/not-found';
 
 function buildRoutes(): Route[] {
 	return [
+		// Static responses:
 		new PlaintextVersionRoute(),
+		new StaticCssRoute(),
+
+		// JSON:
 		new JsonFetchNodeRoute(),
 		new JsonCreateNodeRoute(),
+
+		// HTML:
 		new HtmlLoginRoute(),
 		new HtmlNodePageRoute(),
 		new HtmlCreateSessionRoute(),
 
+		// 404 fallbacks:
 		new JsonNotFoundRoute(),
 		new HtmlNotFoundRoute(),
 		new PlaintextNotFoundRoute()

@@ -1,4 +1,5 @@
 enum ContentType {
+	CSS = 'text/css',
 	TEXT = 'text/plain',
 	HTML = 'text/html',
 	JSON = 'application/json',

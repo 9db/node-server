@@ -7,11 +7,17 @@ interface NodeCache {
 	[key: string]: Node;
 }
 
+interface AccountKeys {
+	[key: string]: string;
+}
+
 class MemoryAdapter implements Adapter {
 	private cache: NodeCache;
+	private account_keys: AccountKeys;
 
 	public constructor() {
 		this.cache = {};
+		this.account_keys = {};
 	}
 
 	public async fetchNode(
@@ -20,15 +26,17 @@ class MemoryAdapter implements Adapter {
 		node_key: string
 	): Promise<Node | undefined> {
 		const cache_key = this.createCacheKey(namespace_key, type_key, node_key);
-		const node = this.cache[cache_key];
+		const cache = this.getCache();
+		const node = cache[cache_key];
 
 		return Promise.resolve(node);
 	}
 
 	public storeNode(node: Node): Promise<Node> {
 		const cache_key = this.createCacheKeyForNode(node);
+		const cache = this.getCache();
 
-		this.cache[cache_key] = node;
+		cache[cache_key] = node;
 
 		return Promise.resolve(node);
 	}
@@ -185,10 +193,27 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public fetchAccountKey(
-		_username: string,
-		_password: string
+		username: string,
+		password: string
 	): Promise<string | undefined> {
-		return Promise.resolve('system');
+		const serialized_credentials = `${username}:${password}`;
+		const account_keys = this.getAccountKeys();
+		const account_key = account_keys[serialized_credentials];
+
+		return Promise.resolve(account_key);
+	}
+
+	public storeAccountKey(
+		username: string,
+		password: string,
+		account_key: string
+	): Promise<void> {
+		const serialized_credentials = `${username}:${password}`;
+		const account_keys = this.getAccountKeys();
+
+		account_keys[serialized_credentials] = account_key;
+
+		return Promise.resolve();
 	}
 
 	private async fetchNodeUnsafe(
@@ -229,6 +254,14 @@ class MemoryAdapter implements Adapter {
 
 	private createCacheKeyForNode(node: Node): string {
 		return this.createCacheKey(node.namespace_key, node.type_key, node.key);
+	}
+
+	private getCache(): NodeCache {
+		return this.cache;
+	}
+
+	private getAccountKeys(): AccountKeys {
+		return this.account_keys;
 	}
 }
 

@@ -1,9 +1,21 @@
+import Node from 'type/node';
 import Template from 'template';
+import AccountMenuTemplate from 'template/partial/account-menu';
 
-abstract class PageTemplate extends Template {
+export interface Breadcrumb {
+	readonly label: string;
+	readonly url?: string;
+}
+
+export interface PageTemplateInput {
+	readonly account: Node;
+}
+
+abstract class PageTemplate<T extends PageTemplateInput> extends Template<T> {
 	protected getHtml(): string {
 		const document_title = this.getDocumentTitle();
-		const header_html = this.getHeaderHtml();
+		const account_menu_html = this.getAccountMenuHtml();
+		const breadcrumbs_html = this.getBreadcrumbsHtml();
 		const content_title = this.getContentTitle();
 		const content_html = this.getContentHtml();
 
@@ -16,7 +28,10 @@ abstract class PageTemplate extends Template {
 				</head>
 				<body>
 					<header>
-						${header_html}
+						${account_menu_html}
+						<nav>
+							${breadcrumbs_html}
+						</nav>
 					</header>
 
 					<hr />
@@ -34,7 +49,47 @@ abstract class PageTemplate extends Template {
 		return this.getContentTitle();
 	}
 
-	protected abstract getHeaderHtml(): string;
+	protected getAccount(): Node {
+		const input = this.getInput();
+
+		return input.account;
+	}
+
+	private getAccountMenuHtml(): string {
+		const account = this.getAccount();
+
+		const template = new AccountMenuTemplate({
+			account
+		});
+
+		return template.render();
+	}
+
+	private getBreadcrumbsHtml(): string {
+		const breadcrumbs = this.getBreadcrumbs();
+
+		const serialized_breadcrumbs = breadcrumbs.map((breadcrumb) => {
+			return this.getBreadcrumbHtml(breadcrumb);
+		});
+
+		return serialized_breadcrumbs.join(`
+			<em>&gt;</em>
+		`);
+	}
+
+	private getBreadcrumbHtml(breadcrumb: Breadcrumb): string {
+		if (breadcrumb.url === undefined) {
+			return `<span>${breadcrumb.label}</span>`;
+		}
+
+		return `
+			<a href="${breadcrumb.url}">
+				${breadcrumb.label}
+			</a>
+		`;
+	}
+
+	protected abstract getBreadcrumbs(): Breadcrumb[];
 	protected abstract getContentTitle(): string;
 	protected abstract getContentHtml(): string;
 }

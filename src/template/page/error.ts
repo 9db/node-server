@@ -1,20 +1,12 @@
 import HttpError from 'http/error';
 import StatusCode from 'http/enum/status-code';
-import PageTemplate from 'template/page';
+import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
-interface Input {
+interface Input extends PageTemplateInput {
 	readonly error: HttpError;
 }
 
-class ErrorPageTemplate extends PageTemplate {
-	private input: Input;
-
-	public constructor(input: Input) {
-		super();
-
-		this.input = input;
-	}
-
+class ErrorPageTemplate extends PageTemplate<Input> {
 	protected getContentTitle(): string {
 		const status_code = this.getStatusCode();
 		const message = this.getErrorMessage();
@@ -22,8 +14,16 @@ class ErrorPageTemplate extends PageTemplate {
 		return `${status_code}: ${message}`;
 	}
 
-	protected getHeaderHtml(): string {
-		return 'xxx';
+	protected getBreadcrumbs(): Breadcrumb[] {
+		return [
+			{
+				label: 'Home',
+				url: '/'
+			},
+			{
+				label: 'Error'
+			}
+		];
 	}
 
 	protected getContentHtml(): string {
@@ -71,10 +71,6 @@ class ErrorPageTemplate extends PageTemplate {
 		const input = this.getInput();
 
 		return input.error;
-	}
-
-	private getInput(): Input {
-		return this.input;
 	}
 }
 

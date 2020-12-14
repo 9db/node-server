@@ -3,6 +3,7 @@ import Adapter from 'interface/adapter';
 import SystemCache from 'system/cache';
 import buildNodeUrl from 'utility/build-node-url';
 import transformNode from 'repository/utility/transform-node';
+import NodeParameters from 'type/node-parameters';
 import transformValue from 'repository/utility/transform-value';
 import standardizeUrl from 'repository/utility/standardize-url';
 import unstandardizeUrl from 'repository/utility/unstandardize-url';
@@ -165,6 +166,32 @@ class Repository {
 		const hostname = this.getHostname();
 
 		return buildNodeUrl(hostname, node);
+	}
+
+	public isLocalUrl(url: string): boolean {
+		const hostname = this.getHostname();
+
+		return url.startsWith(hostname);
+	}
+
+	public getNodeParametersForUrl(url: string): NodeParameters | undefined {
+		const hostname = this.getHostname();
+		const suffix = url.replace(hostname, '');
+		const match = suffix.match(/^\/([^\/]+)\/([^\/]+)\/([^\/]+)$/);
+
+		if (match === null) {
+			return undefined;
+		}
+
+		const namespace_key = match[1];
+		const type_key = match[2];
+		const key = match[3];
+
+		return {
+			namespace_key,
+			type_key,
+			key
+		};
 	}
 
 	public async fetchAccountKey(

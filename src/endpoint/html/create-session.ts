@@ -54,7 +54,7 @@ class HtmlCreateSessionEndpoint extends HtmlEndpoint<Input> {
 	private setCookieFromSession(session: Node): void {
 		const cookie = buildCookie(session.key);
 
-		this.setHeaderValue(HttpHeader.COOKIE, cookie);
+		this.setHeaderValue(HttpHeader.SET_COOKIE, cookie);
 	}
 
 	private getUsername(): string {
@@ -66,7 +66,7 @@ class HtmlCreateSessionEndpoint extends HtmlEndpoint<Input> {
 	private getPassword(): string {
 		const request_body = this.getRequestBody();
 
-		return request_body.username;
+		return request_body.password;
 	}
 }
 
