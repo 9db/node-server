@@ -9,7 +9,7 @@ class JsonCreateNodeEndpoint extends JsonEndpoint<Node> {
 		const key = this.getUrlParameter('key');
 		const body = this.getRequestBody();
 
-		const input = {
+		const node = {
 			...body,
 			namespace_key,
 			type_key,
@@ -17,7 +17,13 @@ class JsonCreateNodeEndpoint extends JsonEndpoint<Node> {
 		};
 
 		const repository = this.getRepository();
-		const operation = new CreateNodeOperation(repository, input);
+		const account = this.getAccount();
+
+		const operation = new CreateNodeOperation({
+			node,
+			repository,
+			account
+		});
 
 		return operation.perform();
 	}

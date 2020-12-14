@@ -1,17 +1,12 @@
 import Node from 'type/node';
-import Operation from 'operation';
-import Repository from 'repository';
+import Operation, {OperationInput} from 'operation';
 import NotFoundError from 'http/error/not-found';
 
-class LoadNodeFromUrlOperation extends Operation<Node> {
-	private url: string;
+interface Input extends OperationInput {
+	readonly url: string;
+}
 
-	public constructor(repository: Repository, url: string) {
-		super(repository);
-
-		this.url = url;
-	}
-
+class LoadNodeFromUrlOperation extends Operation<Input, Node> {
 	protected performInternal(): Promise<Node> {
 		if (this.isLocalNode()) {
 			return this.loadLocalNode();
@@ -54,7 +49,9 @@ class LoadNodeFromUrlOperation extends Operation<Node> {
 	}
 
 	private getUrl(): string {
-		return this.url;
+		const input = this.getInput();
+
+		return input.url;
 	}
 }
 

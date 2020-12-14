@@ -13,16 +13,19 @@ class JsonUpdateNodeEndpoint extends JsonEndpoint<Input> {
 		const key = this.getUrlParameter('key');
 		const body = this.getRequestBody();
 		const changes = body.changes;
+		const repository = this.getRepository();
+		const account = this.getAccount();
 
 		const input = {
 			namespace_key,
 			type_key,
 			key,
-			changes
+			changes,
+			repository,
+			account
 		};
 
-		const repository = this.getRepository();
-		const operation = new UpdateNodeOperation(repository, input);
+		const operation = new UpdateNodeOperation(input);
 
 		return operation.perform();
 	}

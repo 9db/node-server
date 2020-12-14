@@ -1,10 +1,8 @@
 import Node from 'type/node';
-import SystemKey from 'system/enum/key';
 import HttpHeader from 'http/enum/header';
 import buildCookie from 'http/utility/build-cookie';
 import HtmlEndpoint from 'endpoint/html';
 import LogoutPageTemplate from 'template/page/logout';
-import FetchNodeOperation from 'operation/fetch-node';
 
 class HtmlLogoutEndpoint extends HtmlEndpoint<Record<string, never>> {
 	protected async process(): Promise<string> {
@@ -28,16 +26,9 @@ class HtmlLogoutEndpoint extends HtmlEndpoint<Record<string, never>> {
 	}
 
 	private loadAnonymousAccount(): Promise<Node> {
-		const input = {
-			namespace_key: SystemKey.SYSTEM_NAMESPACE,
-			type_key: SystemKey.ACCOUNT_TYPE,
-			key: SystemKey.ANONYMOUS_ACCOUNT
-		};
-
 		const repository = this.getRepository();
-		const operation = new FetchNodeOperation(repository, input);
 
-		return operation.perform();
+		return repository.fetchAnonymousAccount();
 	}
 }
 

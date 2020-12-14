@@ -132,8 +132,16 @@ abstract class Endpoint<Input, Output extends AllowedOutputs> {
 
 	private async loadAccount(): Promise<void> {
 		const repository = this.getRepository();
+		const system_account = await repository.fetchSystemAccount();
 		const request = this.getRequest();
-		const operation = new LoadAccountForRequestOperation(repository, request);
+
+		const input = {
+			request,
+			repository,
+			account: system_account
+		};
+
+		const operation = new LoadAccountForRequestOperation(input);
 		const account = await operation.perform();
 
 		this.account = account;

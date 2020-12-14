@@ -1,13 +1,19 @@
+import Node from 'type/node';
 import Repository from 'repository';
 
-abstract class Operation<T> {
-	private repository: Repository;
+export interface OperationInput {
+	readonly repository: Repository;
+	readonly account: Node;
+}
 
-	public constructor(repository: Repository) {
-		this.repository = repository;
+abstract class Operation<Input extends OperationInput, Output> {
+	private input: Input;
+
+	public constructor(input: Input) {
+		this.input = input;
 	}
 
-	public async perform(): Promise<T> {
+	public async perform(): Promise<Output> {
 		try {
 			const result = await this.performInternal();
 
@@ -20,18 +26,26 @@ abstract class Operation<T> {
 	}
 
 	protected getRepository(): Repository {
-		return this.repository;
+		const input = this.getInput();
+
+		return input.repository;
 	}
 
-	protected async loadAccountUrl(): Promise<string> {
-		return Promise.resolve('http://localhost/system/account/anonymous');
+	protected getAccount(): Node {
+		const input = this.getInput();
+
+		return input.account;
+	}
+
+	protected getInput(): Input {
+		return this.input;
 	}
 
 	private logFailure(error: Error): void {
 		console.error(error);
 	}
 
-	protected abstract performInternal(): Promise<T>;
+	protected abstract performInternal(): Promise<Output>;
 }
 
 export default Operation;

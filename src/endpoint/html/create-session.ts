@@ -22,32 +22,46 @@ class HtmlCreateSessionEndpoint extends HtmlEndpoint<Input> {
 		this.redirectToUrl('/');
 	}
 
-	private fetchAccount(): Promise<Node> {
+	private async fetchAccount(): Promise<Node> {
 		const repository = this.getRepository();
+		const account = await repository.fetchSystemAccount();
 
-		const input = {
+		const credentials = {
 			username: this.getUsername(),
 			password: this.getPassword()
 		};
 
-		const operation = new FetchAccountOperation(repository, input);
+		const input = {
+			credentials,
+			repository,
+			account
+		};
+
+		const operation = new FetchAccountOperation(input);
 
 		return operation.perform();
 	}
 
-	private createSession(account: Node): Promise<Node> {
+	private async createSession(account: Node): Promise<Node> {
 		const key = KeyGenerator.id();
 		const repository = this.getRepository();
+		const system_account = await repository.fetchSystemAccount();
 		const account_url = repository.buildNodeUrl(account);
 
-		const input = {
+		const node = {
 			namespace_key: SystemKey.SYSTEM_NAMESPACE,
 			type_key: SystemKey.SESSION_TYPE,
 			key,
 			account: account_url
 		};
 
-		const operation = new CreateNodeOperation(repository, input);
+		const input = {
+			node,
+			repository,
+			account: system_account
+		};
+
+		const operation = new CreateNodeOperation(input);
 
 		return operation.perform();
 	}

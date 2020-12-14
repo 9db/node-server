@@ -5,12 +5,6 @@ import NotFoundError from 'http/error/not-found';
 import FetchNodeOperation from 'operation/fetch-node';
 
 describe('FetchNodeOperation', () => {
-	const input = {
-		namespace_key: 'public',
-		type_key: 'wizard',
-		key: 'gandalf'
-	};
-
 	function createRepository(): Repository {
 		const hostname = 'https://9db.org';
 		const adapter = new MemoryAdapter();
@@ -21,14 +15,25 @@ describe('FetchNodeOperation', () => {
 	describe('when specified node exists', () => {
 		it('returns expected node', async () => {
 			const repository = createRepository();
+			const account = await repository.fetchAnonymousAccount();
 
 			const node = NodeFactory.create({
-				...input
+				namespace_key: 'public',
+				type_key: 'wizard',
+				key: 'gandalf'
 			});
 
 			await repository.storeNode(node);
 
-			const operation = new FetchNodeOperation(repository, input);
+			const input = {
+				namespace_key: node.namespace_key,
+				type_key: node.type_key,
+				key: node.key,
+				repository,
+				account
+			};
+
+			const operation = new FetchNodeOperation(input);
 			const result = await operation.perform();
 
 			expect(result).toStrictEqual(node);
@@ -40,7 +45,17 @@ describe('FetchNodeOperation', () => {
 			expect.assertions(1);
 
 			const repository = createRepository();
-			const operation = new FetchNodeOperation(repository, input);
+			const account = await repository.fetchAnonymousAccount();
+
+			const input = {
+				namespace_key: 'public',
+				type_key: 'wizard',
+				key: 'gandalf',
+				repository,
+				account
+			};
+
+			const operation = new FetchNodeOperation(input);
 
 			try {
 				await operation.perform();

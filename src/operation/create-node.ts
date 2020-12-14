@@ -1,24 +1,19 @@
 import Node from 'type/node';
-import Operation from 'operation';
-import Repository from 'repository';
 import FieldValue from 'type/field-value';
+import Operation, {OperationInput} from 'operation';
 
-interface Input {
+interface NodeInput {
 	readonly namespace_key: string;
 	readonly type_key: string;
 	readonly key: string;
 	readonly [key: string]: FieldValue;
 }
 
-class CreateNodeOperation extends Operation<Node> {
-	private input: Input;
+interface Input extends OperationInput {
+	readonly node: NodeInput;
+}
 
-	public constructor(repository: Repository, input: Input) {
-		super(repository);
-
-		this.input = input;
-	}
-
+class CreateNodeOperation extends Operation<Input, Node> {
 	protected async performInternal(): Promise<Node> {
 		const node = await this.buildNode();
 		const repository = this.getRepository();
@@ -27,13 +22,13 @@ class CreateNodeOperation extends Operation<Node> {
 	}
 
 	private async buildNode(): Promise<Node> {
-		const input = this.getInput();
-		const creator = await this.loadAccountUrl();
+		const node_input = this.getNodeInput();
+		const creator = this.getAccountUrl();
 		const created_at = Date.now();
 		const updated_at = created_at;
 
 		return {
-			...input,
+			...node_input,
 			creator,
 			created_at,
 			updated_at,
@@ -41,8 +36,17 @@ class CreateNodeOperation extends Operation<Node> {
 		};
 	}
 
-	private getInput(): Input {
-		return this.input;
+	private getNodeInput(): NodeInput {
+		const input = this.getInput();
+
+		return input.node;
+	}
+
+	private getAccountUrl(): string {
+		const account = this.getAccount();
+		const repository = this.getRepository();
+
+		return repository.buildNodeUrl(account);
 	}
 }
 

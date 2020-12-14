@@ -17,7 +17,7 @@ describe('ChangeFieldOperation', () => {
 	let id_spy!: jest.SpyInstance;
 	let id!: number;
 
-	beforeEach(() => {
+	beforeEach(async () => {
 		id = 0;
 
 		const adapter = new MemoryAdapter();
@@ -44,7 +44,9 @@ describe('ChangeFieldOperation', () => {
 	});
 
 	describe('perform()', () => {
-		describe('when handling a SET_FIELD_VALUE change', () => {
+		describe('when handling a SET_FIELD_VALUE change', async () => {
+			const account = await repository.fetchAnonymousAccount();
+
 			const input = {
 				namespace_key: 'public',
 				type_key: 'wizard',
@@ -52,7 +54,9 @@ describe('ChangeFieldOperation', () => {
 				change_type: ChangeType.SET_FIELD_VALUE,
 				field: 'color',
 				value: 'white',
-				previous_value: 'grey'
+				previous_value: 'grey',
+				repository,
+				account
 			};
 
 			const node = {
@@ -69,7 +73,7 @@ describe('ChangeFieldOperation', () => {
 			it('returns the expected output', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(repository, input);
+				const operation = new ChangeFieldOperation(input);
 				const result = await operation.perform();
 
 				expect(result).toStrictEqual({
@@ -87,7 +91,7 @@ describe('ChangeFieldOperation', () => {
 			it('persists the updated node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(repository, input);
+				const operation = new ChangeFieldOperation(input);
 
 				await operation.perform();
 
@@ -112,7 +116,7 @@ describe('ChangeFieldOperation', () => {
 			it('persists the change node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(repository, input);
+				const operation = new ChangeFieldOperation(input);
 
 				await operation.perform();
 
@@ -139,7 +143,7 @@ describe('ChangeFieldOperation', () => {
 				it('returns a NotFoundError', async () => {
 					expect.assertions(1);
 
-					const operation = new ChangeFieldOperation(repository, input);
+					const operation = new ChangeFieldOperation(input);
 
 					try {
 						await operation.perform();
@@ -150,14 +154,18 @@ describe('ChangeFieldOperation', () => {
 			});
 		});
 
-		describe('when handling a ADD_SET_VALUE change', () => {
+		describe('when handling a ADD_SET_VALUE change', async () => {
+			const account = await repository.fetchAnonymousAccount();
+
 			const input = {
 				namespace_key: 'public',
 				type_key: 'wizard',
 				key: 'gandalf',
 				change_type: ChangeType.ADD_SET_VALUE,
 				field: 'weapons',
-				value: 'glamdring'
+				value: 'glamdring',
+				repository,
+				account
 			};
 
 			const node = {
@@ -174,7 +182,7 @@ describe('ChangeFieldOperation', () => {
 			it('returns the expected output', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(repository, input);
+				const operation = new ChangeFieldOperation(input);
 				const result = await operation.perform();
 
 				expect(result).toStrictEqual({
@@ -192,7 +200,7 @@ describe('ChangeFieldOperation', () => {
 			it('persists the updated node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(repository, input);
+				const operation = new ChangeFieldOperation(input);
 
 				await operation.perform();
 
@@ -217,7 +225,7 @@ describe('ChangeFieldOperation', () => {
 			it('persists the change node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(repository, input);
+				const operation = new ChangeFieldOperation(input);
 
 				await operation.perform();
 
@@ -244,7 +252,7 @@ describe('ChangeFieldOperation', () => {
 				it('returns a NotFoundError', async () => {
 					expect.assertions(1);
 
-					const operation = new ChangeFieldOperation(repository, input);
+					const operation = new ChangeFieldOperation(input);
 
 					try {
 						await operation.perform();
@@ -255,14 +263,18 @@ describe('ChangeFieldOperation', () => {
 			});
 		});
 
-		describe('when handling a REMOVE_SET_VALUE change', () => {
+		describe('when handling a REMOVE_SET_VALUE change', async () => {
+			const account = await repository.fetchAnonymousAccount();
+
 			const input = {
 				namespace_key: 'public',
 				type_key: 'wizard',
 				key: 'gandalf',
 				change_type: ChangeType.REMOVE_SET_VALUE,
 				field: 'weapons',
-				value: 'glamdring'
+				value: 'glamdring',
+				repository,
+				account
 			};
 
 			const node = {
@@ -279,7 +291,7 @@ describe('ChangeFieldOperation', () => {
 			it('returns the expected output', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(repository, input);
+				const operation = new ChangeFieldOperation(input);
 				const result = await operation.perform();
 
 				expect(result).toStrictEqual({
@@ -297,7 +309,7 @@ describe('ChangeFieldOperation', () => {
 			it('persists the updated node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(repository, input);
+				const operation = new ChangeFieldOperation(input);
 
 				await operation.perform();
 
@@ -322,7 +334,7 @@ describe('ChangeFieldOperation', () => {
 			it('persists the change node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(repository, input);
+				const operation = new ChangeFieldOperation(input);
 
 				await operation.perform();
 
@@ -349,7 +361,7 @@ describe('ChangeFieldOperation', () => {
 				it('returns a NotFoundError', async () => {
 					expect.assertions(1);
 
-					const operation = new ChangeFieldOperation(repository, input);
+					const operation = new ChangeFieldOperation(input);
 
 					try {
 						await operation.perform();
@@ -360,14 +372,18 @@ describe('ChangeFieldOperation', () => {
 			});
 		});
 
-		describe('when handling an ADD_LIST_VALUE change', () => {
+		describe('when handling an ADD_LIST_VALUE change', async () => {
+			const account = await repository.fetchAnonymousAccount();
+
 			const input = {
 				namespace_key: 'public',
 				type_key: 'wizard',
 				key: 'gandalf',
 				change_type: ChangeType.ADD_LIST_VALUE,
 				field: 'mutterings',
-				value: 'hrm'
+				value: 'hrm',
+				repository,
+				account
 			};
 
 			const node = {
@@ -384,7 +400,7 @@ describe('ChangeFieldOperation', () => {
 			it('returns the expected output', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(repository, input);
+				const operation = new ChangeFieldOperation(input);
 				const result = await operation.perform();
 
 				expect(result).toStrictEqual({
@@ -402,7 +418,7 @@ describe('ChangeFieldOperation', () => {
 			it('persists the updated node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(repository, input);
+				const operation = new ChangeFieldOperation(input);
 
 				await operation.perform();
 
@@ -427,7 +443,7 @@ describe('ChangeFieldOperation', () => {
 			it('persists the change node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(repository, input);
+				const operation = new ChangeFieldOperation(input);
 
 				await operation.perform();
 
@@ -454,7 +470,7 @@ describe('ChangeFieldOperation', () => {
 				it('returns a NotFoundError', async () => {
 					expect.assertions(1);
 
-					const operation = new ChangeFieldOperation(repository, input);
+					const operation = new ChangeFieldOperation(input);
 
 					try {
 						await operation.perform();
@@ -465,14 +481,18 @@ describe('ChangeFieldOperation', () => {
 			});
 		});
 
-		describe('when handling an REMOVE_LIST_VALUE change', () => {
+		describe('when handling an REMOVE_LIST_VALUE change', async () => {
+			const account = await repository.fetchAnonymousAccount();
+
 			const input = {
 				namespace_key: 'public',
 				type_key: 'wizard',
 				key: 'gandalf',
 				change_type: ChangeType.REMOVE_LIST_VALUE,
 				field: 'mutterings',
-				value: 'hrm'
+				value: 'hrm',
+				repository,
+				account
 			};
 
 			const node = {
@@ -489,7 +509,7 @@ describe('ChangeFieldOperation', () => {
 			it('returns the expected output', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(repository, input);
+				const operation = new ChangeFieldOperation(input);
 				const result = await operation.perform();
 
 				expect(result).toStrictEqual({
@@ -507,7 +527,7 @@ describe('ChangeFieldOperation', () => {
 			it('persists the updated node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(repository, input);
+				const operation = new ChangeFieldOperation(input);
 
 				await operation.perform();
 
@@ -532,7 +552,7 @@ describe('ChangeFieldOperation', () => {
 			it('persists the change node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(repository, input);
+				const operation = new ChangeFieldOperation(input);
 
 				await operation.perform();
 
@@ -559,7 +579,7 @@ describe('ChangeFieldOperation', () => {
 				it('returns a NotFoundError', async () => {
 					expect.assertions(1);
 
-					const operation = new ChangeFieldOperation(repository, input);
+					const operation = new ChangeFieldOperation(input);
 
 					try {
 						await operation.perform();
@@ -570,14 +590,18 @@ describe('ChangeFieldOperation', () => {
 			});
 		});
 
-		describe('when given an unsupported change type', () => {
+		describe('when given an unsupported change type', async () => {
+			const account = await repository.fetchAnonymousAccount();
+
 			const input = {
 				namespace_key: 'public',
 				type_key: 'wizard',
 				key: 'gandalf',
 				change_type: 'something_unsupported' as ChangeType,
 				field: 'weapons',
-				value: 'glamdring'
+				value: 'glamdring',
+				repository,
+				account
 			};
 
 			const node = {
@@ -596,7 +620,7 @@ describe('ChangeFieldOperation', () => {
 
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(repository, input);
+				const operation = new ChangeFieldOperation(input);
 
 				try {
 					await operation.perform();

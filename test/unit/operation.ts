@@ -1,6 +1,6 @@
-import Operation from 'operation';
 import Repository from 'repository';
 import MemoryAdapter from 'adapter/memory';
+import Operation, {OperationInput} from 'operation';
 
 describe('Operation', () => {
 	function createRepository(): Repository {
@@ -12,7 +12,7 @@ describe('Operation', () => {
 
 	describe('perform()', () => {
 		describe('when performInternal() succeeds', () => {
-			class MockOperation extends Operation<string> {
+			class MockOperation extends Operation<OperationInput, string> {
 				protected performInternal(): Promise<string> {
 					return Promise.resolve('speak friend and enter');
 				}
@@ -20,7 +20,13 @@ describe('Operation', () => {
 
 			it('returns the expected result', async () => {
 				const repository = createRepository();
-				const operation = new MockOperation(repository);
+				const account = await repository.fetchAnonymousAccount();
+
+				const operation = new MockOperation({
+					repository,
+					account
+				});
+
 				const result = await operation.perform();
 
 				expect(result).toStrictEqual('speak friend and enter');
@@ -30,7 +36,7 @@ describe('Operation', () => {
 		describe('when performInternal() returns a rejected promise', () => {
 			const error = new Error('Wrong incantation');
 
-			class MockOperation extends Operation<string> {
+			class MockOperation extends Operation<OperationInput, string> {
 				protected performInternal(): Promise<string> {
 					return Promise.reject(error);
 				}
@@ -40,7 +46,13 @@ describe('Operation', () => {
 				expect.assertions(2);
 
 				const repository = createRepository();
-				const operation = new MockOperation(repository);
+				const account = await repository.fetchAnonymousAccount();
+
+				const operation = new MockOperation({
+					repository,
+					account
+				});
+
 				const spy = jest.spyOn(console, 'error');
 
 				spy.mockImplementation(() => {
@@ -62,7 +74,7 @@ describe('Operation', () => {
 		describe('when performInternal() raises a synchronous exception', () => {
 			const error = new Error('Wrong incantation');
 
-			class MockOperation extends Operation<string> {
+			class MockOperation extends Operation<OperationInput, string> {
 				protected performInternal(): Promise<string> {
 					throw error;
 				}
@@ -72,7 +84,13 @@ describe('Operation', () => {
 				expect.assertions(2);
 
 				const repository = createRepository();
-				const operation = new MockOperation(repository);
+				const account = await repository.fetchAnonymousAccount();
+
+				const operation = new MockOperation({
+					repository,
+					account
+				});
+
 				const spy = jest.spyOn(console, 'error');
 
 				spy.mockImplementation(() => {
@@ -93,8 +111,8 @@ describe('Operation', () => {
 	});
 
 	describe('getRepository()', () => {
-		it('returns the supplied repository', () => {
-			class MockOperation extends Operation<void> {
+		it('returns the supplied repository', async () => {
+			class MockOperation extends Operation<OperationInput, void> {
 				public privilegedGetRepository(): Repository {
 					return this.getRepository();
 				}
@@ -105,7 +123,13 @@ describe('Operation', () => {
 			}
 
 			const repository = createRepository();
-			const operation = new MockOperation(repository);
+			const account = await repository.fetchAnonymousAccount();
+
+			const operation = new MockOperation({
+				repository,
+				account
+			});
+
 			const result = operation.privilegedGetRepository();
 
 			expect(result).toStrictEqual(repository);

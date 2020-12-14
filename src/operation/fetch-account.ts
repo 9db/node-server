@@ -1,25 +1,14 @@
 import Node from 'type/node';
-import Operation from 'operation';
 import SystemKey from 'system/enum/key';
-import Repository from 'repository';
 import UnauthorizedError from 'http/error/unauthorized';
+import BasicAuthCredentials from 'http/type/basic-auth-credentials';
+import Operation, {OperationInput} from 'operation';
 
-interface Input {
-	readonly username: string;
-	readonly password: string;
+interface Input extends OperationInput {
+	readonly credentials: BasicAuthCredentials;
 }
 
-class FetchAccountOperation extends Operation<Node> {
-	private username: string;
-	private password: string;
-
-	public constructor(repository: Repository, input: Input) {
-		super(repository);
-
-		this.username = input.username;
-		this.password = input.password;
-	}
-
+class FetchAccountOperation extends Operation<Input, Node> {
 	protected async performInternal(): Promise<Node> {
 		const account_key = await this.fetchAccountKey();
 
@@ -56,11 +45,21 @@ class FetchAccountOperation extends Operation<Node> {
 	}
 
 	private getUsername(): string {
-		return this.username;
+		const credentials = this.getCredentials();
+
+		return credentials.username;
 	}
 
 	private getPassword(): string {
-		return this.password;
+		const credentials = this.getCredentials();
+
+		return credentials.password;
+	}
+
+	private getCredentials(): BasicAuthCredentials {
+		const input = this.getInput();
+
+		return input.credentials;
 	}
 }
 

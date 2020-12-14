@@ -1,10 +1,9 @@
 import Node from 'type/node';
-import Operation from 'operation';
-import Repository from 'repository';
 import ChangeType from 'enum/change-type';
 import BadRequestError from 'http/error/bad-request';
 import { PrimitiveValue } from 'type/field-value';
 import ChangeFieldOperation from 'operation/change-field';
+import Operation, {OperationInput} from 'operation';
 
 export interface ChangeInput {
 	readonly change_type: ChangeType;
@@ -13,22 +12,14 @@ export interface ChangeInput {
 	readonly previous_value: PrimitiveValue | null;
 }
 
-export interface Input {
+export interface Input extends OperationInput {
 	readonly namespace_key: string;
 	readonly type_key: string;
 	readonly key: string;
 	readonly changes: ChangeInput[];
 }
 
-class UpdateNodeOperation extends Operation<Node> {
-	private input: Input;
-
-	public constructor(repository: Repository, input: Input) {
-		super(repository);
-
-		this.input = input;
-	}
-
+class UpdateNodeOperation extends Operation<Input, Node> {
 	protected async performInternal(): Promise<Node> {
 		const changes = this.getChanges();
 
@@ -51,19 +42,22 @@ class UpdateNodeOperation extends Operation<Node> {
 	}
 
 	private applyChange(change: ChangeInput): Promise<Node> {
-		const repository = this.getRepository();
 		const namespace_key = this.getNamespaceKey();
 		const type_key = this.getTypeKey();
 		const key = this.getNodeKey();
+		const repository = this.getRepository();
+		const account = this.getAccount();
 
 		const input = {
 			namespace_key,
 			type_key,
 			key,
-			...change
+			...change,
+			repository,
+			account
 		};
 
-		const service = new ChangeFieldOperation(repository, input);
+		const service = new ChangeFieldOperation(input);
 
 		return service.perform();
 	}
@@ -90,10 +84,6 @@ class UpdateNodeOperation extends Operation<Node> {
 		const input = this.getInput();
 
 		return input.key;
-	}
-
-	private getInput(): Input {
-		return this.input;
 	}
 }
 

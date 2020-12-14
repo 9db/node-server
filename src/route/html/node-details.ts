@@ -1,6 +1,6 @@
 import HtmlRoute from 'route/html';
 import HttpMethod from 'http/enum/method';
-import HtmlNodePageEndpoint from 'endpoint/html/node-page';
+import HtmlNodePageEndpoint from 'endpoint/html/node-details';
 
 class HtmlNodePageRoute extends HtmlRoute {
 	public constructor() {

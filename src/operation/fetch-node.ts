@@ -1,23 +1,14 @@
 import Node from 'type/node';
-import Operation from 'operation';
-import Repository from 'repository';
 import NotFoundError from 'http/error/not-found';
+import Operation, {OperationInput} from 'operation';
 
-interface Input {
+interface Input extends OperationInput {
 	readonly namespace_key: string;
 	readonly type_key: string;
 	readonly key: string;
 }
 
-class FetchNodeOperation extends Operation<Node> {
-	private input: Input;
-
-	public constructor(repository: Repository, input: Input) {
-		super(repository);
-
-		this.input = input;
-	}
-
+class FetchNodeOperation extends Operation<Input, Node> {
 	protected async performInternal(): Promise<Node> {
 		const input = this.getInput();
 		const repository = this.getRepository();
@@ -33,10 +24,6 @@ class FetchNodeOperation extends Operation<Node> {
 		}
 
 		return node;
-	}
-
-	private getInput(): Input {
-		return this.input;
 	}
 }
 

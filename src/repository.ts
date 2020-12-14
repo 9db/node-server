@@ -1,7 +1,9 @@
 import Node from 'type/node';
 import Adapter from 'interface/adapter';
+import SystemKey from 'system/enum/key';
 import SystemCache from 'system/cache';
 import buildNodeUrl from 'utility/build-node-url';
+import NotFoundError from 'http/error/not-found';
 import transformNode from 'repository/utility/transform-node';
 import NodeParameters from 'type/node-parameters';
 import transformValue from 'repository/utility/transform-value';
@@ -201,6 +203,34 @@ class Repository {
 		const adapter = this.getAdapter();
 
 		return adapter.fetchAccountKey(username, password);
+	}
+
+	public async fetchAnonymousAccount(): Promise<Node> {
+		const node = await this.fetchNode(
+			SystemKey.SYSTEM_NAMESPACE,
+			SystemKey.ACCOUNT_TYPE,
+			SystemKey.ANONYMOUS_ACCOUNT
+		);
+
+		if (node === undefined) {
+			throw new NotFoundError();
+		}
+
+		return node;
+	}
+
+	public async fetchSystemAccount(): Promise<Node> {
+		const node = await this.fetchNode(
+			SystemKey.SYSTEM_NAMESPACE,
+			SystemKey.ACCOUNT_TYPE,
+			SystemKey.SYSTEM_ACCOUNT
+		);
+
+		if (node === undefined) {
+			throw new NotFoundError();
+		}
+
+		return node;
 	}
 
 	private fetchSystemNode(

@@ -16,7 +16,7 @@ describe('UpdateNodeOperation', () => {
 	let id_spy!: jest.SpyInstance;
 	let id!: number;
 
-	beforeEach(() => {
+	beforeEach(async () => {
 		id = 0;
 
 		const adapter = new MemoryAdapter();
@@ -59,6 +59,8 @@ describe('UpdateNodeOperation', () => {
 
 			await repository.storeNode(node);
 
+			const account = await repository.fetchAnonymousAccount();
+
 			const input = {
 				namespace_key: 'public',
 				type_key: 'wizard',
@@ -88,10 +90,12 @@ describe('UpdateNodeOperation', () => {
 						value: 'grey',
 						previous_value: null
 					}
-				]
+				],
+				repository,
+				account
 			};
 
-			const operation = new UpdateNodeOperation(repository, input);
+			const operation = new UpdateNodeOperation(input);
 			const result = await operation.perform();
 
 			expect(result).toStrictEqual({
@@ -129,6 +133,8 @@ describe('UpdateNodeOperation', () => {
 
 			await repository.storeNode(node);
 
+			const account = await repository.fetchAnonymousAccount();
+
 			const input = {
 				namespace_key: 'public',
 				type_key: 'wizard',
@@ -158,10 +164,12 @@ describe('UpdateNodeOperation', () => {
 						value: 'grey',
 						previous_value: null
 					}
-				]
+				],
+				repository,
+				account
 			};
 
-			const operation = new UpdateNodeOperation(repository, input);
+			const operation = new UpdateNodeOperation(input);
 			const result = await operation.perform();
 
 			const promises = result.changes.map((change_url) => {
@@ -257,14 +265,18 @@ describe('UpdateNodeOperation', () => {
 
 				await repository.storeNode(node);
 
+				const account = await repository.fetchAnonymousAccount();
+
 				const input = {
 					namespace_key: 'public',
 					type_key: 'wizard',
 					key: 'gandalf',
-					changes: []
+					changes: [],
+					repository,
+					account
 				};
 
-				const operation = new UpdateNodeOperation(repository, input);
+				const operation = new UpdateNodeOperation(input);
 
 				try {
 					await operation.perform();

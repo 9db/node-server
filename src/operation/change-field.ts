@@ -1,14 +1,13 @@
 import Node from 'type/node';
-import Operation from 'operation';
 import SystemKey from 'system/enum/key';
-import Repository from 'repository';
 import ChangeType from 'enum/change-type';
 import ChangeStatus from 'enum/change-status';
 import KeyGenerator from 'utility/key-generator';
 import BadRequestError from 'http/error/bad-request';
 import { PrimitiveValue } from 'type/field-value';
+import Operation, {OperationInput} from 'operation';
 
-interface Input {
+interface Input extends OperationInput {
 	readonly namespace_key: string;
 	readonly type_key: string;
 	readonly key: string;
@@ -18,14 +17,7 @@ interface Input {
 	readonly previous_value?: PrimitiveValue;
 }
 
-class ChangeFieldOperation extends Operation<Node> {
-	private input: Input;
-
-	public constructor(repository: Repository, input: Input) {
-		super(repository);
-		this.input = input;
-	}
-
+class ChangeFieldOperation extends Operation<Input, Node> {
 	protected async performInternal(): Promise<Node> {
 		await this.addChangeNode();
 
@@ -191,10 +183,6 @@ class ChangeFieldOperation extends Operation<Node> {
 		const input = this.getInput();
 
 		return input.change_type;
-	}
-
-	private getInput(): Input {
-		return this.input;
 	}
 }
 

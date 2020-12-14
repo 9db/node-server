@@ -25,15 +25,21 @@ describe('CreateNodeOperation', () => {
 
 	describe('perform()', () => {
 		it('returns the expected data', async () => {
+			const account = await repository.fetchAnonymousAccount();
+
 			const input = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
-				color: 'grey',
-				weapon: 'glamdring'
+				node: {
+					namespace_key: 'public',
+					type_key: 'wizard',
+					key: 'gandalf',
+					color: 'grey',
+					weapon: 'glamdring'
+				},
+				repository,
+				account
 			};
 
-			const operation = new CreateNodeOperation(repository, input);
+			const operation = new CreateNodeOperation(input);
 			const result = await operation.perform();
 
 			expect(result).toStrictEqual({
@@ -46,15 +52,21 @@ describe('CreateNodeOperation', () => {
 		});
 
 		it('assigns the expected data to the repository', async () => {
+			const account = await repository.fetchAnonymousAccount();
+
 			const input = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
-				color: 'grey',
-				weapon: 'glamdring'
+				node: {
+					namespace_key: 'public',
+					type_key: 'wizard',
+					key: 'gandalf',
+					color: 'grey',
+					weapon: 'glamdring'
+				},
+				repository,
+				account
 			};
 
-			const operation = new CreateNodeOperation(repository, input);
+			const operation = new CreateNodeOperation(input);
 
 			await operation.perform();
 
