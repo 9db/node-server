@@ -1,13 +1,14 @@
 import Route from 'route';
-import StaticCssRoute from 'route/static/css';
 import HtmlHomeRoute from 'route/html/home';
+import StaticCssRoute from 'route/static/css';
 import HtmlLoginRoute from 'route/html/login';
 import HtmlLogoutRoute from 'route/html/logout';
-import HtmlNodeDetailsRoute from 'route/html/node-details';
+import HtmlTypeFormRoute from 'route/html/type-form';
 import HtmlNotFoundRoute from 'route/html/not-found';
 import JsonNotFoundRoute from 'route/json/not-found';
 import JsonFetchNodeRoute from 'route/json/fetch-node';
 import JsonCreateNodeRoute from 'route/json/create-node';
+import HtmlNodeDetailsRoute from 'route/html/node-details';
 import PlaintextVersionRoute from 'route/plaintext/version';
 import HtmlCreateSessionRoute from 'route/html/create-session';
 import PlaintextNotFoundRoute from 'route/plaintext/not-found';
@@ -26,6 +27,7 @@ function buildRoutes(): Route[] {
 		new HtmlHomeRoute(),
 		new HtmlLoginRoute(),
 		new HtmlLogoutRoute(),
+		new HtmlTypeFormRoute(),
 		new HtmlNodeDetailsRoute(),
 		new HtmlCreateSessionRoute(),
 

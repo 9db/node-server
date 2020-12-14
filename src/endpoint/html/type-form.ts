@@ -1,19 +1,20 @@
 import Node from 'type/node';
+import SystemKey from 'system/enum/key';
 import HtmlEndpoint from 'endpoint/html';
+import TypeFormTemplate from 'template/page/type-form';
 import FetchNodeOperation from 'operation/fetch-node';
-import NodeDetailsTemplate from 'template/page/node-details';
 
-class HtmlNodeDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
+class HtmlTypeFormEndpoint extends HtmlEndpoint<Record<string, never>> {
 	protected async process(): Promise<string> {
-		const node = await this.fetchNode();
+		const type_node = await this.fetchTypeNode();
 
-		return this.renderNode(node);
+		return this.renderFormForTypeNode(type_node);
 	}
 
-	private fetchNode(): Promise<Node> {
+	private fetchTypeNode(): Promise<Node> {
 		const namespace_key = this.getUrlParameter('namespace_key');
-		const type_key = this.getUrlParameter('type_key');
-		const key = this.getUrlParameter('key');
+		const type_key = SystemKey.GENERIC_TYPE;
+		const key = SystemKey.GENERIC_TYPE;
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
@@ -30,12 +31,11 @@ class HtmlNodeDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		return operation.perform();
 	}
 
-	private renderNode(node: Node): string {
+	private renderFormForTypeNode(node: Node): string {
 		const account = this.getAccount();
 
-		const template = new NodeDetailsTemplate({
+		const template = new TypeFormTemplate({
 			node,
-			type_nodes: [],
 			account
 		});
 
@@ -43,4 +43,4 @@ class HtmlNodeDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 	}
 }
 
-export default HtmlNodeDetailsEndpoint;
+export default HtmlTypeFormEndpoint;

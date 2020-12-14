@@ -21,9 +21,9 @@ class AccountMenuTemplate extends Template<Input> {
 
 		return `
 			<menu>
-				<span>Logged in as</span>
+				<span>logged in as</span>
 				<a href="${account_url}">${account_key}</a>.
-				<a href="/logout">Log out</a>
+				<a href="/logout">log out</a>
 			</menu>
 		`;
 	}
@@ -31,9 +31,9 @@ class AccountMenuTemplate extends Template<Input> {
 	private renderUnauthenticated(): string {
 		return `
 			<menu>
-				<a href="/login">Log in</a>
+				<a href="/login">log in</a>
 				<span>or</span>
-				<a href="/register">Register</a>
+				<a href="/register">register</a>
 			</menu>
 		`;
 	}
