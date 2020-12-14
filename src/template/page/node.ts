@@ -7,7 +7,7 @@ interface Input extends PageTemplateInput {
 	readonly type_nodes: Node[];
 }
 
-class NodePageTemplate extends PageTemplate<Input> {
+class NodeDetailsTemplate extends PageTemplate<Input> {
 	protected getBreadcrumbs(): Breadcrumb[] {
 		const namespace_key = this.getNamespaceKey();
 		const namespace_url = this.getNamespaceUrl();
@@ -268,4 +268,4 @@ class NodePageTemplate extends PageTemplate<Input> {
 	}
 }
 
-export default NodePageTemplate;
+export default NodeDetailsTemplate;

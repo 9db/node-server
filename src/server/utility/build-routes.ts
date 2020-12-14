@@ -3,7 +3,7 @@ import StaticCssRoute from 'route/static/css';
 import HtmlHomeRoute from 'route/html/home';
 import HtmlLoginRoute from 'route/html/login';
 import HtmlLogoutRoute from 'route/html/logout';
-import HtmlNodePageRoute from 'route/html/node-page';
+import HtmlNodeDetailsRoute from 'route/html/node-details';
 import HtmlNotFoundRoute from 'route/html/not-found';
 import JsonNotFoundRoute from 'route/json/not-found';
 import JsonFetchNodeRoute from 'route/json/fetch-node';
@@ -26,7 +26,7 @@ function buildRoutes(): Route[] {
 		new HtmlHomeRoute(),
 		new HtmlLoginRoute(),
 		new HtmlLogoutRoute(),
-		new HtmlNodePageRoute(),
+		new HtmlNodeDetailsRoute(),
 		new HtmlCreateSessionRoute(),
 
 		// 404 fallbacks:
