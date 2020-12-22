@@ -3,7 +3,6 @@ import FieldValue from 'type/field-value';
 import Operation, {OperationInput} from 'operation';
 
 interface NodeInput {
-	readonly namespace_key: string;
 	readonly type_key: string;
 	readonly key: string;
 	readonly [key: string]: FieldValue;

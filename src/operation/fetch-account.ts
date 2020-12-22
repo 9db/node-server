@@ -19,7 +19,6 @@ class FetchAccountOperation extends Operation<Input, Node> {
 		const repository = this.getRepository();
 
 		const account = await repository.fetchNode(
-			SystemKey.SYSTEM_NAMESPACE,
 			SystemKey.ACCOUNT_TYPE,
 			account_key
 		);

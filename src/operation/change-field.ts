@@ -8,7 +8,6 @@ import { PrimitiveValue } from 'type/field-value';
 import Operation, {OperationInput} from 'operation';
 
 interface Input extends OperationInput {
-	readonly namespace_key: string;
 	readonly type_key: string;
 	readonly key: string;
 	readonly change_type: ChangeType;
@@ -34,7 +33,6 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const change_url = repository.buildNodeUrl(change_node);
 
 		await repository.addValueToList(
-			input.namespace_key,
 			input.type_key,
 			input.key,
 			'changes',
@@ -66,7 +64,6 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const repository = this.getRepository();
 
 		return repository.setField(
-			input.namespace_key,
 			input.type_key,
 			input.key,
 			input.field,
@@ -79,7 +76,6 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const repository = this.getRepository();
 
 		return repository.addValueToList(
-			input.namespace_key,
 			input.type_key,
 			input.key,
 			input.field,
@@ -92,7 +88,6 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const repository = this.getRepository();
 
 		return repository.removeValueFromList(
-			input.namespace_key,
 			input.type_key,
 			input.key,
 			input.field,
@@ -105,7 +100,6 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const repository = this.getRepository();
 
 		return repository.addValueToSet(
-			input.namespace_key,
 			input.type_key,
 			input.key,
 			input.field,
@@ -118,7 +112,6 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const repository = this.getRepository();
 
 		return repository.removeValueFromSet(
-			input.namespace_key,
 			input.type_key,
 			input.key,
 			input.field,
@@ -127,7 +120,6 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 	}
 
 	private buildChangeNode(): Node {
-		const namespace_key = SystemKey.SYSTEM_NAMESPACE;
 		const type_key = SystemKey.CHANGE_TYPE;
 		const key = KeyGenerator.id();
 		const status = ChangeStatus.APPROVED;
@@ -141,7 +133,6 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const updated_at = created_at;
 
 		return {
-			namespace_key,
 			type_key,
 			key,
 			status,

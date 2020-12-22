@@ -1,17 +1,13 @@
 import Node from 'type/node';
 import GenericTypeGenerator from 'system/node-generator/type/generic';
 import AccountTypeGenerator from 'system/node-generator/type/account';
-import NamespaceTypeGenerator from 'system/node-generator/type/namespace';
 import SystemAccountGenerator from 'system/node-generator/account/system';
 import { GeneratorConstructor } from 'system/node-generator';
-import SystemNamespaceGenerator from 'system/node-generator/namespace/system';
 import AnonymousAccountGenerator from 'system/node-generator/account/anonymous';
 
 const GENERATORS: GeneratorConstructor[] = [
 	GenericTypeGenerator,
 	AccountTypeGenerator,
-	NamespaceTypeGenerator,
-	SystemNamespaceGenerator,
 	SystemAccountGenerator,
 	AnonymousAccountGenerator
 ];
@@ -31,11 +27,10 @@ class SystemCache {
 	}
 
 	public fetchNode(
-		namespace_key: string,
 		type_key: string,
 		node_key: string
 	): Node | undefined {
-		const cache_key = this.buildCacheKey(namespace_key, type_key, node_key);
+		const cache_key = this.buildCacheKey(type_key, node_key);
 		const nodes = this.getNodes();
 
 		return nodes[cache_key];
@@ -54,7 +49,6 @@ class SystemCache {
 
 	private addNode(node: Node): void {
 		const cache_key = this.buildCacheKey(
-			node.namespace_key,
 			node.type_key,
 			node.key
 		);
@@ -65,11 +59,10 @@ class SystemCache {
 	}
 
 	private buildCacheKey(
-		namespace_key: string,
 		type_key: string,
 		node_key: string
 	): string {
-		return `${namespace_key}/${type_key}/${node_key}`;
+		return `${type_key}/${node_key}`;
 	}
 
 	private getHostname(): string {

@@ -102,7 +102,7 @@ databases that are not supported by the included adapters.
 
 An adapter must implement the following methods:
 
-- `retrieveNode(namespace_key, type_key, node_key)`
+- `retrieveNode(type_key, node_key)`
 - `storeNode(node)`
 - `setField(node, field_key, field_value)`
 - `addItemToSet(node, set_key, item)`

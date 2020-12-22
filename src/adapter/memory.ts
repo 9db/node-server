@@ -21,11 +21,10 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public async fetchNode(
-		namespace_key: string,
 		type_key: string,
 		node_key: string
 	): Promise<Node | undefined> {
-		const cache_key = this.createCacheKey(namespace_key, type_key, node_key);
+		const cache_key = this.createCacheKey(type_key, node_key);
 		const cache = this.getCache();
 		const node = cache[cache_key];
 
@@ -42,13 +41,12 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public async setField(
-		namespace_key: string,
 		type_key: string,
 		node_key: string,
 		field_key: string,
 		value: FieldValue
 	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(namespace_key, type_key, node_key);
+		const node = await this.fetchNodeUnsafe(type_key, node_key);
 
 		const updated_node = {
 			...node,
@@ -59,13 +57,12 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public async addValueToSet(
-		namespace_key: string,
 		type_key: string,
 		node_key: string,
 		field_key: string,
 		value: PrimitiveValue
 	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(namespace_key, type_key, node_key);
+		const node = await this.fetchNodeUnsafe(type_key, node_key);
 		const set_field = this.getArrayField(node, field_key);
 
 		if (set_field.includes(value)) {
@@ -83,13 +80,12 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public async removeValueFromSet(
-		namespace_key: string,
 		type_key: string,
 		node_key: string,
 		field_key: string,
 		value: PrimitiveValue
 	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(namespace_key, type_key, node_key);
+		const node = await this.fetchNodeUnsafe(type_key, node_key);
 		const set_field = this.getArrayField(node, field_key);
 
 		if (!set_field.includes(value)) {
@@ -109,14 +105,13 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public async addValueToList(
-		namespace_key: string,
 		type_key: string,
 		node_key: string,
 		field_key: string,
 		value: PrimitiveValue,
 		position?: number
 	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(namespace_key, type_key, node_key);
+		const node = await this.fetchNodeUnsafe(type_key, node_key);
 		const list_field = this.getArrayField(node, field_key);
 
 		if (position === undefined) {
@@ -153,14 +148,13 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public async removeValueFromList(
-		namespace_key: string,
 		type_key: string,
 		node_key: string,
 		field_key: string,
 		value: PrimitiveValue,
 		position?: number
 	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(namespace_key, type_key, node_key);
+		const node = await this.fetchNodeUnsafe(type_key, node_key);
 		const list_field = this.getArrayField(node, field_key);
 
 		if (position === undefined) {
@@ -217,11 +211,10 @@ class MemoryAdapter implements Adapter {
 	}
 
 	private async fetchNodeUnsafe(
-		namespace_key: string,
 		type_key: string,
 		node_key: string
 	): Promise<Node> {
-		const node = await this.fetchNode(namespace_key, type_key, node_key);
+		const node = await this.fetchNode(type_key, node_key);
 
 		if (node === undefined) {
 			throw new NotFoundError();
@@ -245,15 +238,14 @@ class MemoryAdapter implements Adapter {
 	}
 
 	private createCacheKey(
-		namespace_key: string,
 		type_key: string,
 		node_key: string
 	): string {
-		return `${namespace_key}/${type_key}/${node_key}`;
+		return `${type_key}/${node_key}`;
 	}
 
 	private createCacheKeyForNode(node: Node): string {
-		return this.createCacheKey(node.namespace_key, node.type_key, node.key);
+		return this.createCacheKey(node.type_key, node.key);
 	}
 
 	private getCache(): NodeCache {

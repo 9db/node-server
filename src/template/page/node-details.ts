@@ -9,17 +9,11 @@ interface Input extends PageTemplateInput {
 
 class NodeDetailsTemplate extends PageTemplate<Input> {
 	protected getBreadcrumbs(): Breadcrumb[] {
-		const namespace_key = this.getNamespaceKey();
-		const namespace_url = this.getNamespaceUrl();
 		const type_key = this.getTypeKey();
 		const type_url = this.getTypeUrl();
 		const node_key = this.getNodeKey();
 
 		return [
-			{
-				label: namespace_key,
-				url: namespace_url
-			},
 			{
 				label: type_key,
 				url: type_url
@@ -144,25 +138,22 @@ class NodeDetailsTemplate extends PageTemplate<Input> {
 	}
 
 	private getListUrl(): string {
-		const namespace_key = this.getNamespaceKey();
 		const node_key = this.getNodeKey();
 
-		return this.buildUrl(namespace_key, node_key, 'list');
+		return this.buildUrl(node_key, 'list');
 	}
 
 	private getNewUrl(): string {
-		const namespace_key = this.getNamespaceKey();
 		const node_key = this.getNodeKey();
 
-		return this.buildUrl(namespace_key, node_key, 'new');
+		return this.buildUrl(node_key, 'new');
 	}
 
 	private getNodeUrl(): string {
-		const namespace_key = this.getNamespaceKey();
 		const type_key = this.getTypeKey();
 		const node_key = this.getNodeKey();
 
-		return this.buildUrl(namespace_key, type_key, node_key);
+		return this.buildUrl(type_key, node_key);
 	}
 
 	private isInstanceNode(): boolean {
@@ -175,27 +166,10 @@ class NodeDetailsTemplate extends PageTemplate<Input> {
 		return type_key === SystemKey.GENERIC_TYPE;
 	}
 
-	private getNamespaceUrl(): string {
-		const namespace_key = this.getNamespaceKey();
-
-		return this.buildUrl(
-			SystemKey.SYSTEM_NAMESPACE,
-			SystemKey.NAMESPACE_TYPE,
-			namespace_key
-		);
-	}
-
-	private getNamespaceKey(): string {
-		const node = this.getNode();
-
-		return node.namespace_key;
-	}
-
 	private getTypeUrl(): string {
 		const type_key = this.getTypeKey();
-		const namespace_key = this.getNamespaceKey();
 
-		return this.buildUrl(namespace_key, SystemKey.GENERIC_TYPE, type_key);
+		return this.buildUrl(SystemKey.GENERIC_TYPE, type_key);
 	}
 
 	private getTypeKey(): string {

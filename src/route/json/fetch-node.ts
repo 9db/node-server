@@ -6,7 +6,7 @@ class JsonFetchNodeRoute extends JsonRoute {
 	public constructor() {
 		super(
 			HttpMethod.GET,
-			'/:namespace_key/:type_key/:key',
+			'/:type_key/:key',
 			JsonFetchNodeEndpoint
 		);
 	}

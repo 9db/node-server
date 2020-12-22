@@ -3,7 +3,6 @@ import NotFoundError from 'http/error/not-found';
 import Operation, {OperationInput} from 'operation';
 
 interface Input extends OperationInput {
-	readonly namespace_key: string;
 	readonly type_key: string;
 	readonly key: string;
 }
@@ -14,7 +13,6 @@ class FetchNodeOperation extends Operation<Input, Node> {
 		const repository = this.getRepository();
 
 		const node = await repository.fetchNode(
-			input.namespace_key,
 			input.type_key,
 			input.key
 		);

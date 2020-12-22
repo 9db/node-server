@@ -3,7 +3,6 @@ import FieldValue, { PrimitiveValue } from 'type/field-value';
 
 interface Adapter {
 	fetchNode(
-		namespace_key: string,
 		type_key: string,
 		node_key: string
 	): Promise<Node | undefined>;
@@ -11,7 +10,6 @@ interface Adapter {
 	storeNode(node: Node): Promise<Node>;
 
 	setField(
-		namespace_key: string,
 		type_key: string,
 		node_key: string,
 		field_key: string,
@@ -19,7 +17,6 @@ interface Adapter {
 	): Promise<Node>;
 
 	addValueToSet(
-		namespace_key: string,
 		type_key: string,
 		node_key: string,
 		field_key: string,
@@ -27,7 +24,6 @@ interface Adapter {
 	): Promise<Node>;
 
 	removeValueFromSet(
-		namespace_key: string,
 		type_key: string,
 		node_key: string,
 		field_key: string,
@@ -35,7 +31,6 @@ interface Adapter {
 	): Promise<Node>;
 
 	addValueToList(
-		namespace_key: string,
 		type_key: string,
 		node_key: string,
 		field_key: string,
@@ -44,7 +39,6 @@ interface Adapter {
 	): Promise<Node>;
 
 	removeValueFromList(
-		namespace_key: string,
 		type_key: string,
 		node_key: string,
 		field_key: string,

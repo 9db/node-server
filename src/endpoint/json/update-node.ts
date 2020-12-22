@@ -8,7 +8,6 @@ interface Input {
 
 class JsonUpdateNodeEndpoint extends JsonEndpoint<Input> {
 	protected async process(): Promise<Node> {
-		const namespace_key = this.getUrlParameter('namespace_key');
 		const type_key = this.getUrlParameter('type_key');
 		const key = this.getUrlParameter('key');
 		const body = this.getRequestBody();
@@ -17,7 +16,6 @@ class JsonUpdateNodeEndpoint extends JsonEndpoint<Input> {
 		const account = this.getAccount();
 
 		const input = {
-			namespace_key,
 			type_key,
 			key,
 			changes,

@@ -11,7 +11,6 @@ abstract class SystemNodeGenerator {
 
 	public generate(): Node {
 		return {
-			namespace_key: this.getNamespaceKey(),
 			type_key: this.getTypeKey(),
 			key: this.getNodeKey(),
 			creator: this.getCreator(),
@@ -21,18 +20,12 @@ abstract class SystemNodeGenerator {
 		};
 	}
 
-	protected getNamespaceKey(): string {
-		return SystemKey.SYSTEM_NAMESPACE;
-	}
-
 	protected getCreator(): string {
 		const hostname = this.getHostname();
-		const namespace_key = this.getNamespaceKey();
 		const type_key = SystemKey.ACCOUNT_TYPE;
 		const key = SystemKey.SYSTEM_ACCOUNT;
 
 		return buildNodeUrl(hostname, {
-			namespace_key,
 			type_key,
 			key
 		});

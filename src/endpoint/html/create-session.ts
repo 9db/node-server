@@ -49,7 +49,6 @@ class HtmlCreateSessionEndpoint extends HtmlEndpoint<Input> {
 		const account_url = repository.buildNodeUrl(account);
 
 		const node = {
-			namespace_key: SystemKey.SYSTEM_NAMESPACE,
 			type_key: SystemKey.SESSION_TYPE,
 			key,
 			account: account_url

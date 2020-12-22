@@ -7,7 +7,7 @@ class HtmlTypeFormRoute extends HtmlRoute {
 	public constructor() {
 		super(
 			HttpMethod.GET,
-			`/:namespace_key/${SystemKey.GENERIC_TYPE}/new`,
+			`/${SystemKey.GENERIC_TYPE}/new`,
 			HtmlTypeFormEndpoint
 		);
 	}

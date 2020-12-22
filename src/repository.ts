@@ -24,11 +24,10 @@ class Repository {
 	}
 
 	public async fetchNode(
-		namespace_key: string,
 		type_key: string,
 		node_key: string
 	): Promise<Node | undefined> {
-		const system_node = this.fetchSystemNode(namespace_key, type_key, node_key);
+		const system_node = this.fetchSystemNode(type_key, node_key);
 
 		if (system_node !== undefined) {
 			// NOTE: No transformation happens on system nodes, for performance
@@ -37,7 +36,7 @@ class Repository {
 		}
 
 		const adapter = this.getAdapter();
-		const node = await adapter.fetchNode(namespace_key, type_key, node_key);
+		const node = await adapter.fetchNode(type_key, node_key);
 
 		if (node === undefined) {
 			return undefined;
@@ -56,7 +55,6 @@ class Repository {
 	}
 
 	public async setField(
-		namespace_key: string,
 		type_key: string,
 		node_key: string,
 		field_key: string,
@@ -66,7 +64,6 @@ class Repository {
 		const adapter = this.getAdapter();
 
 		const node = await adapter.setField(
-			namespace_key,
 			type_key,
 			node_key,
 			field_key,
@@ -77,7 +74,6 @@ class Repository {
 	}
 
 	public async addValueToSet(
-		namespace_key: string,
 		type_key: string,
 		node_key: string,
 		field_key: string,
@@ -87,7 +83,6 @@ class Repository {
 		const adapter = this.getAdapter();
 
 		const node = await adapter.addValueToSet(
-			namespace_key,
 			type_key,
 			node_key,
 			field_key,
@@ -98,7 +93,6 @@ class Repository {
 	}
 
 	public async removeValueFromSet(
-		namespace_key: string,
 		type_key: string,
 		node_key: string,
 		field_key: string,
@@ -108,7 +102,6 @@ class Repository {
 		const adapter = this.getAdapter();
 
 		const node = await adapter.removeValueFromSet(
-			namespace_key,
 			type_key,
 			node_key,
 			field_key,
@@ -119,7 +112,6 @@ class Repository {
 	}
 
 	public async addValueToList(
-		namespace_key: string,
 		type_key: string,
 		node_key: string,
 		field_key: string,
@@ -130,7 +122,6 @@ class Repository {
 		const adapter = this.getAdapter();
 
 		const node = await adapter.addValueToList(
-			namespace_key,
 			type_key,
 			node_key,
 			field_key,
@@ -142,7 +133,6 @@ class Repository {
 	}
 
 	public async removeValueFromList(
-		namespace_key: string,
 		type_key: string,
 		node_key: string,
 		field_key: string,
@@ -153,7 +143,6 @@ class Repository {
 		const adapter = this.getAdapter();
 
 		const node = await adapter.removeValueFromList(
-			namespace_key,
 			type_key,
 			node_key,
 			field_key,
@@ -179,18 +168,16 @@ class Repository {
 	public getNodeParametersForUrl(url: string): NodeParameters | undefined {
 		const hostname = this.getHostname();
 		const suffix = url.replace(hostname, '');
-		const match = suffix.match(/^\/([^\/]+)\/([^\/]+)\/([^\/]+)$/);
+		const match = suffix.match(/^\/([^\/]+)\/([^\/]+)$/);
 
 		if (match === null) {
 			return undefined;
 		}
 
-		const namespace_key = match[1];
-		const type_key = match[2];
-		const key = match[3];
+		const type_key = match[1];
+		const key = match[2];
 
 		return {
-			namespace_key,
 			type_key,
 			key
 		};
@@ -207,7 +194,6 @@ class Repository {
 
 	public async fetchAnonymousAccount(): Promise<Node> {
 		const node = await this.fetchNode(
-			SystemKey.SYSTEM_NAMESPACE,
 			SystemKey.ACCOUNT_TYPE,
 			SystemKey.ANONYMOUS_ACCOUNT
 		);
@@ -221,7 +207,6 @@ class Repository {
 
 	public async fetchSystemAccount(): Promise<Node> {
 		const node = await this.fetchNode(
-			SystemKey.SYSTEM_NAMESPACE,
 			SystemKey.ACCOUNT_TYPE,
 			SystemKey.SYSTEM_ACCOUNT
 		);
@@ -234,13 +219,12 @@ class Repository {
 	}
 
 	private fetchSystemNode(
-		namespace_key: string,
 		type_key: string,
 		node_key: string
 	): Node | undefined {
 		const system_cache = this.getSystemCache();
 
-		return system_cache.fetchNode(namespace_key, type_key, node_key);
+		return system_cache.fetchNode(type_key, node_key);
 	}
 
 	private standardizeNode(node: Node): Node {

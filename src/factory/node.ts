@@ -13,7 +13,6 @@ function randomCreator(): string {
 class NodeFactory {
 	public static create(node?: Partial<Node>): Node {
 		return {
-			namespace_key: randomKey(),
 			type_key: randomKey(),
 			key: randomKey(),
 			creator: randomCreator(),

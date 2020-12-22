@@ -58,7 +58,6 @@ class LoadAccountForRequestOperation extends Operation<Input, Node> {
 		const repository = this.getRepository();
 
 		const session = await repository.fetchNode(
-			SystemKey.SYSTEM_NAMESPACE,
 			SystemKey.SESSION_TYPE,
 			session_key
 		);
@@ -98,7 +97,6 @@ class LoadAccountForRequestOperation extends Operation<Input, Node> {
 		const repository = this.getRepository();
 
 		const node = await repository.fetchNode(
-			SystemKey.SYSTEM_NAMESPACE,
 			SystemKey.ACCOUNT_TYPE,
 			SystemKey.ANONYMOUS_ACCOUNT
 		);

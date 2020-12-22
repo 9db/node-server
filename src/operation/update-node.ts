@@ -13,7 +13,6 @@ export interface ChangeInput {
 }
 
 export interface Input extends OperationInput {
-	readonly namespace_key: string;
 	readonly type_key: string;
 	readonly key: string;
 	readonly changes: ChangeInput[];
@@ -42,14 +41,12 @@ class UpdateNodeOperation extends Operation<Input, Node> {
 	}
 
 	private applyChange(change: ChangeInput): Promise<Node> {
-		const namespace_key = this.getNamespaceKey();
 		const type_key = this.getTypeKey();
 		const key = this.getNodeKey();
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
 		const input = {
-			namespace_key,
 			type_key,
 			key,
 			...change,
@@ -66,12 +63,6 @@ class UpdateNodeOperation extends Operation<Input, Node> {
 		const input = this.getInput();
 
 		return input.changes;
-	}
-
-	private getNamespaceKey(): string {
-		const input = this.getInput();
-
-		return input.namespace_key;
 	}
 
 	private getTypeKey(): string {
