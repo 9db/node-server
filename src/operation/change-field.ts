@@ -127,8 +127,8 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const field = this.getInputField();
 		const value = this.getInputValue();
 		const previous_value = this.getInputPreviousValue();
-		const creator = 'https://9db.org/system/account/anonymous';
-		const approver = 'https://9db.org/system/account/system';
+		const creator = 'https://9db.org/account/anonymous';
+		const approver = 'https://9db.org/account/system';
 		const created_at = Date.now();
 		const updated_at = created_at;
 

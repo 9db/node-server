@@ -54,17 +54,17 @@ describe('JsonCreateNodeEndpoint', () => {
 	describe('serve()', () => {
 		it('returns the expected node data', async () => {
 			const data = {
-				name: `${hostname}/system/type/string`,
-				age: `${hostname}/system/type/number`
+				name: `${hostname}/type/string`,
+				age: `${hostname}/type/number`
 			};
 
-			const url = `http://localhost:${port}/public/type/wizard`;
+			const url = `http://localhost:${port}/type/wizard`;
 			const result = await postJson(url, data);
 
 			expect(result.body).toStrictEqual({
 				id: 'wizard',
 				type_id: SystemId.GENERIC_TYPE,
-				creator: 'http://localhost/system/account/anonymous',
+				creator: `${hostname}/account/anonymous`,
 				created_at: current_timestamp,
 				updated_at: current_timestamp,
 				changes: [],
@@ -73,7 +73,7 @@ describe('JsonCreateNodeEndpoint', () => {
 		});
 
 		it('returns the expected headers', async () => {
-			const url = `http://localhost:${port}/public/type/wizard`;
+			const url = `http://localhost:${port}/type/wizard`;
 			const result = await postJson(url, {});
 
 			expect(result.headers).toMatchObject({
@@ -82,7 +82,7 @@ describe('JsonCreateNodeEndpoint', () => {
 		});
 
 		it('returns the expected status code', async () => {
-			const url = `http://localhost:${port}/public/type/wizard`;
+			const url = `http://localhost:${port}/type/wizard`;
 			const result = await postJson(url, {});
 
 			expect(result.status_code).toStrictEqual(StatusCode.CREATED);
@@ -90,11 +90,11 @@ describe('JsonCreateNodeEndpoint', () => {
 
 		it('persists the node to the repository', async () => {
 			const data = {
-				name: `${hostname}/system/type/string`,
-				age: `${hostname}/system/type/number`
+				name: `${hostname}/type/string`,
+				age: `${hostname}/type/number`
 			};
 
-			const url = `http://localhost:${port}/public/type/wizard`;
+			const url = `http://localhost:${port}/type/wizard`;
 
 			await postJson(url, data);
 
@@ -106,7 +106,7 @@ describe('JsonCreateNodeEndpoint', () => {
 			expect(persisted_node).toStrictEqual({
 				id: 'wizard',
 				type_id: SystemId.GENERIC_TYPE,
-				creator: 'http://localhost/system/account/anonymous',
+				creator: `${hostname}/account/anonymous`,
 				created_at: current_timestamp,
 				updated_at: current_timestamp,
 				changes: [],

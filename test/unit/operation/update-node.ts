@@ -50,7 +50,7 @@ describe('UpdateNodeOperation', () => {
 				name: 'Gandalf the Grey',
 				horses: [],
 				colors: ['grey'],
-				creator: `${hostname}/public/account/iluvatar`,
+				creator: `${hostname}/account/iluvatar`,
 				created_at: 1607692722005,
 				updated_at: 1607692722005,
 				changes: []
@@ -103,12 +103,12 @@ describe('UpdateNodeOperation', () => {
 				horses: ['Shadowfax'],
 				colors: ['white'],
 				changes: [
-					`${hostname}/system/change/0`,
-					`${hostname}/system/change/1`,
-					`${hostname}/system/change/2`,
-					`${hostname}/system/change/3`
+					`${hostname}/change/0`,
+					`${hostname}/change/1`,
+					`${hostname}/change/2`,
+					`${hostname}/change/3`
 				],
-				creator: `${hostname}/public/account/iluvatar`,
+				creator: `${hostname}/account/iluvatar`,
 				created_at: 1607692722005,
 				updated_at: 1607692722005
 			});
@@ -121,7 +121,7 @@ describe('UpdateNodeOperation', () => {
 				name: 'Gandalf the Grey',
 				horses: [],
 				colors: ['grey'],
-				creator: `${hostname}/public/account/iluvatar`,
+				creator: `${hostname}/account/iluvatar`,
 				created_at: 1607692722005,
 				updated_at: 1607692722005,
 				changes: []
@@ -187,8 +187,8 @@ describe('UpdateNodeOperation', () => {
 					value: 'Gandalf the White',
 					previous_value: 'Gandalf the Grey',
 					status: ChangeStatus.APPROVED,
-					creator: `${hostname}/system/account/anonymous`,
-					approver: `${hostname}/system/account/system`,
+					creator: `${hostname}/account/anonymous`,
+					approver: `${hostname}/account/system`,
 					created_at: current_timestamp,
 					updated_at: current_timestamp,
 					changes: []
@@ -201,8 +201,8 @@ describe('UpdateNodeOperation', () => {
 					value: 'Shadowfax',
 					previous_value: null,
 					status: ChangeStatus.APPROVED,
-					creator: `${hostname}/system/account/anonymous`,
-					approver: `${hostname}/system/account/system`,
+					creator: `${hostname}/account/anonymous`,
+					approver: `${hostname}/account/system`,
 					created_at: current_timestamp,
 					updated_at: current_timestamp,
 					changes: []
@@ -215,8 +215,8 @@ describe('UpdateNodeOperation', () => {
 					value: 'white',
 					previous_value: null,
 					status: ChangeStatus.APPROVED,
-					creator: `${hostname}/system/account/anonymous`,
-					approver: `${hostname}/system/account/system`,
+					creator: `${hostname}/account/anonymous`,
+					approver: `${hostname}/account/system`,
 					created_at: current_timestamp,
 					updated_at: current_timestamp,
 					changes: []
@@ -229,8 +229,8 @@ describe('UpdateNodeOperation', () => {
 					value: 'grey',
 					previous_value: null,
 					status: ChangeStatus.APPROVED,
-					creator: `${hostname}/system/account/anonymous`,
-					approver: `${hostname}/system/account/system`,
+					creator: `${hostname}/account/anonymous`,
+					approver: `${hostname}/account/system`,
 					created_at: current_timestamp,
 					updated_at: current_timestamp,
 					changes: []
@@ -246,7 +246,7 @@ describe('UpdateNodeOperation', () => {
 					name: 'Gandalf the Grey',
 					horses: [],
 					colors: ['grey'],
-					creator: `${hostname}/public/account/iluvatar`,
+					creator: `${hostname}/account/iluvatar`,
 					created_at: 1607692722005,
 					updated_at: 1607692722005,
 					changes: []

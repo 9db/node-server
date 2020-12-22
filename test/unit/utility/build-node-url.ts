@@ -7,6 +7,6 @@ describe('buildNodeUrl', () => {
 			id: 'gandalf'
 		});
 
-		expect(url).toStrictEqual('https://9db.org/public/wizard/gandalf');
+		expect(url).toStrictEqual('https://9db.org/wizard/gandalf');
 	});
 });

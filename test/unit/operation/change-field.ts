@@ -1,3 +1,4 @@
+import Node from 'type/node';
 import SystemId from 'system/enum/id';
 import Repository from 'repository';
 import ChangeType from 'enum/change-type';
@@ -13,6 +14,7 @@ describe('ChangeFieldOperation', () => {
 	const current_timestamp = Date.now();
 
 	let repository!: Repository;
+	let account!: Node;
 	let date_spy!: jest.SpyInstance;
 	let id_spy!: jest.SpyInstance;
 	let id!: number;
@@ -22,6 +24,7 @@ describe('ChangeFieldOperation', () => {
 
 		const adapter = new MemoryAdapter();
 		repository = new Repository(hostname, adapter);
+		account = await repository.fetchAnonymousAccount();
 
 		date_spy = jest.spyOn(Date, 'now');
 
@@ -44,25 +47,21 @@ describe('ChangeFieldOperation', () => {
 	});
 
 	describe('perform()', () => {
-		describe('when handling a SET_FIELD_VALUE change', async () => {
-			const account = await repository.fetchAnonymousAccount();
-
+		describe('when handling a SET_FIELD_VALUE change', () => {
 			const input = {
 				id: 'gandalf',
 				type_id: 'wizard',
 				change_type: ChangeType.SET_FIELD_VALUE,
 				field: 'color',
 				value: 'white',
-				previous_value: 'grey',
-				repository,
-				account
+				previous_value: 'grey'
 			};
 
 			const node = {
 				id: 'gandalf',
 				type_id: 'wizard',
 				color: 'grey',
-				creator: `${hostname}/public/account/iluvatar`,
+				creator: `${hostname}/account/iluvatar`,
 				created_at: 0,
 				updated_at: 0,
 				changes: []
@@ -71,24 +70,33 @@ describe('ChangeFieldOperation', () => {
 			it('returns the expected output', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(input);
+				const operation = new ChangeFieldOperation({
+					...input,
+					repository,
+					account
+				});
+
 				const result = await operation.perform();
 
 				expect(result).toStrictEqual({
 					id: 'gandalf',
 					type_id: 'wizard',
 					color: 'white',
-					creator: `${hostname}/public/account/iluvatar`,
+					creator: `${hostname}/account/iluvatar`,
 					created_at: 0,
 					updated_at: 0,
-					changes: [`${hostname}/system/change/0`]
+					changes: [`${hostname}/change/0`]
 				});
 			});
 
 			it('persists the updated node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(input);
+				const operation = new ChangeFieldOperation({
+					...input,
+					repository,
+					account
+				});
 
 				await operation.perform();
 
@@ -101,17 +109,21 @@ describe('ChangeFieldOperation', () => {
 					id: 'gandalf',
 					type_id: 'wizard',
 					color: 'white',
-					creator: `${hostname}/public/account/iluvatar`,
+					creator: `${hostname}/account/iluvatar`,
 					created_at: 0,
 					updated_at: 0,
-					changes: [`${hostname}/system/change/0`]
+					changes: [`${hostname}/change/0`]
 				});
 			});
 
 			it('persists the change node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(input);
+				const operation = new ChangeFieldOperation({
+					...input,
+					repository,
+					account
+				});
 
 				await operation.perform();
 
@@ -125,8 +137,8 @@ describe('ChangeFieldOperation', () => {
 					previous_value: 'grey',
 					change_type: ChangeType.SET_FIELD_VALUE,
 					status: ChangeStatus.APPROVED,
-					creator: `${hostname}/system/account/anonymous`,
-					approver: `${hostname}/system/account/system`,
+					creator: `${hostname}/account/anonymous`,
+					approver: `${hostname}/account/system`,
 					created_at: current_timestamp,
 					updated_at: current_timestamp,
 					changes: []
@@ -137,7 +149,11 @@ describe('ChangeFieldOperation', () => {
 				it('returns a NotFoundError', async () => {
 					expect.assertions(1);
 
-					const operation = new ChangeFieldOperation(input);
+					const operation = new ChangeFieldOperation({
+						...input,
+						repository,
+						account
+					});
 
 					try {
 						await operation.perform();
@@ -148,24 +164,20 @@ describe('ChangeFieldOperation', () => {
 			});
 		});
 
-		describe('when handling a ADD_SET_VALUE change', async () => {
-			const account = await repository.fetchAnonymousAccount();
-
+		describe('when handling a ADD_SET_VALUE change', () => {
 			const input = {
 				id: 'gandalf',
 				type_id: 'wizard',
 				change_type: ChangeType.ADD_SET_VALUE,
 				field: 'weapons',
-				value: 'glamdring',
-				repository,
-				account
+				value: 'glamdring'
 			};
 
 			const node = {
 				id: 'gandalf',
 				type_id: 'wizard',
 				weapons: [],
-				creator: `${hostname}/public/account/iluvatar`,
+				creator: `${hostname}/account/iluvatar`,
 				created_at: 0,
 				updated_at: 0,
 				changes: []
@@ -174,24 +186,33 @@ describe('ChangeFieldOperation', () => {
 			it('returns the expected output', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(input);
+				const operation = new ChangeFieldOperation({
+					...input,
+					repository,
+					account
+				});
+
 				const result = await operation.perform();
 
 				expect(result).toStrictEqual({
 					id: 'gandalf',
 					type_id: 'wizard',
 					weapons: ['glamdring'],
-					creator: `${hostname}/public/account/iluvatar`,
+					creator: `${hostname}/account/iluvatar`,
 					created_at: 0,
 					updated_at: 0,
-					changes: [`${hostname}/system/change/0`]
+					changes: [`${hostname}/change/0`]
 				});
 			});
 
 			it('persists the updated node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(input);
+				const operation = new ChangeFieldOperation({
+					...input,
+					repository,
+					account
+				});
 
 				await operation.perform();
 
@@ -204,17 +225,21 @@ describe('ChangeFieldOperation', () => {
 					id: 'gandalf',
 					type_id: 'wizard',
 					weapons: ['glamdring'],
-					creator: `${hostname}/public/account/iluvatar`,
+					creator: `${hostname}/account/iluvatar`,
 					created_at: 0,
 					updated_at: 0,
-					changes: [`${hostname}/system/change/0`]
+					changes: [`${hostname}/change/0`]
 				});
 			});
 
 			it('persists the change node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(input);
+				const operation = new ChangeFieldOperation({
+					...input,
+					repository,
+				  account
+				});
 
 				await operation.perform();
 
@@ -228,8 +253,8 @@ describe('ChangeFieldOperation', () => {
 					previous_value: null,
 					change_type: ChangeType.ADD_SET_VALUE,
 					status: ChangeStatus.APPROVED,
-					creator: `${hostname}/system/account/anonymous`,
-					approver: `${hostname}/system/account/system`,
+					creator: `${hostname}/account/anonymous`,
+					approver: `${hostname}/account/system`,
 					created_at: current_timestamp,
 					updated_at: current_timestamp,
 					changes: []
@@ -240,7 +265,11 @@ describe('ChangeFieldOperation', () => {
 				it('returns a NotFoundError', async () => {
 					expect.assertions(1);
 
-					const operation = new ChangeFieldOperation(input);
+					const operation = new ChangeFieldOperation({
+						...input,
+						repository,
+						account
+					});
 
 					try {
 						await operation.perform();
@@ -251,24 +280,20 @@ describe('ChangeFieldOperation', () => {
 			});
 		});
 
-		describe('when handling a REMOVE_SET_VALUE change', async () => {
-			const account = await repository.fetchAnonymousAccount();
-
+		describe('when handling a REMOVE_SET_VALUE change', () => {
 			const input = {
 				id: 'gandalf',
 				type_id: 'wizard',
 				change_type: ChangeType.REMOVE_SET_VALUE,
 				field: 'weapons',
-				value: 'glamdring',
-				repository,
-				account
+				value: 'glamdring'
 			};
 
 			const node = {
 				id: 'gandalf',
 				type_id: 'wizard',
 				weapons: ['glamdring'],
-				creator: `${hostname}/public/account/iluvatar`,
+				creator: `${hostname}/account/iluvatar`,
 				created_at: 0,
 				updated_at: 0,
 				changes: []
@@ -277,24 +302,33 @@ describe('ChangeFieldOperation', () => {
 			it('returns the expected output', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(input);
+				const operation = new ChangeFieldOperation({
+					...input,
+					repository,
+					account
+				});
+
 				const result = await operation.perform();
 
 				expect(result).toStrictEqual({
 					id: 'gandalf',
 					type_id: 'wizard',
 					weapons: [],
-					creator: `${hostname}/public/account/iluvatar`,
+					creator: `${hostname}/account/iluvatar`,
 					created_at: 0,
 					updated_at: 0,
-					changes: [`${hostname}/system/change/0`]
+					changes: [`${hostname}/change/0`]
 				});
 			});
 
 			it('persists the updated node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(input);
+				const operation = new ChangeFieldOperation({
+					...input,
+					repository,
+					account
+				});
 
 				await operation.perform();
 
@@ -307,17 +341,21 @@ describe('ChangeFieldOperation', () => {
 					id: 'gandalf',
 					type_id: 'wizard',
 					weapons: [],
-					creator: `${hostname}/public/account/iluvatar`,
+					creator: `${hostname}/account/iluvatar`,
 					created_at: 0,
 					updated_at: 0,
-					changes: [`${hostname}/system/change/0`]
+					changes: [`${hostname}/change/0`]
 				});
 			});
 
 			it('persists the change node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(input);
+				const operation = new ChangeFieldOperation({
+					...input,
+					repository,
+					account
+				});
 
 				await operation.perform();
 
@@ -331,8 +369,8 @@ describe('ChangeFieldOperation', () => {
 					previous_value: null,
 					change_type: ChangeType.REMOVE_SET_VALUE,
 					status: ChangeStatus.APPROVED,
-					creator: `${hostname}/system/account/anonymous`,
-					approver: `${hostname}/system/account/system`,
+					creator: `${hostname}/account/anonymous`,
+					approver: `${hostname}/account/system`,
 					created_at: current_timestamp,
 					updated_at: current_timestamp,
 					changes: []
@@ -343,7 +381,11 @@ describe('ChangeFieldOperation', () => {
 				it('returns a NotFoundError', async () => {
 					expect.assertions(1);
 
-					const operation = new ChangeFieldOperation(input);
+					const operation = new ChangeFieldOperation({
+						...input,
+						repository,
+						account
+					});
 
 					try {
 						await operation.perform();
@@ -354,24 +396,20 @@ describe('ChangeFieldOperation', () => {
 			});
 		});
 
-		describe('when handling an ADD_LIST_VALUE change', async () => {
-			const account = await repository.fetchAnonymousAccount();
-
+		describe('when handling an ADD_LIST_VALUE change', () => {
 			const input = {
 				id: 'gandalf',
 				type_id: 'wizard',
 				change_type: ChangeType.ADD_LIST_VALUE,
 				field: 'mutterings',
-				value: 'hrm',
-				repository,
-				account
+				value: 'hrm'
 			};
 
 			const node = {
 				id: 'gandalf',
 				type_id: 'wizard',
 				mutterings: ['hrm', 'oho'],
-				creator: `${hostname}/public/account/iluvatar`,
+				creator: `${hostname}/account/iluvatar`,
 				created_at: 0,
 				updated_at: 0,
 				changes: []
@@ -380,24 +418,33 @@ describe('ChangeFieldOperation', () => {
 			it('returns the expected output', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(input);
+				const operation = new ChangeFieldOperation({
+					...input,
+					repository,
+					account
+				});
+
 				const result = await operation.perform();
 
 				expect(result).toStrictEqual({
 					id: 'gandalf',
 					type_id: 'wizard',
 					mutterings: ['hrm', 'oho', 'hrm'],
-					creator: `${hostname}/public/account/iluvatar`,
+					creator: `${hostname}/account/iluvatar`,
 					created_at: 0,
 					updated_at: 0,
-					changes: [`${hostname}/system/change/0`]
+					changes: [`${hostname}/change/0`]
 				});
 			});
 
 			it('persists the updated node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(input);
+				const operation = new ChangeFieldOperation({
+					...input,
+					repository,
+					account
+				});
 
 				await operation.perform();
 
@@ -410,17 +457,21 @@ describe('ChangeFieldOperation', () => {
 					id: 'gandalf',
 					type_id: 'wizard',
 					mutterings: ['hrm', 'oho', 'hrm'],
-					creator: `${hostname}/public/account/iluvatar`,
+					creator: `${hostname}/account/iluvatar`,
 					created_at: 0,
 					updated_at: 0,
-					changes: [`${hostname}/system/change/0`]
+					changes: [`${hostname}/change/0`]
 				});
 			});
 
 			it('persists the change node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(input);
+				const operation = new ChangeFieldOperation({
+					...input,
+					repository,
+					account
+				});
 
 				await operation.perform();
 
@@ -434,8 +485,8 @@ describe('ChangeFieldOperation', () => {
 					previous_value: null,
 					change_type: ChangeType.ADD_LIST_VALUE,
 					status: ChangeStatus.APPROVED,
-					creator: `${hostname}/system/account/anonymous`,
-					approver: `${hostname}/system/account/system`,
+					creator: `${hostname}/account/anonymous`,
+					approver: `${hostname}/account/system`,
 					created_at: current_timestamp,
 					updated_at: current_timestamp,
 					changes: []
@@ -446,7 +497,11 @@ describe('ChangeFieldOperation', () => {
 				it('returns a NotFoundError', async () => {
 					expect.assertions(1);
 
-					const operation = new ChangeFieldOperation(input);
+					const operation = new ChangeFieldOperation({
+						...input,
+						repository,
+						account
+					});
 
 					try {
 						await operation.perform();
@@ -457,24 +512,20 @@ describe('ChangeFieldOperation', () => {
 			});
 		});
 
-		describe('when handling an REMOVE_LIST_VALUE change', async () => {
-			const account = await repository.fetchAnonymousAccount();
-
+		describe('when handling an REMOVE_LIST_VALUE change', () => {
 			const input = {
 				id: 'gandalf',
 				type_id: 'wizard',
 				change_type: ChangeType.REMOVE_LIST_VALUE,
 				field: 'mutterings',
-				value: 'hrm',
-				repository,
-				account
+				value: 'hrm'
 			};
 
 			const node = {
 				id: 'gandalf',
 				type_id: 'wizard',
 				mutterings: ['hrm', 'oho', 'hrm'],
-				creator: `${hostname}/public/account/iluvatar`,
+				creator: `${hostname}/account/iluvatar`,
 				created_at: 0,
 				updated_at: 0,
 				changes: []
@@ -483,24 +534,33 @@ describe('ChangeFieldOperation', () => {
 			it('returns the expected output', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(input);
+				const operation = new ChangeFieldOperation({
+					...input,
+					repository,
+					account
+				});
+
 				const result = await operation.perform();
 
 				expect(result).toStrictEqual({
 					id: 'gandalf',
 					type_id: 'wizard',
 					mutterings: ['hrm', 'oho'],
-					creator: `${hostname}/public/account/iluvatar`,
+					creator: `${hostname}/account/iluvatar`,
 					created_at: 0,
 					updated_at: 0,
-					changes: [`${hostname}/system/change/0`]
+					changes: [`${hostname}/change/0`]
 				});
 			});
 
 			it('persists the updated node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(input);
+				const operation = new ChangeFieldOperation({
+					...input,
+					repository,
+					account
+				});
 
 				await operation.perform();
 
@@ -513,17 +573,21 @@ describe('ChangeFieldOperation', () => {
 					id: 'gandalf',
 					type_id: 'wizard',
 					mutterings: ['hrm', 'oho'],
-					creator: `${hostname}/public/account/iluvatar`,
+					creator: `${hostname}/account/iluvatar`,
 					created_at: 0,
 					updated_at: 0,
-					changes: [`${hostname}/system/change/0`]
+					changes: [`${hostname}/change/0`]
 				});
 			});
 
 			it('persists the change node', async () => {
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(input);
+				const operation = new ChangeFieldOperation({
+					...input,
+					repository,
+					account
+				});
 
 				await operation.perform();
 
@@ -537,8 +601,8 @@ describe('ChangeFieldOperation', () => {
 					previous_value: null,
 					change_type: ChangeType.REMOVE_LIST_VALUE,
 					status: ChangeStatus.APPROVED,
-					creator: `${hostname}/system/account/anonymous`,
-					approver: `${hostname}/system/account/system`,
+					creator: `${hostname}/account/anonymous`,
+					approver: `${hostname}/account/system`,
 					created_at: current_timestamp,
 					updated_at: current_timestamp,
 					changes: []
@@ -549,7 +613,11 @@ describe('ChangeFieldOperation', () => {
 				it('returns a NotFoundError', async () => {
 					expect.assertions(1);
 
-					const operation = new ChangeFieldOperation(input);
+					const operation = new ChangeFieldOperation({
+						...input,
+						repository,
+						account
+					});
 
 					try {
 						await operation.perform();
@@ -560,24 +628,20 @@ describe('ChangeFieldOperation', () => {
 			});
 		});
 
-		describe('when given an unsupported change type', async () => {
-			const account = await repository.fetchAnonymousAccount();
-
+		describe('when given an unsupported change type', () => {
 			const input = {
 				id: 'gandalf',
 				type_id: 'wizard',
 				change_type: 'something_unsupported' as ChangeType,
 				field: 'weapons',
-				value: 'glamdring',
-				repository,
-				account
+				value: 'glamdring'
 			};
 
 			const node = {
 				id: 'gandalf',
 				type_id: 'wizard',
 				weapons: [],
-				creator: `${hostname}/public/account/iluvatar`,
+				creator: `${hostname}/account/iluvatar`,
 				created_at: 0,
 				updated_at: 0,
 				changes: []
@@ -588,7 +652,11 @@ describe('ChangeFieldOperation', () => {
 
 				await repository.storeNode(node);
 
-				const operation = new ChangeFieldOperation(input);
+				const operation = new ChangeFieldOperation({
+					...input,
+					repository,
+					account
+				});
 
 				try {
 					await operation.perform();

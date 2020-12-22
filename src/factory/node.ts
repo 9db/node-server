@@ -7,7 +7,7 @@ function randomId(): string {
 function randomCreator(): string {
 	const key = randomId();
 
-	return `https://9db.org/public/account/${key}`;
+	return `https://9db.org/account/${key}`;
 }
 
 class NodeFactory {

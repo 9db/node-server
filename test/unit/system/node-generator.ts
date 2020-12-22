@@ -21,7 +21,7 @@ describe('NodeGenerator', () => {
 			expect(node).toStrictEqual({
 				id: 'bar',
 				type_id: 'foo',
-				creator: `${hostname}/system/account/system`,
+				creator: `${hostname}/account/system`,
 				created_at: 0,
 				updated_at: 0,
 				changes: []
@@ -40,7 +40,7 @@ describe('NodeGenerator', () => {
 			const generator = new ThrowawayGenerator(hostname);
 			const creator = generator.privilegedGetCreator();
 
-			expect(creator).toStrictEqual(`${hostname}/system/account/system`);
+			expect(creator).toStrictEqual(`${hostname}/account/system`);
 		});
 	});
 });

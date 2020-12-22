@@ -53,7 +53,7 @@ describe('JsonFetchNodeEndpoint', () => {
 
 				await repository.storeNode(node);
 
-				const url = `http://localhost:${port}/public/wizard/gandalf`;
+				const url = `http://localhost:${port}/wizard/gandalf`;
 				const result = await fetchJson(url);
 
 				expect(result.body).toStrictEqual(node);
@@ -67,7 +67,7 @@ describe('JsonFetchNodeEndpoint', () => {
 
 		describe('when the specified node does not exist', () => {
 			it('returns the expected error data', async () => {
-				const url = `http://localhost:${port}/public/wizard/gandalf`;
+				const url = `http://localhost:${port}/wizard/gandalf`;
 				const result = await fetchJson(url);
 
 				expect(result.body).toStrictEqual({

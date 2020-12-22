@@ -4,7 +4,7 @@ import SystemCache from 'system/cache';
 describe('SystemCache', () => {
 	describe('fetchNode()', () => {
 		const hostname = 'https://9db.org';
-		const creator = `${hostname}/system/account/system`;
+		const creator = `${hostname}/account/system`;
 		const cache = new SystemCache(hostname);
 
 		describe('when fetching the generic type', () => {

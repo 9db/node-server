@@ -12,7 +12,7 @@ describe('AccountTypeGenerator', () => {
 			expect(node).toStrictEqual({
 				id: SystemId.ACCOUNT_TYPE,
 				type_id: SystemId.GENERIC_TYPE,
-				creator: `${hostname}/system/account/system`,
+				creator: `${hostname}/account/system`,
 				created_at: 0,
 				updated_at: 0,
 				changes: []

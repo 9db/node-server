@@ -42,8 +42,11 @@ describe('CreateNodeOperation', () => {
 			const result = await operation.perform();
 
 			expect(result).toStrictEqual({
-				...input,
-				creator: 'http://localhost/system/account/anonymous',
+				id: 'gandalf',
+				type_id: 'wizard',
+				color: 'grey',
+				weapon: 'glamdring',
+				creator: `${hostname}/account/anonymous`,
 				created_at: current_timestamp,
 				updated_at: current_timestamp,
 				changes: []
@@ -74,8 +77,11 @@ describe('CreateNodeOperation', () => {
 			);
 
 			expect(persisted_node).toStrictEqual({
-				...input,
-				creator: 'http://localhost/system/account/anonymous',
+				id: 'gandalf',
+				type_id: 'wizard',
+				color: 'grey',
+				weapon: 'glamdring',
+				creator: `${hostname}/account/anonymous`,
 				created_at: current_timestamp,
 				updated_at: current_timestamp,
 				changes: []

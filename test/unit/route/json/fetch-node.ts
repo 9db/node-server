@@ -9,7 +9,7 @@ describe('JsonFetchNodeRoute', () => {
 
 		describe('when given a request whose URL does not match', () => {
 			const request = buildMockRequest(
-				'/public/type',
+				'/type',
 				HttpMethod.GET,
 				ContentType.JSON
 			);
@@ -21,7 +21,7 @@ describe('JsonFetchNodeRoute', () => {
 
 		describe('when given a request whose method does not match', () => {
 			const request = buildMockRequest(
-				'/public/type/wizard',
+				'/type/wizard',
 				HttpMethod.POST,
 				ContentType.JSON
 			);
@@ -33,7 +33,7 @@ describe('JsonFetchNodeRoute', () => {
 
 		describe('when given a request whose content type does not match', () => {
 			const request = buildMockRequest(
-				'/public/type/wizard',
+				'/type/wizard',
 				HttpMethod.GET,
 				ContentType.TEXT
 			);
@@ -45,7 +45,7 @@ describe('JsonFetchNodeRoute', () => {
 
 		describe('when given a matching request', () => {
 			const request = buildMockRequest(
-				'/public/type/wizard',
+				'/type/wizard',
 				HttpMethod.GET,
 				ContentType.JSON
 			);

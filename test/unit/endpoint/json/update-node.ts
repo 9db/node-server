@@ -74,7 +74,7 @@ describe('JsonUpdateNodeEndpoint', () => {
 				name: 'Gandalf the Grey',
 				horses: [],
 				colors: ['grey'],
-				creator: `${hostname}/public/account/iluvatar`,
+				creator: `${hostname}/account/iluvatar`,
 				created_at: 1607692722005,
 				updated_at: 1607692722005,
 				changes: []
@@ -108,7 +108,7 @@ describe('JsonUpdateNodeEndpoint', () => {
 				]
 			};
 
-			const url = `http://localhost:${port}/public/wizard/gandalf`;
+			const url = `http://localhost:${port}/wizard/gandalf`;
 			const result = await postJson(url, data);
 
 			expect(result.body).toStrictEqual({
@@ -118,12 +118,12 @@ describe('JsonUpdateNodeEndpoint', () => {
 				horses: ['Shadowfax'],
 				colors: ['white'],
 				changes: [
-					`${hostname}/system/change/0`,
-					`${hostname}/system/change/1`,
-					`${hostname}/system/change/2`,
-					`${hostname}/system/change/3`
+					`${hostname}/change/0`,
+					`${hostname}/change/1`,
+					`${hostname}/change/2`,
+					`${hostname}/change/3`
 				],
-				creator: `${hostname}/public/account/iluvatar`,
+				creator: `${hostname}/account/iluvatar`,
 				created_at: 1607692722005,
 				updated_at: 1607692722005
 			});
@@ -136,7 +136,7 @@ describe('JsonUpdateNodeEndpoint', () => {
 				name: 'Gandalf the Grey',
 				horses: [],
 				colors: ['grey'],
-				creator: `${hostname}/public/account/iluvatar`,
+				creator: `${hostname}/account/iluvatar`,
 				created_at: 1607692722005,
 				updated_at: 1607692722005,
 				changes: []
@@ -170,7 +170,7 @@ describe('JsonUpdateNodeEndpoint', () => {
 				]
 			};
 
-			const url = `http://localhost:${port}/public/wizard/gandalf`;
+			const url = `http://localhost:${port}/wizard/gandalf`;
 			const result = await postJson(url, data);
 			const result_node = result.body as Node;
 			const promises = result_node.changes.map((change_url) => {
@@ -193,8 +193,8 @@ describe('JsonUpdateNodeEndpoint', () => {
 					value: 'Gandalf the White',
 					previous_value: 'Gandalf the Grey',
 					status: ChangeStatus.APPROVED,
-					creator: `${hostname}/system/account/anonymous`,
-					approver: `${hostname}/system/account/system`,
+					creator: `${hostname}/account/anonymous`,
+					approver: `${hostname}/account/system`,
 					created_at: current_timestamp,
 					updated_at: current_timestamp,
 					changes: []
@@ -207,8 +207,8 @@ describe('JsonUpdateNodeEndpoint', () => {
 					value: 'Shadowfax',
 					previous_value: null,
 					status: ChangeStatus.APPROVED,
-					creator: `${hostname}/system/account/anonymous`,
-					approver: `${hostname}/system/account/system`,
+					creator: `${hostname}/account/anonymous`,
+					approver: `${hostname}/account/system`,
 					created_at: current_timestamp,
 					updated_at: current_timestamp,
 					changes: []
@@ -221,8 +221,8 @@ describe('JsonUpdateNodeEndpoint', () => {
 					value: 'white',
 					previous_value: null,
 					status: ChangeStatus.APPROVED,
-					creator: `${hostname}/system/account/anonymous`,
-					approver: `${hostname}/system/account/system`,
+					creator: `${hostname}/account/anonymous`,
+					approver: `${hostname}/account/system`,
 					created_at: current_timestamp,
 					updated_at: current_timestamp,
 					changes: []
@@ -235,8 +235,8 @@ describe('JsonUpdateNodeEndpoint', () => {
 					value: 'grey',
 					previous_value: null,
 					status: ChangeStatus.APPROVED,
-					creator: `${hostname}/system/account/anonymous`,
-					approver: `${hostname}/system/account/system`,
+					creator: `${hostname}/account/anonymous`,
+					approver: `${hostname}/account/system`,
 					created_at: current_timestamp,
 					updated_at: current_timestamp,
 					changes: []

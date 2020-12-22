@@ -5,7 +5,7 @@ import MemoryAdapter from 'adapter/memory';
 
 describe('Repository', () => {
 	const hostname = 'https://9db.org';
-	const creator = `${hostname}/public/account/iluvatar`;
+	const creator = `${hostname}/account/iluvatar`;
 
 	let adapter!: MemoryAdapter;
 	let repository!: Repository;
@@ -67,7 +67,7 @@ describe('Repository', () => {
 				expect(node).toStrictEqual({
 					id: SystemId.GENERIC_TYPE,
 					type_id: SystemId.GENERIC_TYPE,
-					creator: `${hostname}/system/account/system`,
+					creator: `${hostname}/account/system`,
 					created_at: 0,
 					updated_at: 0,
 					changes: []
@@ -106,7 +106,7 @@ describe('Repository', () => {
 
 			expect(actual_node).toStrictEqual({
 				...expected_node,
-				creator: '<9dbhost>/public/account/iluvatar',
+				creator: '<9dbhost>/account/iluvatar',
 				some_url: '<9dbhost>/foo/bar/baz',
 				url_list: ['<9dbhost>/bam', '<9dbhost>/wat']
 			});
@@ -192,7 +192,7 @@ describe('Repository', () => {
 
 			expect(persisted_node).toStrictEqual({
 				...node,
-				creator: '<9dbhost>/public/account/iluvatar',
+				creator: '<9dbhost>/account/iluvatar',
 				wizard_url: '<9dbhost>/gandalf'
 			});
 		});
@@ -371,7 +371,7 @@ describe('Repository', () => {
 
 				expect(persisted_node).toStrictEqual({
 					...node,
-					creator: '<9dbhost>/public/account/iluvatar',
+					creator: '<9dbhost>/account/iluvatar',
 					urls: ['<9dbhost>/gandalf']
 				});
 			});
@@ -666,7 +666,7 @@ describe('Repository', () => {
 
 				expect(persisted_node).toStrictEqual({
 					...node,
-					creator: '<9dbhost>/public/account/iluvatar',
+					creator: '<9dbhost>/account/iluvatar',
 					wizard_urls: ['<9dbhost>/gandalf']
 				});
 			});

@@ -12,7 +12,7 @@ describe('AnonymousAccountGenerator', () => {
 			expect(node).toStrictEqual({
 				id: SystemId.ANONYMOUS_ACCOUNT,
 				type_id: SystemId.ACCOUNT_TYPE,
-				creator: `${hostname}/system/account/system`,
+				creator: `${hostname}/account/system`,
 				created_at: 0,
 				updated_at: 0,
 				changes: []
