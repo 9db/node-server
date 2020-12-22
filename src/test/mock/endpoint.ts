@@ -2,6 +2,7 @@ import Endpoint from 'endpoint';
 import HttpError from 'http/error';
 import ContentType from 'http/enum/content-type';
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 type AllowedOutput = string | Buffer | object;
 
 class MockEndpoint<Input, Output extends AllowedOutput> extends Endpoint<

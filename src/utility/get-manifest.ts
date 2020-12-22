@@ -5,6 +5,7 @@ function loadManifest(): Manifest {
 	const root_path = getRootPath();
 	const manifest_path = `${root_path}/package.json`;
 
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	return require(manifest_path) as Manifest;
 }
 

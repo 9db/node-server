@@ -119,17 +119,9 @@ describe('Repository', () => {
 
 			await repository.storeNode(node);
 
-			await repository.setField(
-				node.type_id,
-				node.id,
-				'wizard',
-				'gandalf'
-			);
+			await repository.setField(node.type_id, node.id, 'wizard', 'gandalf');
 
-			const persisted_node = await repository.fetchNode(
-				node.type_id,
-				node.id
-			);
+			const persisted_node = await repository.fetchNode(node.type_id, node.id);
 
 			expect(persisted_node).toStrictEqual({
 				...node,
@@ -161,12 +153,7 @@ describe('Repository', () => {
 
 			await repository.storeNode(node);
 
-			await repository.setField(
-				node.type_id,
-				node.id,
-				'wizard',
-				'gandalf'
-			);
+			await repository.setField(node.type_id, node.id, 'wizard', 'gandalf');
 
 			expect(node).toStrictEqual(original_node);
 		});
@@ -185,10 +172,7 @@ describe('Repository', () => {
 				`${hostname}/gandalf`
 			);
 
-			const persisted_node = await adapter.fetchNode(
-				node.type_id,
-				node.id
-			);
+			const persisted_node = await adapter.fetchNode(node.type_id, node.id);
 
 			expect(persisted_node).toStrictEqual({
 				...node,
@@ -364,10 +348,7 @@ describe('Repository', () => {
 					`${hostname}/gandalf`
 				);
 
-				const persisted_node = await adapter.fetchNode(
-					node.type_id,
-					node.id
-				);
+				const persisted_node = await adapter.fetchNode(node.type_id, node.id);
 
 				expect(persisted_node).toStrictEqual({
 					...node,
@@ -659,10 +640,7 @@ describe('Repository', () => {
 					`${hostname}/gandalf`
 				);
 
-				const persisted_node = await adapter.fetchNode(
-					node.type_id,
-					node.id
-				);
+				const persisted_node = await adapter.fetchNode(node.type_id, node.id);
 
 				expect(persisted_node).toStrictEqual({
 					...node,

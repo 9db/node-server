@@ -100,10 +100,7 @@ describe('ChangeFieldOperation', () => {
 
 				await operation.perform();
 
-				const persisted_node = await repository.fetchNode(
-					'wizard',
-					'gandalf'
-				);
+				const persisted_node = await repository.fetchNode('wizard', 'gandalf');
 
 				expect(persisted_node).toStrictEqual({
 					id: 'gandalf',
@@ -216,10 +213,7 @@ describe('ChangeFieldOperation', () => {
 
 				await operation.perform();
 
-				const persisted_node = await repository.fetchNode(
-					'wizard',
-					'gandalf'
-				);
+				const persisted_node = await repository.fetchNode('wizard', 'gandalf');
 
 				expect(persisted_node).toStrictEqual({
 					id: 'gandalf',
@@ -238,7 +232,7 @@ describe('ChangeFieldOperation', () => {
 				const operation = new ChangeFieldOperation({
 					...input,
 					repository,
-				  account
+					account
 				});
 
 				await operation.perform();
@@ -332,10 +326,7 @@ describe('ChangeFieldOperation', () => {
 
 				await operation.perform();
 
-				const persisted_node = await repository.fetchNode(
-					'wizard',
-					'gandalf'
-				);
+				const persisted_node = await repository.fetchNode('wizard', 'gandalf');
 
 				expect(persisted_node).toStrictEqual({
 					id: 'gandalf',
@@ -448,10 +439,7 @@ describe('ChangeFieldOperation', () => {
 
 				await operation.perform();
 
-				const persisted_node = await repository.fetchNode(
-					'wizard',
-					'gandalf'
-				);
+				const persisted_node = await repository.fetchNode('wizard', 'gandalf');
 
 				expect(persisted_node).toStrictEqual({
 					id: 'gandalf',
@@ -564,10 +552,7 @@ describe('ChangeFieldOperation', () => {
 
 				await operation.perform();
 
-				const persisted_node = await repository.fetchNode(
-					'wizard',
-					'gandalf'
-				);
+				const persisted_node = await repository.fetchNode('wizard', 'gandalf');
 
 				expect(persisted_node).toStrictEqual({
 					id: 'gandalf',

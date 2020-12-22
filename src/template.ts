@@ -22,10 +22,7 @@ abstract class Template<Input> {
 		return this.buildUrl(node.type_id, node.id);
 	}
 
-	protected buildUrl(
-		type_id: string,
-		node_id: string
-	): string {
+	protected buildUrl(type_id: string, node_id: string): string {
 		return `/${type_id}/${node_id}`;
 	}
 

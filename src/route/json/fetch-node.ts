@@ -4,11 +4,7 @@ import JsonFetchNodeEndpoint from 'endpoint/json/fetch-node';
 
 class JsonFetchNodeRoute extends JsonRoute {
 	public constructor() {
-		super(
-			HttpMethod.GET,
-			'/:type_id/:id',
-			JsonFetchNodeEndpoint
-		);
+		super(HttpMethod.GET, '/:type_id/:id', JsonFetchNodeEndpoint);
 	}
 }
 

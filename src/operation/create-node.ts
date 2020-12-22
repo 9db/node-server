@@ -1,6 +1,6 @@
 import Node from 'type/node';
 import FieldValue from 'type/field-value';
-import Operation, {OperationInput} from 'operation';
+import Operation, { OperationInput } from 'operation';
 
 interface NodeInput {
 	readonly id: string;

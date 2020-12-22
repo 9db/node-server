@@ -1,5 +1,5 @@
 import Node from 'type/node';
-import Operation, {OperationInput} from 'operation';
+import Operation, { OperationInput } from 'operation';
 import NotFoundError from 'http/error/not-found';
 
 interface Input extends OperationInput {

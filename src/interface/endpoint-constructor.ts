@@ -11,6 +11,7 @@ interface EndpointConstructor {
 		response: HTTP.ServerResponse,
 		url_parameters: UrlParameters,
 		repository: Repository
+		// eslint-disable-next-line @typescript-eslint/ban-types
 	): Endpoint<object, string | JsonObject | Buffer>;
 }
 

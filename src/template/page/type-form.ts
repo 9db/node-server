@@ -33,10 +33,7 @@ class TypeFormTemplate extends PageTemplate<Input> {
 	}
 
 	private getTypeUrl(): string {
-		return this.buildUrl(
-			SystemId.GENERIC_TYPE,
-			SystemId.GENERIC_TYPE
-		);
+		return this.buildUrl(SystemId.GENERIC_TYPE, SystemId.GENERIC_TYPE);
 	}
 
 	private getTypeId(): string {

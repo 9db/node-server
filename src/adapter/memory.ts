@@ -237,10 +237,7 @@ class MemoryAdapter implements Adapter {
 		return field as PrimitiveValue[];
 	}
 
-	private createCacheKey(
-		type_id: string,
-		node_id: string
-	): string {
+	private createCacheKey(type_id: string, node_id: string): string {
 		return `${type_id}/${node_id}`;
 	}
 

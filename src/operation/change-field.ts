@@ -5,7 +5,7 @@ import ChangeStatus from 'enum/change-status';
 import KeyGenerator from 'utility/key-generator';
 import BadRequestError from 'http/error/bad-request';
 import { PrimitiveValue } from 'type/field-value';
-import Operation, {OperationInput} from 'operation';
+import Operation, { OperationInput } from 'operation';
 
 interface Input extends OperationInput {
 	readonly id: string;

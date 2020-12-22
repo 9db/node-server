@@ -81,10 +81,7 @@ describe('SystemCache', () => {
 
 		describe('when fetching a node that does not exist', () => {
 			it('returns undefined', () => {
-				const node = cache.fetchNode(
-					SystemId.ACCOUNT_TYPE,
-					'gandalf'
-				);
+				const node = cache.fetchNode(SystemId.ACCOUNT_TYPE, 'gandalf');
 
 				expect(node).toStrictEqual(undefined);
 			});

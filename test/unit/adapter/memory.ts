@@ -54,17 +54,9 @@ describe('MemoryAdapter', () => {
 
 				await adapter.storeNode(node);
 
-				await adapter.setField(
-					node.type_id,
-					node.id,
-					'wizard',
-					'gandalf'
-				);
+				await adapter.setField(node.type_id, node.id, 'wizard', 'gandalf');
 
-				const persisted_node = await adapter.fetchNode(
-					node.type_id,
-					node.id
-				);
+				const persisted_node = await adapter.fetchNode(node.type_id, node.id);
 
 				expect(persisted_node).toStrictEqual({
 					...node,
@@ -98,12 +90,7 @@ describe('MemoryAdapter', () => {
 
 				await adapter.storeNode(node);
 
-				await adapter.setField(
-					node.type_id,
-					node.id,
-					'wizard',
-					'gandalf'
-				);
+				await adapter.setField(node.type_id, node.id, 'wizard', 'gandalf');
 
 				expect(node).toStrictEqual(original_node);
 			});
@@ -115,12 +102,7 @@ describe('MemoryAdapter', () => {
 				const node = NodeFactory.create();
 
 				try {
-					await adapter.setField(
-						node.type_id,
-						node.id,
-						'wizard',
-						'gandalf'
-					);
+					await adapter.setField(node.type_id, node.id, 'wizard', 'gandalf');
 				} catch (error) {
 					expect(error).toBeInstanceOf(NotFoundError);
 				}
@@ -214,10 +196,7 @@ describe('MemoryAdapter', () => {
 					'gandalf'
 				);
 
-				const persisted_node = await adapter.fetchNode(
-					node.type_id,
-					node.id
-				);
+				const persisted_node = await adapter.fetchNode(node.type_id, node.id);
 
 				expect(persisted_node).toStrictEqual(node);
 			});
@@ -256,10 +235,7 @@ describe('MemoryAdapter', () => {
 					'gandalf'
 				);
 
-				const persisted_node = await adapter.fetchNode(
-					node.type_id,
-					node.id
-				);
+				const persisted_node = await adapter.fetchNode(node.type_id, node.id);
 
 				expect(persisted_node).toStrictEqual({
 					...node,
@@ -395,10 +371,7 @@ describe('MemoryAdapter', () => {
 					'gandalf'
 				);
 
-				const persisted_node = await adapter.fetchNode(
-					node.type_id,
-					node.id
-				);
+				const persisted_node = await adapter.fetchNode(node.type_id, node.id);
 
 				expect(persisted_node).toStrictEqual(node);
 			});
@@ -437,10 +410,7 @@ describe('MemoryAdapter', () => {
 					'gandalf'
 				);
 
-				const persisted_node = await adapter.fetchNode(
-					node.type_id,
-					node.id
-				);
+				const persisted_node = await adapter.fetchNode(node.type_id, node.id);
 
 				expect(persisted_node).toStrictEqual({
 					...node,
@@ -576,10 +546,7 @@ describe('MemoryAdapter', () => {
 					'gandalf'
 				);
 
-				const persisted_node = await adapter.fetchNode(
-					node.type_id,
-					node.id
-				);
+				const persisted_node = await adapter.fetchNode(node.type_id, node.id);
 
 				expect(persisted_node).toStrictEqual({
 					...node,
@@ -787,10 +754,7 @@ describe('MemoryAdapter', () => {
 					'gandalf'
 				);
 
-				const persisted_node = await adapter.fetchNode(
-					node.type_id,
-					node.id
-				);
+				const persisted_node = await adapter.fetchNode(node.type_id, node.id);
 
 				expect(persisted_node).toStrictEqual({
 					...node,
@@ -871,10 +835,7 @@ describe('MemoryAdapter', () => {
 						'gandalf'
 					);
 
-					const persisted_node = await adapter.fetchNode(
-						node.type_id,
-						node.id
-					);
+					const persisted_node = await adapter.fetchNode(node.type_id, node.id);
 
 					expect(persisted_node).toStrictEqual(node);
 				});

@@ -1,6 +1,6 @@
 import Repository from 'repository';
 import MemoryAdapter from 'adapter/memory';
-import Operation, {OperationInput} from 'operation';
+import Operation, { OperationInput } from 'operation';
 
 describe('Operation', () => {
 	function createRepository(): Repository {

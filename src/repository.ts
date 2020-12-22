@@ -218,10 +218,7 @@ class Repository {
 		return node;
 	}
 
-	private fetchSystemNode(
-		type_id: string,
-		node_id: string
-	): Node | undefined {
+	private fetchSystemNode(type_id: string, node_id: string): Node | undefined {
 		const system_cache = this.getSystemCache();
 
 		return system_cache.fetchNode(type_id, node_id);

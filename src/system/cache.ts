@@ -26,10 +26,7 @@ class SystemCache {
 		this.generateNodes();
 	}
 
-	public fetchNode(
-		type_id: string,
-		node_id: string
-	): Node | undefined {
+	public fetchNode(type_id: string, node_id: string): Node | undefined {
 		const cache_key = this.buildCacheKey(type_id, node_id);
 		const nodes = this.getNodes();
 
@@ -48,20 +45,14 @@ class SystemCache {
 	}
 
 	private addNode(node: Node): void {
-		const cache_key = this.buildCacheKey(
-			node.type_id,
-			node.id
-		);
+		const cache_key = this.buildCacheKey(node.type_id, node.id);
 
 		const nodes = this.getNodes();
 
 		nodes[cache_key] = node;
 	}
 
-	private buildCacheKey(
-		type_id: string,
-		node_id: string
-	): string {
+	private buildCacheKey(type_id: string, node_id: string): string {
 		return `${type_id}/${node_id}`;
 	}
 

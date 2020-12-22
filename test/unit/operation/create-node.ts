@@ -71,10 +71,7 @@ describe('CreateNodeOperation', () => {
 
 			await operation.perform();
 
-			const persisted_node = await repository.fetchNode(
-				'wizard',
-				'gandalf'
-			);
+			const persisted_node = await repository.fetchNode('wizard', 'gandalf');
 
 			expect(persisted_node).toStrictEqual({
 				id: 'gandalf',

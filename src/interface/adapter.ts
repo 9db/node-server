@@ -2,10 +2,7 @@ import Node from 'type/node';
 import FieldValue, { PrimitiveValue } from 'type/field-value';
 
 interface Adapter {
-	fetchNode(
-		type_id: string,
-		node_id: string
-	): Promise<Node | undefined>;
+	fetchNode(type_id: string, node_id: string): Promise<Node | undefined>;
 
 	storeNode(node: Node): Promise<Node>;
 

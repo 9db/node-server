@@ -9,7 +9,7 @@ import CookieAttribute from 'http/enum/cookie-attribute';
 import BasicAuthCredentials from 'http/type/basic-auth-credentials';
 import FetchAccountOperation from 'operation/fetch-account';
 import LoadNodeFromUrlOperation from 'operation/load-node-from-url';
-import Operation, {OperationInput} from 'operation';
+import Operation, { OperationInput } from 'operation';
 
 interface Input extends OperationInput {
 	readonly request: HTTP.IncomingMessage;
@@ -40,9 +40,9 @@ class LoadAccountForRequestOperation extends Operation<Input, Node> {
 			return undefined;
 		}
 
-		const parsedCookie = parseCookie(header);
+		const parsed_cookie = parseCookie(header);
 
-		return parsedCookie[CookieAttribute.SESSION] as string | undefined;
+		return parsed_cookie[CookieAttribute.SESSION] as string | undefined;
 	}
 
 	private getBasicAuthCredentials(): BasicAuthCredentials | undefined {

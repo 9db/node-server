@@ -4,11 +4,7 @@ import JsonCreateNodeEndpoint from 'endpoint/json/create-node';
 
 class JsonCreateNodeRoute extends JsonRoute {
 	public constructor() {
-		super(
-			HttpMethod.POST,
-			'/:type_id/:id',
-			JsonCreateNodeEndpoint
-		);
+		super(HttpMethod.POST, '/:type_id/:id', JsonCreateNodeEndpoint);
 	}
 }
 

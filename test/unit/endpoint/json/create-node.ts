@@ -98,10 +98,7 @@ describe('JsonCreateNodeEndpoint', () => {
 
 			await postJson(url, data);
 
-			const persisted_node = await repository.fetchNode(
-				'type',
-				'wizard'
-			);
+			const persisted_node = await repository.fetchNode('type', 'wizard');
 
 			expect(persisted_node).toStrictEqual({
 				id: 'wizard',

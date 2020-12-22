@@ -2,7 +2,7 @@ import Node from 'type/node';
 import SystemId from 'system/enum/id';
 import UnauthorizedError from 'http/error/unauthorized';
 import BasicAuthCredentials from 'http/type/basic-auth-credentials';
-import Operation, {OperationInput} from 'operation';
+import Operation, { OperationInput } from 'operation';
 
 interface Input extends OperationInput {
 	readonly credentials: BasicAuthCredentials;

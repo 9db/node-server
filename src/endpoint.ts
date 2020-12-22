@@ -17,6 +17,7 @@ import UrlEncodedBodyParser from 'server/body-parser/url-encoded';
 import getSuccessfulStatusCode from 'http/utility/get-successful-status-code';
 import LoadAccountForRequestOperation from 'operation/load-account-for-request';
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 type AllowedOutputs = string | Buffer | object;
 
 abstract class Endpoint<Input, Output extends AllowedOutputs> {
