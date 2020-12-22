@@ -169,7 +169,7 @@ class NodeDetailsTemplate extends PageTemplate<Input> {
 	private getTypeUrl(): string {
 		const type_id = this.getTypeId();
 
-		return this.buildUrl(SystemId.GENERIC_TYPE, type_id);
+		return `/${type_id}`;
 	}
 
 	private getTypeId(): string {

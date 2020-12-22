@@ -9,6 +9,7 @@ import JsonNotFoundRoute from 'route/json/not-found';
 import JsonFetchNodeRoute from 'route/json/fetch-node';
 import JsonCreateNodeRoute from 'route/json/create-node';
 import HtmlNodeDetailsRoute from 'route/html/node-details';
+import HtmlTypeDetailsRoute from 'route/html/type-details';
 import PlaintextVersionRoute from 'route/plaintext/version';
 import HtmlCreateSessionRoute from 'route/html/create-session';
 import PlaintextNotFoundRoute from 'route/plaintext/not-found';
@@ -29,6 +30,7 @@ function buildRoutes(): Route[] {
 		new HtmlLogoutRoute(),
 		new HtmlTypeFormRoute(),
 		new HtmlNodeDetailsRoute(),
+		new HtmlTypeDetailsRoute(),
 		new HtmlCreateSessionRoute(),
 
 		// 404 fallbacks:
