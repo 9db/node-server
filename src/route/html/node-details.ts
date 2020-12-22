@@ -6,7 +6,7 @@ class HtmlNodeDetailsRoute extends HtmlRoute {
 	public constructor() {
 		super(
 			HttpMethod.GET,
-			'/:type_key/:key',
+			'/:type_id/:id',
 			HtmlNodeDetailsEndpoint
 		);
 	}

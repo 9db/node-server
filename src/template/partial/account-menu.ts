@@ -1,6 +1,6 @@
 import Node from 'type/node';
 import Template from 'template';
-import SystemKey from 'system/enum/key';
+import SystemId from 'system/enum/id';
 
 interface Input {
 	readonly account: Node;
@@ -16,13 +16,13 @@ class AccountMenuTemplate extends Template<Input> {
 	}
 
 	private renderAuthenticated(): string {
-		const account_key = this.getAccountKey();
+		const account_id = this.getAccountId();
 		const account_url = this.getAccountUrl();
 
 		return `
 			<menu>
 				<span>logged in as</span>
-				<a href="${account_url}">${account_key}</a>.
+				<a href="${account_url}">${account_id}</a>.
 				<a href="/logout">log out</a>
 			</menu>
 		`;
@@ -39,15 +39,15 @@ class AccountMenuTemplate extends Template<Input> {
 	}
 
 	private isAuthenticated(): boolean {
-		const account_key = this.getAccountKey();
+		const account_id = this.getAccountId();
 
-		return account_key !== SystemKey.ANONYMOUS_ACCOUNT;
+		return account_id !== SystemId.ANONYMOUS_ACCOUNT;
 	}
 
-	private getAccountKey(): string {
+	private getAccountId(): string {
 		const account = this.getAccount();
 
-		return account.key;
+		return account.id;
 	}
 
 	private getAccountUrl(): string {

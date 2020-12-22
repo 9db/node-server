@@ -25,8 +25,8 @@ class LoadNodeFromUrlOperation extends Operation<Input, Node> {
 		}
 
 		const node = await repository.fetchNode(
-			node_parameters.type_key,
-			node_parameters.key
+			node_parameters.type_id,
+			node_parameters.id
 		);
 
 		if (node === undefined) {

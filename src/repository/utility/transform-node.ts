@@ -18,8 +18,8 @@ function transformNode(
 		const value = node[key];
 
 		switch (key) {
-			case 'type_key':
-			case 'key':
+			case 'id':
+			case 'type_id':
 			case 'created_at':
 			case 'updated_at':
 				result[key] = value;

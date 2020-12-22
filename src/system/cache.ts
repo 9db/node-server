@@ -27,10 +27,10 @@ class SystemCache {
 	}
 
 	public fetchNode(
-		type_key: string,
-		node_key: string
+		type_id: string,
+		node_id: string
 	): Node | undefined {
-		const cache_key = this.buildCacheKey(type_key, node_key);
+		const cache_key = this.buildCacheKey(type_id, node_id);
 		const nodes = this.getNodes();
 
 		return nodes[cache_key];
@@ -49,8 +49,8 @@ class SystemCache {
 
 	private addNode(node: Node): void {
 		const cache_key = this.buildCacheKey(
-			node.type_key,
-			node.key
+			node.type_id,
+			node.id
 		);
 
 		const nodes = this.getNodes();
@@ -59,10 +59,10 @@ class SystemCache {
 	}
 
 	private buildCacheKey(
-		type_key: string,
-		node_key: string
+		type_id: string,
+		node_id: string
 	): string {
-		return `${type_key}/${node_key}`;
+		return `${type_id}/${node_id}`;
 	}
 
 	private getHostname(): string {

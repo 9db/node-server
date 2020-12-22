@@ -1,4 +1,4 @@
-import SystemKey from 'system/enum/key';
+import SystemId from 'system/enum/id';
 import Repository from 'repository';
 import NodeFactory from 'factory/node';
 import MemoryAdapter from 'adapter/memory';
@@ -22,9 +22,8 @@ describe('Repository', () => {
 			await repository.storeNode(expected_node);
 
 			const actual_node = await repository.fetchNode(
-				expected_node.namespace_key,
-				expected_node.type_key,
-				expected_node.key
+				expected_node.type_id,
+				expected_node.id
 			);
 
 			expect(actual_node).toStrictEqual(expected_node);
@@ -32,7 +31,7 @@ describe('Repository', () => {
 
 		describe('when node does not exist in cache', () => {
 			it('returns undefined', async () => {
-				const node = await repository.fetchNode('non', 'existent', 'node');
+				const node = await repository.fetchNode('nonexistent', 'node');
 
 				expect(node).toStrictEqual(undefined);
 			});
@@ -47,9 +46,8 @@ describe('Repository', () => {
 				await adapter.storeNode(expected_node);
 
 				const actual_node = await repository.fetchNode(
-					expected_node.namespace_key,
-					expected_node.type_key,
-					expected_node.key
+					expected_node.type_id,
+					expected_node.id
 				);
 
 				expect(actual_node).toStrictEqual({
@@ -62,15 +60,13 @@ describe('Repository', () => {
 		describe('when a system node is requested', () => {
 			it('returns the expected system node', async () => {
 				const node = await repository.fetchNode(
-					SystemKey.SYSTEM_NAMESPACE,
-					SystemKey.GENERIC_TYPE,
-					SystemKey.GENERIC_TYPE
+					SystemId.GENERIC_TYPE,
+					SystemId.GENERIC_TYPE
 				);
 
 				expect(node).toStrictEqual({
-					namespace_key: SystemKey.SYSTEM_NAMESPACE,
-					type_key: SystemKey.GENERIC_TYPE,
-					key: SystemKey.GENERIC_TYPE,
+					id: SystemId.GENERIC_TYPE,
+					type_id: SystemId.GENERIC_TYPE,
 					creator: `${hostname}/system/account/system`,
 					created_at: 0,
 					updated_at: 0,
@@ -87,9 +83,8 @@ describe('Repository', () => {
 			await repository.storeNode(expected_node);
 
 			const actual_node = await repository.fetchNode(
-				expected_node.namespace_key,
-				expected_node.type_key,
-				expected_node.key
+				expected_node.type_id,
+				expected_node.id
 			);
 
 			expect(actual_node).toStrictEqual(expected_node);
@@ -105,9 +100,8 @@ describe('Repository', () => {
 			await repository.storeNode(expected_node);
 
 			const actual_node = await adapter.fetchNode(
-				expected_node.namespace_key,
-				expected_node.type_key,
-				expected_node.key
+				expected_node.type_id,
+				expected_node.id
 			);
 
 			expect(actual_node).toStrictEqual({
@@ -126,17 +120,15 @@ describe('Repository', () => {
 			await repository.storeNode(node);
 
 			await repository.setField(
-				node.namespace_key,
-				node.type_key,
-				node.key,
+				node.type_id,
+				node.id,
 				'wizard',
 				'gandalf'
 			);
 
 			const persisted_node = await repository.fetchNode(
-				node.namespace_key,
-				node.type_key,
-				node.key
+				node.type_id,
+				node.id
 			);
 
 			expect(persisted_node).toStrictEqual({
@@ -151,9 +143,8 @@ describe('Repository', () => {
 			await repository.storeNode(node);
 
 			const result = await repository.setField(
-				node.namespace_key,
-				node.type_key,
-				node.key,
+				node.type_id,
+				node.id,
 				'wizard',
 				'gandalf'
 			);
@@ -171,9 +162,8 @@ describe('Repository', () => {
 			await repository.storeNode(node);
 
 			await repository.setField(
-				node.namespace_key,
-				node.type_key,
-				node.key,
+				node.type_id,
+				node.id,
 				'wizard',
 				'gandalf'
 			);
@@ -189,17 +179,15 @@ describe('Repository', () => {
 			await repository.storeNode(node);
 
 			await repository.setField(
-				node.namespace_key,
-				node.type_key,
-				node.key,
+				node.type_id,
+				node.id,
 				'wizard_url',
 				`${hostname}/gandalf`
 			);
 
 			const persisted_node = await adapter.fetchNode(
-				node.namespace_key,
-				node.type_key,
-				node.key
+				node.type_id,
+				node.id
 			);
 
 			expect(persisted_node).toStrictEqual({
@@ -221,9 +209,8 @@ describe('Repository', () => {
 
 				try {
 					await repository.addValueToSet(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -247,9 +234,8 @@ describe('Repository', () => {
 
 				try {
 					await repository.addValueToSet(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -269,17 +255,15 @@ describe('Repository', () => {
 
 				await repository.storeNode(node);
 				await repository.addValueToSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
 
 				const persisted_node = await repository.fetchNode(
-					node.namespace_key,
-					node.type_key,
-					node.key
+					node.type_id,
+					node.id
 				);
 
 				expect(persisted_node).toStrictEqual(node);
@@ -293,9 +277,8 @@ describe('Repository', () => {
 				await repository.storeNode(node);
 
 				const result = await repository.addValueToSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -312,17 +295,15 @@ describe('Repository', () => {
 
 				await repository.storeNode(node);
 				await repository.addValueToSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
 
 				const persisted_node = await repository.fetchNode(
-					node.namespace_key,
-					node.type_key,
-					node.key
+					node.type_id,
+					node.id
 				);
 
 				expect(persisted_node).toStrictEqual({
@@ -339,9 +320,8 @@ describe('Repository', () => {
 				await repository.storeNode(node);
 
 				const result = await repository.addValueToSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -361,9 +341,8 @@ describe('Repository', () => {
 
 				await repository.storeNode(node);
 				await repository.addValueToSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -379,17 +358,15 @@ describe('Repository', () => {
 
 				await repository.storeNode(node);
 				await repository.addValueToSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'urls',
 					`${hostname}/gandalf`
 				);
 
 				const persisted_node = await adapter.fetchNode(
-					node.namespace_key,
-					node.type_key,
-					node.key
+					node.type_id,
+					node.id
 				);
 
 				expect(persisted_node).toStrictEqual({
@@ -412,9 +389,8 @@ describe('Repository', () => {
 
 				try {
 					await repository.removeValueFromSet(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -438,9 +414,8 @@ describe('Repository', () => {
 
 				try {
 					await repository.removeValueFromSet(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -460,17 +435,15 @@ describe('Repository', () => {
 
 				await repository.storeNode(node);
 				await repository.removeValueFromSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
 
 				const persisted_node = await repository.fetchNode(
-					node.namespace_key,
-					node.type_key,
-					node.key
+					node.type_id,
+					node.id
 				);
 
 				expect(persisted_node).toStrictEqual(node);
@@ -484,9 +457,8 @@ describe('Repository', () => {
 				await repository.storeNode(node);
 
 				const result = await repository.removeValueFromSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -503,17 +475,15 @@ describe('Repository', () => {
 
 				await repository.storeNode(node);
 				await repository.removeValueFromSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
 
 				const persisted_node = await repository.fetchNode(
-					node.namespace_key,
-					node.type_key,
-					node.key
+					node.type_id,
+					node.id
 				);
 
 				expect(persisted_node).toStrictEqual({
@@ -530,9 +500,8 @@ describe('Repository', () => {
 				await repository.storeNode(node);
 
 				const result = await repository.removeValueFromSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -552,9 +521,8 @@ describe('Repository', () => {
 
 				await repository.storeNode(node);
 				await repository.removeValueFromSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -575,9 +543,8 @@ describe('Repository', () => {
 
 				try {
 					await repository.addValueToList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -601,9 +568,8 @@ describe('Repository', () => {
 
 				try {
 					await repository.addValueToList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -624,17 +590,15 @@ describe('Repository', () => {
 
 				await repository.storeNode(node);
 				await repository.addValueToList(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
 
 				const persisted_node = await repository.fetchNode(
-					node.namespace_key,
-					node.type_key,
-					node.key
+					node.type_id,
+					node.id
 				);
 
 				expect(persisted_node).toStrictEqual({
@@ -651,9 +615,8 @@ describe('Repository', () => {
 				await repository.storeNode(node);
 
 				const result = await repository.addValueToList(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -673,9 +636,8 @@ describe('Repository', () => {
 
 				await repository.storeNode(node);
 				await repository.addValueToList(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -691,17 +653,15 @@ describe('Repository', () => {
 
 				await repository.storeNode(node);
 				await repository.addValueToList(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizard_urls',
 					`${hostname}/gandalf`
 				);
 
 				const persisted_node = await adapter.fetchNode(
-					node.namespace_key,
-					node.type_key,
-					node.key
+					node.type_id,
+					node.id
 				);
 
 				expect(persisted_node).toStrictEqual({
@@ -720,9 +680,8 @@ describe('Repository', () => {
 					await repository.storeNode(node);
 
 					const result = await repository.addValueToList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf',
 						0
@@ -744,9 +703,8 @@ describe('Repository', () => {
 					await repository.storeNode(node);
 
 					const result = await repository.addValueToList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf',
 						2
@@ -768,9 +726,8 @@ describe('Repository', () => {
 					await repository.storeNode(node);
 
 					const result = await repository.addValueToList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf',
 						5
@@ -796,9 +753,8 @@ describe('Repository', () => {
 
 				try {
 					await repository.removeValueFromList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -822,9 +778,8 @@ describe('Repository', () => {
 
 				try {
 					await repository.removeValueFromList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -844,17 +799,15 @@ describe('Repository', () => {
 
 				await repository.storeNode(node);
 				await repository.removeValueFromList(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
 
 				const persisted_node = await repository.fetchNode(
-					node.namespace_key,
-					node.type_key,
-					node.key
+					node.type_id,
+					node.id
 				);
 
 				expect(persisted_node).toStrictEqual({
@@ -871,9 +824,8 @@ describe('Repository', () => {
 				await repository.storeNode(node);
 
 				const result = await repository.removeValueFromList(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -893,9 +845,8 @@ describe('Repository', () => {
 
 				await repository.storeNode(node);
 				await repository.removeValueFromList(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -912,9 +863,8 @@ describe('Repository', () => {
 					await repository.storeNode(node);
 
 					const result = await repository.removeValueFromList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -929,17 +879,15 @@ describe('Repository', () => {
 
 					await repository.storeNode(node);
 					await repository.removeValueFromList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
 
 					const persisted_node = await repository.fetchNode(
-						node.namespace_key,
-						node.type_key,
-						node.key
+						node.type_id,
+						node.id
 					);
 
 					expect(persisted_node).toStrictEqual(node);
@@ -958,9 +906,8 @@ describe('Repository', () => {
 
 					try {
 						await repository.removeValueFromList(
-							node.namespace_key,
-							node.type_key,
-							node.key,
+							node.type_id,
+							node.id,
 							'wizards',
 							'gandalf',
 							0
@@ -982,9 +929,8 @@ describe('Repository', () => {
 					await repository.storeNode(node);
 
 					const result = await repository.removeValueFromList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);

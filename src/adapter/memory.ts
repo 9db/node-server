@@ -7,24 +7,24 @@ interface NodeCache {
 	[key: string]: Node;
 }
 
-interface AccountKeys {
+interface AccountIds {
 	[key: string]: string;
 }
 
 class MemoryAdapter implements Adapter {
 	private cache: NodeCache;
-	private account_keys: AccountKeys;
+	private account_ids: AccountIds;
 
 	public constructor() {
 		this.cache = {};
-		this.account_keys = {};
+		this.account_ids = {};
 	}
 
 	public async fetchNode(
-		type_key: string,
-		node_key: string
+		type_id: string,
+		node_id: string
 	): Promise<Node | undefined> {
-		const cache_key = this.createCacheKey(type_key, node_key);
+		const cache_key = this.createCacheKey(type_id, node_id);
 		const cache = this.getCache();
 		const node = cache[cache_key];
 
@@ -41,12 +41,12 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public async setField(
-		type_key: string,
-		node_key: string,
+		type_id: string,
+		node_id: string,
 		field_key: string,
 		value: FieldValue
 	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(type_key, node_key);
+		const node = await this.fetchNodeUnsafe(type_id, node_id);
 
 		const updated_node = {
 			...node,
@@ -57,12 +57,12 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public async addValueToSet(
-		type_key: string,
-		node_key: string,
+		type_id: string,
+		node_id: string,
 		field_key: string,
 		value: PrimitiveValue
 	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(type_key, node_key);
+		const node = await this.fetchNodeUnsafe(type_id, node_id);
 		const set_field = this.getArrayField(node, field_key);
 
 		if (set_field.includes(value)) {
@@ -80,12 +80,12 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public async removeValueFromSet(
-		type_key: string,
-		node_key: string,
+		type_id: string,
+		node_id: string,
 		field_key: string,
 		value: PrimitiveValue
 	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(type_key, node_key);
+		const node = await this.fetchNodeUnsafe(type_id, node_id);
 		const set_field = this.getArrayField(node, field_key);
 
 		if (!set_field.includes(value)) {
@@ -105,13 +105,13 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public async addValueToList(
-		type_key: string,
-		node_key: string,
+		type_id: string,
+		node_id: string,
 		field_key: string,
 		value: PrimitiveValue,
 		position?: number
 	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(type_key, node_key);
+		const node = await this.fetchNodeUnsafe(type_id, node_id);
 		const list_field = this.getArrayField(node, field_key);
 
 		if (position === undefined) {
@@ -148,13 +148,13 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public async removeValueFromList(
-		type_key: string,
-		node_key: string,
+		type_id: string,
+		node_id: string,
 		field_key: string,
 		value: PrimitiveValue,
 		position?: number
 	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(type_key, node_key);
+		const node = await this.fetchNodeUnsafe(type_id, node_id);
 		const list_field = this.getArrayField(node, field_key);
 
 		if (position === undefined) {
@@ -186,35 +186,35 @@ class MemoryAdapter implements Adapter {
 		return this.storeNode(updated_node);
 	}
 
-	public fetchAccountKey(
+	public fetchAccountId(
 		username: string,
 		password: string
 	): Promise<string | undefined> {
 		const serialized_credentials = `${username}:${password}`;
-		const account_keys = this.getAccountKeys();
-		const account_key = account_keys[serialized_credentials];
+		const account_ids = this.getAccountIds();
+		const account_id = account_ids[serialized_credentials];
 
-		return Promise.resolve(account_key);
+		return Promise.resolve(account_id);
 	}
 
-	public storeAccountKey(
+	public storeAccountId(
 		username: string,
 		password: string,
-		account_key: string
+		account_id: string
 	): Promise<void> {
 		const serialized_credentials = `${username}:${password}`;
-		const account_keys = this.getAccountKeys();
+		const account_ids = this.getAccountIds();
 
-		account_keys[serialized_credentials] = account_key;
+		account_ids[serialized_credentials] = account_id;
 
 		return Promise.resolve();
 	}
 
 	private async fetchNodeUnsafe(
-		type_key: string,
-		node_key: string
+		type_id: string,
+		node_id: string
 	): Promise<Node> {
-		const node = await this.fetchNode(type_key, node_key);
+		const node = await this.fetchNode(type_id, node_id);
 
 		if (node === undefined) {
 			throw new NotFoundError();
@@ -238,22 +238,22 @@ class MemoryAdapter implements Adapter {
 	}
 
 	private createCacheKey(
-		type_key: string,
-		node_key: string
+		type_id: string,
+		node_id: string
 	): string {
-		return `${type_key}/${node_key}`;
+		return `${type_id}/${node_id}`;
 	}
 
 	private createCacheKeyForNode(node: Node): string {
-		return this.createCacheKey(node.type_key, node.key);
+		return this.createCacheKey(node.type_id, node.id);
 	}
 
 	private getCache(): NodeCache {
 		return this.cache;
 	}
 
-	private getAccountKeys(): AccountKeys {
-		return this.account_keys;
+	private getAccountIds(): AccountIds {
+		return this.account_ids;
 	}
 }
 

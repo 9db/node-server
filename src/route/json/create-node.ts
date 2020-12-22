@@ -6,7 +6,7 @@ class JsonCreateNodeRoute extends JsonRoute {
 	public constructor() {
 		super(
 			HttpMethod.POST,
-			'/:type_key/:key',
+			'/:type_id/:id',
 			JsonCreateNodeEndpoint
 		);
 	}

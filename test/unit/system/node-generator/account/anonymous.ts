@@ -1,4 +1,4 @@
-import SystemKey from 'system/enum/key';
+import SystemId from 'system/enum/id';
 import AnonymousAccountGenerator from 'system/node-generator/account/anonymous';
 
 describe('AnonymousAccountGenerator', () => {
@@ -10,9 +10,8 @@ describe('AnonymousAccountGenerator', () => {
 			const node = generator.generate();
 
 			expect(node).toStrictEqual({
-				namespace_key: SystemKey.SYSTEM_NAMESPACE,
-				type_key: SystemKey.ACCOUNT_TYPE,
-				key: SystemKey.ANONYMOUS_ACCOUNT,
+				id: SystemId.ANONYMOUS_ACCOUNT,
+				type_id: SystemId.ACCOUNT_TYPE,
 				creator: `${hostname}/system/account/system`,
 				created_at: 0,
 				updated_at: 0,

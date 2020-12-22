@@ -1,5 +1,5 @@
 import Node from 'type/node';
-import SystemKey from 'system/enum/key';
+import SystemId from 'system/enum/id';
 import UnauthorizedError from 'http/error/unauthorized';
 import BasicAuthCredentials from 'http/type/basic-auth-credentials';
 import Operation, {OperationInput} from 'operation';
@@ -10,17 +10,17 @@ interface Input extends OperationInput {
 
 class FetchAccountOperation extends Operation<Input, Node> {
 	protected async performInternal(): Promise<Node> {
-		const account_key = await this.fetchAccountKey();
+		const account_key = await this.fetchAccountId();
 
 		return this.fetchAccount(account_key);
 	}
 
-	private async fetchAccount(account_key: string): Promise<Node> {
+	private async fetchAccount(account_id: string): Promise<Node> {
 		const repository = this.getRepository();
 
 		const account = await repository.fetchNode(
-			SystemKey.ACCOUNT_TYPE,
-			account_key
+			SystemId.ACCOUNT_TYPE,
+			account_id
 		);
 
 		if (account === undefined) {
@@ -30,11 +30,11 @@ class FetchAccountOperation extends Operation<Input, Node> {
 		return account;
 	}
 
-	private async fetchAccountKey(): Promise<string> {
+	private async fetchAccountId(): Promise<string> {
 		const repository = this.getRepository();
 		const username = this.getUsername();
 		const password = this.getPassword();
-		const account_key = await repository.fetchAccountKey(username, password);
+		const account_key = await repository.fetchAccountId(username, password);
 
 		if (account_key === undefined) {
 			throw new UnauthorizedError();

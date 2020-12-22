@@ -1,6 +1,6 @@
 import Node from 'type/node';
 import Adapter from 'interface/adapter';
-import SystemKey from 'system/enum/key';
+import SystemId from 'system/enum/id';
 import SystemCache from 'system/cache';
 import buildNodeUrl from 'utility/build-node-url';
 import NotFoundError from 'http/error/not-found';
@@ -24,10 +24,10 @@ class Repository {
 	}
 
 	public async fetchNode(
-		type_key: string,
-		node_key: string
+		type_id: string,
+		node_id: string
 	): Promise<Node | undefined> {
-		const system_node = this.fetchSystemNode(type_key, node_key);
+		const system_node = this.fetchSystemNode(type_id, node_id);
 
 		if (system_node !== undefined) {
 			// NOTE: No transformation happens on system nodes, for performance
@@ -36,7 +36,7 @@ class Repository {
 		}
 
 		const adapter = this.getAdapter();
-		const node = await adapter.fetchNode(type_key, node_key);
+		const node = await adapter.fetchNode(type_id, node_id);
 
 		if (node === undefined) {
 			return undefined;
@@ -55,8 +55,8 @@ class Repository {
 	}
 
 	public async setField(
-		type_key: string,
-		node_key: string,
+		type_id: string,
+		node_id: string,
 		field_key: string,
 		field_value: FieldValue
 	): Promise<Node> {
@@ -64,8 +64,8 @@ class Repository {
 		const adapter = this.getAdapter();
 
 		const node = await adapter.setField(
-			type_key,
-			node_key,
+			type_id,
+			node_id,
 			field_key,
 			standardized_value
 		);
@@ -74,8 +74,8 @@ class Repository {
 	}
 
 	public async addValueToSet(
-		type_key: string,
-		node_key: string,
+		type_id: string,
+		node_id: string,
 		field_key: string,
 		value: PrimitiveValue
 	): Promise<Node> {
@@ -83,8 +83,8 @@ class Repository {
 		const adapter = this.getAdapter();
 
 		const node = await adapter.addValueToSet(
-			type_key,
-			node_key,
+			type_id,
+			node_id,
 			field_key,
 			standardized_value
 		);
@@ -93,8 +93,8 @@ class Repository {
 	}
 
 	public async removeValueFromSet(
-		type_key: string,
-		node_key: string,
+		type_id: string,
+		node_id: string,
 		field_key: string,
 		value: PrimitiveValue
 	): Promise<Node> {
@@ -102,8 +102,8 @@ class Repository {
 		const adapter = this.getAdapter();
 
 		const node = await adapter.removeValueFromSet(
-			type_key,
-			node_key,
+			type_id,
+			node_id,
 			field_key,
 			standardized_value
 		);
@@ -112,8 +112,8 @@ class Repository {
 	}
 
 	public async addValueToList(
-		type_key: string,
-		node_key: string,
+		type_id: string,
+		node_id: string,
 		field_key: string,
 		value: PrimitiveValue,
 		position?: number
@@ -122,8 +122,8 @@ class Repository {
 		const adapter = this.getAdapter();
 
 		const node = await adapter.addValueToList(
-			type_key,
-			node_key,
+			type_id,
+			node_id,
 			field_key,
 			standardized_value,
 			position
@@ -133,8 +133,8 @@ class Repository {
 	}
 
 	public async removeValueFromList(
-		type_key: string,
-		node_key: string,
+		type_id: string,
+		node_id: string,
 		field_key: string,
 		value: PrimitiveValue,
 		position?: number
@@ -143,8 +143,8 @@ class Repository {
 		const adapter = this.getAdapter();
 
 		const node = await adapter.removeValueFromList(
-			type_key,
-			node_key,
+			type_id,
+			node_id,
 			field_key,
 			standardized_value,
 			position
@@ -174,28 +174,28 @@ class Repository {
 			return undefined;
 		}
 
-		const type_key = match[1];
-		const key = match[2];
+		const type_id = match[1];
+		const id = match[2];
 
 		return {
-			type_key,
-			key
+			id,
+			type_id
 		};
 	}
 
-	public async fetchAccountKey(
+	public async fetchAccountId(
 		username: string,
 		password: string
 	): Promise<string | undefined> {
 		const adapter = this.getAdapter();
 
-		return adapter.fetchAccountKey(username, password);
+		return adapter.fetchAccountId(username, password);
 	}
 
 	public async fetchAnonymousAccount(): Promise<Node> {
 		const node = await this.fetchNode(
-			SystemKey.ACCOUNT_TYPE,
-			SystemKey.ANONYMOUS_ACCOUNT
+			SystemId.ACCOUNT_TYPE,
+			SystemId.ANONYMOUS_ACCOUNT
 		);
 
 		if (node === undefined) {
@@ -207,8 +207,8 @@ class Repository {
 
 	public async fetchSystemAccount(): Promise<Node> {
 		const node = await this.fetchNode(
-			SystemKey.ACCOUNT_TYPE,
-			SystemKey.SYSTEM_ACCOUNT
+			SystemId.ACCOUNT_TYPE,
+			SystemId.SYSTEM_ACCOUNT
 		);
 
 		if (node === undefined) {
@@ -219,12 +219,12 @@ class Repository {
 	}
 
 	private fetchSystemNode(
-		type_key: string,
-		node_key: string
+		type_id: string,
+		node_id: string
 	): Node | undefined {
 		const system_cache = this.getSystemCache();
 
-		return system_cache.fetchNode(type_key, node_key);
+		return system_cache.fetchNode(type_id, node_id);
 	}
 
 	private standardizeNode(node: Node): Node {

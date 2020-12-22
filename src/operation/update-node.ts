@@ -13,8 +13,8 @@ export interface ChangeInput {
 }
 
 export interface Input extends OperationInput {
-	readonly type_key: string;
-	readonly key: string;
+	readonly id: string;
+	readonly type_id: string;
 	readonly changes: ChangeInput[];
 }
 
@@ -41,14 +41,14 @@ class UpdateNodeOperation extends Operation<Input, Node> {
 	}
 
 	private applyChange(change: ChangeInput): Promise<Node> {
-		const type_key = this.getTypeKey();
-		const key = this.getNodeKey();
+		const id = this.getNodeId();
+		const type_id = this.getTypeId();
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
 		const input = {
-			type_key,
-			key,
+			id,
+			type_id,
 			...change,
 			repository,
 			account
@@ -65,16 +65,16 @@ class UpdateNodeOperation extends Operation<Input, Node> {
 		return input.changes;
 	}
 
-	private getTypeKey(): string {
+	private getTypeId(): string {
 		const input = this.getInput();
 
-		return input.type_key;
+		return input.type_id;
 	}
 
-	private getNodeKey(): string {
+	private getNodeId(): string {
 		const input = this.getInput();
 
-		return input.key;
+		return input.id;
 	}
 }
 

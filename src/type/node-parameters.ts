@@ -1,6 +1,6 @@
 interface NodeParameters {
-	readonly type_key: string;
-	readonly key: string;
+	readonly id: string;
+	readonly type_id: string;
 }
 
 export default NodeParameters;

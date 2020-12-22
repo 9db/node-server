@@ -1,5 +1,5 @@
 import Node from 'type/node';
-import SystemKey from 'system/enum/key';
+import SystemId from 'system/enum/id';
 import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
 interface Input extends PageTemplateInput {
@@ -8,12 +8,12 @@ interface Input extends PageTemplateInput {
 
 class TypeFormTemplate extends PageTemplate<Input> {
 	protected getBreadcrumbs(): Breadcrumb[] {
-		const type_key = this.getTypeKey();
+		const type_id = this.getTypeId();
 		const type_url = this.getTypeUrl();
 
 		return [
 			{
-				label: type_key,
+				label: type_id,
 				url: type_url
 			},
 			{
@@ -34,15 +34,15 @@ class TypeFormTemplate extends PageTemplate<Input> {
 
 	private getTypeUrl(): string {
 		return this.buildUrl(
-			SystemKey.GENERIC_TYPE,
-			SystemKey.GENERIC_TYPE
+			SystemId.GENERIC_TYPE,
+			SystemId.GENERIC_TYPE
 		);
 	}
 
-	private getTypeKey(): string {
+	private getTypeId(): string {
 		const node = this.getNode();
 
-		return node.type_key;
+		return node.type_id;
 	}
 
 	private getNode(): Node {

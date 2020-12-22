@@ -1,7 +1,7 @@
 import HTTP from 'http';
 
 import Node from 'type/node';
-import SystemKey from 'system/enum/key';
+import SystemId from 'system/enum/id';
 import HttpHeader from 'http/enum/header';
 import parseCookie from 'http/utility/parse-cookie';
 import getHeaderValue from 'http/utility/get-header-value';
@@ -17,10 +17,10 @@ interface Input extends OperationInput {
 
 class LoadAccountForRequestOperation extends Operation<Input, Node> {
 	protected async performInternal(): Promise<Node> {
-		const session_key = this.getSessionKey();
+		const session_id = this.getSessionId();
 
-		if (session_key !== undefined) {
-			return this.loadFromSessionKey(session_key);
+		if (session_id !== undefined) {
+			return this.loadFromSessionId(session_id);
 		}
 
 		const basic_auth_credentials = this.getBasicAuthCredentials();
@@ -32,7 +32,7 @@ class LoadAccountForRequestOperation extends Operation<Input, Node> {
 		return this.loadAnonymousAccount();
 	}
 
-	private getSessionKey(): string | undefined {
+	private getSessionId(): string | undefined {
 		const request = this.getRequest();
 		const header = getHeaderValue(request, HttpHeader.COOKIE);
 
@@ -54,12 +54,12 @@ class LoadAccountForRequestOperation extends Operation<Input, Node> {
 		return undefined;
 	}
 
-	private async loadFromSessionKey(session_key: string): Promise<Node> {
+	private async loadFromSessionId(session_id: string): Promise<Node> {
 		const repository = this.getRepository();
 
 		const session = await repository.fetchNode(
-			SystemKey.SESSION_TYPE,
-			session_key
+			SystemId.SESSION_TYPE,
+			session_id
 		);
 
 		if (session === undefined) {
@@ -97,8 +97,8 @@ class LoadAccountForRequestOperation extends Operation<Input, Node> {
 		const repository = this.getRepository();
 
 		const node = await repository.fetchNode(
-			SystemKey.ACCOUNT_TYPE,
-			SystemKey.ANONYMOUS_ACCOUNT
+			SystemId.ACCOUNT_TYPE,
+			SystemId.ANONYMOUS_ACCOUNT
 		);
 
 		return node as Node;

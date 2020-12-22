@@ -1,5 +1,5 @@
 import Node from 'type/node';
-import SystemKey from 'system/enum/key';
+import SystemId from 'system/enum/id';
 import HtmlEndpoint from 'endpoint/html';
 import TypeFormTemplate from 'template/page/type-form';
 import FetchNodeOperation from 'operation/fetch-node';
@@ -12,14 +12,14 @@ class HtmlTypeFormEndpoint extends HtmlEndpoint<Record<string, never>> {
 	}
 
 	private fetchTypeNode(): Promise<Node> {
-		const type_key = SystemKey.GENERIC_TYPE;
-		const key = SystemKey.GENERIC_TYPE;
+		const id = SystemId.GENERIC_TYPE;
+		const type_id = SystemId.GENERIC_TYPE;
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
 		const input = {
-			type_key,
-			key,
+			id,
+			type_id,
 			repository,
 			account
 		};

@@ -1,5 +1,5 @@
 import HtmlRoute from 'route/html';
-import SystemKey from 'system/enum/key';
+import SystemId from 'system/enum/id';
 import HttpMethod from 'http/enum/method';
 import HtmlTypeFormEndpoint from 'endpoint/html/type-form';
 
@@ -7,7 +7,7 @@ class HtmlTypeFormRoute extends HtmlRoute {
 	public constructor() {
 		super(
 			HttpMethod.GET,
-			`/${SystemKey.GENERIC_TYPE}/new`,
+			`/${SystemId.GENERIC_TYPE}/new`,
 			HtmlTypeFormEndpoint
 		);
 	}

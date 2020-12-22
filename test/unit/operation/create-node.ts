@@ -29,9 +29,8 @@ describe('CreateNodeOperation', () => {
 
 			const input = {
 				node: {
-					namespace_key: 'public',
-					type_key: 'wizard',
-					key: 'gandalf',
+					id: 'gandalf',
+					type_id: 'wizard',
 					color: 'grey',
 					weapon: 'glamdring'
 				},
@@ -56,9 +55,8 @@ describe('CreateNodeOperation', () => {
 
 			const input = {
 				node: {
-					namespace_key: 'public',
-					type_key: 'wizard',
-					key: 'gandalf',
+					id: 'gandalf',
+					type_id: 'wizard',
 					color: 'grey',
 					weapon: 'glamdring'
 				},
@@ -71,7 +69,6 @@ describe('CreateNodeOperation', () => {
 			await operation.perform();
 
 			const persisted_node = await repository.fetchNode(
-				'public',
 				'wizard',
 				'gandalf'
 			);

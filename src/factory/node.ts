@@ -1,11 +1,11 @@
 import Node from 'type/node';
 
-function randomKey(): string {
+function randomId(): string {
 	return Math.random().toString(16).slice(2);
 }
 
 function randomCreator(): string {
-	const key = randomKey();
+	const key = randomId();
 
 	return `https://9db.org/public/account/${key}`;
 }
@@ -13,8 +13,8 @@ function randomCreator(): string {
 class NodeFactory {
 	public static create(node?: Partial<Node>): Node {
 		return {
-			type_key: randomKey(),
-			key: randomKey(),
+			id: randomId(),
+			type_id: randomId(),
 			creator: randomCreator(),
 			created_at: Date.now(),
 			updated_at: Date.now(),

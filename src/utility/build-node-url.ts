@@ -1,12 +1,12 @@
 interface NodeParameters {
-	readonly type_key: string;
-	readonly key: string;
+	readonly id: string;
+	readonly type_id: string;
 }
 
 function buildNodeUrl(hostname: string, parameters: NodeParameters): string {
-	const { type_key, key } = parameters;
+	const { type_id, id } = parameters;
 
-	return `${hostname}/${type_key}/${key}`;
+	return `${hostname}/${type_id}/${id}`;
 }
 
 export default buildNodeUrl;

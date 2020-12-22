@@ -28,9 +28,8 @@ describe('JsonFetchNodeEndpoint', () => {
 					request,
 					response,
 					{
-						namespace_key: 'public',
-						type_key: 'wizard',
-						key: 'gandalf'
+						type_id: 'wizard',
+						id: 'gandalf'
 					},
 					repository
 				);
@@ -48,9 +47,8 @@ describe('JsonFetchNodeEndpoint', () => {
 		describe('when the specified node exists', () => {
 			it('returns expected response data', async () => {
 				const node = NodeFactory.create({
-					namespace_key: 'public',
-					type_key: 'wizard',
-					key: 'gandalf'
+					type_id: 'wizard',
+					id: 'gandalf'
 				});
 
 				await repository.storeNode(node);

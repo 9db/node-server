@@ -14,21 +14,11 @@ describe('transformNode', () => {
 		});
 	});
 
-	it('does not pass the namespace key to the transformer', () => {
-		const node = NodeFactory.create();
-
-		transformNode(node, hostname, (value) => {
-			expect(value).not.toStrictEqual(node.namespace_key);
-
-			return value;
-		});
-	});
-
 	it('does not pass the type key to the transformer', () => {
 		const node = NodeFactory.create();
 
 		transformNode(node, hostname, (value) => {
-			expect(value).not.toStrictEqual(node.type_key);
+			expect(value).not.toStrictEqual(node.type_id);
 
 			return value;
 		});
@@ -38,7 +28,7 @@ describe('transformNode', () => {
 		const node = NodeFactory.create();
 
 		transformNode(node, hostname, (value) => {
-			expect(value).not.toStrictEqual(node.key);
+			expect(value).not.toStrictEqual(node.id);
 
 			return value;
 		});

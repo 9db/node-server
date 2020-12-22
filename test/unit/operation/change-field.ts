@@ -1,4 +1,4 @@
-import SystemKey from 'system/enum/key';
+import SystemId from 'system/enum/id';
 import Repository from 'repository';
 import ChangeType from 'enum/change-type';
 import ChangeStatus from 'enum/change-status';
@@ -48,9 +48,8 @@ describe('ChangeFieldOperation', () => {
 			const account = await repository.fetchAnonymousAccount();
 
 			const input = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				id: 'gandalf',
+				type_id: 'wizard',
 				change_type: ChangeType.SET_FIELD_VALUE,
 				field: 'color',
 				value: 'white',
@@ -60,9 +59,8 @@ describe('ChangeFieldOperation', () => {
 			};
 
 			const node = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				id: 'gandalf',
+				type_id: 'wizard',
 				color: 'grey',
 				creator: `${hostname}/public/account/iluvatar`,
 				created_at: 0,
@@ -77,9 +75,8 @@ describe('ChangeFieldOperation', () => {
 				const result = await operation.perform();
 
 				expect(result).toStrictEqual({
-					namespace_key: 'public',
-					type_key: 'wizard',
-					key: 'gandalf',
+					id: 'gandalf',
+					type_id: 'wizard',
 					color: 'white',
 					creator: `${hostname}/public/account/iluvatar`,
 					created_at: 0,
@@ -96,15 +93,13 @@ describe('ChangeFieldOperation', () => {
 				await operation.perform();
 
 				const persisted_node = await repository.fetchNode(
-					'public',
 					'wizard',
 					'gandalf'
 				);
 
 				expect(persisted_node).toStrictEqual({
-					namespace_key: 'public',
-					type_key: 'wizard',
-					key: 'gandalf',
+					id: 'gandalf',
+					type_id: 'wizard',
 					color: 'white',
 					creator: `${hostname}/public/account/iluvatar`,
 					created_at: 0,
@@ -120,12 +115,11 @@ describe('ChangeFieldOperation', () => {
 
 				await operation.perform();
 
-				const change_node = await repository.fetchNode('system', 'change', '0');
+				const change_node = await repository.fetchNode('change', '0');
 
 				expect(change_node).toStrictEqual({
-					namespace_key: SystemKey.SYSTEM_NAMESPACE,
-					type_key: SystemKey.CHANGE_TYPE,
-					key: '0',
+					id: '0',
+					type_id: SystemId.CHANGE_TYPE,
 					field: 'color',
 					value: 'white',
 					previous_value: 'grey',
@@ -158,9 +152,8 @@ describe('ChangeFieldOperation', () => {
 			const account = await repository.fetchAnonymousAccount();
 
 			const input = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				id: 'gandalf',
+				type_id: 'wizard',
 				change_type: ChangeType.ADD_SET_VALUE,
 				field: 'weapons',
 				value: 'glamdring',
@@ -169,9 +162,8 @@ describe('ChangeFieldOperation', () => {
 			};
 
 			const node = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				id: 'gandalf',
+				type_id: 'wizard',
 				weapons: [],
 				creator: `${hostname}/public/account/iluvatar`,
 				created_at: 0,
@@ -186,9 +178,8 @@ describe('ChangeFieldOperation', () => {
 				const result = await operation.perform();
 
 				expect(result).toStrictEqual({
-					namespace_key: 'public',
-					type_key: 'wizard',
-					key: 'gandalf',
+					id: 'gandalf',
+					type_id: 'wizard',
 					weapons: ['glamdring'],
 					creator: `${hostname}/public/account/iluvatar`,
 					created_at: 0,
@@ -205,15 +196,13 @@ describe('ChangeFieldOperation', () => {
 				await operation.perform();
 
 				const persisted_node = await repository.fetchNode(
-					'public',
 					'wizard',
 					'gandalf'
 				);
 
 				expect(persisted_node).toStrictEqual({
-					namespace_key: 'public',
-					type_key: 'wizard',
-					key: 'gandalf',
+					id: 'gandalf',
+					type_id: 'wizard',
 					weapons: ['glamdring'],
 					creator: `${hostname}/public/account/iluvatar`,
 					created_at: 0,
@@ -229,12 +218,11 @@ describe('ChangeFieldOperation', () => {
 
 				await operation.perform();
 
-				const change_node = await repository.fetchNode('system', 'change', '0');
+				const change_node = await repository.fetchNode('change', '0');
 
 				expect(change_node).toStrictEqual({
-					namespace_key: SystemKey.SYSTEM_NAMESPACE,
-					type_key: SystemKey.CHANGE_TYPE,
-					key: '0',
+					id: '0',
+					type_id: SystemId.CHANGE_TYPE,
 					field: 'weapons',
 					value: 'glamdring',
 					previous_value: null,
@@ -267,9 +255,8 @@ describe('ChangeFieldOperation', () => {
 			const account = await repository.fetchAnonymousAccount();
 
 			const input = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				id: 'gandalf',
+				type_id: 'wizard',
 				change_type: ChangeType.REMOVE_SET_VALUE,
 				field: 'weapons',
 				value: 'glamdring',
@@ -278,9 +265,8 @@ describe('ChangeFieldOperation', () => {
 			};
 
 			const node = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				id: 'gandalf',
+				type_id: 'wizard',
 				weapons: ['glamdring'],
 				creator: `${hostname}/public/account/iluvatar`,
 				created_at: 0,
@@ -295,9 +281,8 @@ describe('ChangeFieldOperation', () => {
 				const result = await operation.perform();
 
 				expect(result).toStrictEqual({
-					namespace_key: 'public',
-					type_key: 'wizard',
-					key: 'gandalf',
+					id: 'gandalf',
+					type_id: 'wizard',
 					weapons: [],
 					creator: `${hostname}/public/account/iluvatar`,
 					created_at: 0,
@@ -314,15 +299,13 @@ describe('ChangeFieldOperation', () => {
 				await operation.perform();
 
 				const persisted_node = await repository.fetchNode(
-					'public',
 					'wizard',
 					'gandalf'
 				);
 
 				expect(persisted_node).toStrictEqual({
-					namespace_key: 'public',
-					type_key: 'wizard',
-					key: 'gandalf',
+					id: 'gandalf',
+					type_id: 'wizard',
 					weapons: [],
 					creator: `${hostname}/public/account/iluvatar`,
 					created_at: 0,
@@ -338,12 +321,11 @@ describe('ChangeFieldOperation', () => {
 
 				await operation.perform();
 
-				const change_node = await repository.fetchNode('system', 'change', '0');
+				const change_node = await repository.fetchNode('change', '0');
 
 				expect(change_node).toStrictEqual({
-					namespace_key: SystemKey.SYSTEM_NAMESPACE,
-					type_key: SystemKey.CHANGE_TYPE,
-					key: '0',
+					id: '0',
+					type_id: SystemId.CHANGE_TYPE,
 					field: 'weapons',
 					value: 'glamdring',
 					previous_value: null,
@@ -376,9 +358,8 @@ describe('ChangeFieldOperation', () => {
 			const account = await repository.fetchAnonymousAccount();
 
 			const input = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				id: 'gandalf',
+				type_id: 'wizard',
 				change_type: ChangeType.ADD_LIST_VALUE,
 				field: 'mutterings',
 				value: 'hrm',
@@ -387,9 +368,8 @@ describe('ChangeFieldOperation', () => {
 			};
 
 			const node = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				id: 'gandalf',
+				type_id: 'wizard',
 				mutterings: ['hrm', 'oho'],
 				creator: `${hostname}/public/account/iluvatar`,
 				created_at: 0,
@@ -404,9 +384,8 @@ describe('ChangeFieldOperation', () => {
 				const result = await operation.perform();
 
 				expect(result).toStrictEqual({
-					namespace_key: 'public',
-					type_key: 'wizard',
-					key: 'gandalf',
+					id: 'gandalf',
+					type_id: 'wizard',
 					mutterings: ['hrm', 'oho', 'hrm'],
 					creator: `${hostname}/public/account/iluvatar`,
 					created_at: 0,
@@ -423,15 +402,13 @@ describe('ChangeFieldOperation', () => {
 				await operation.perform();
 
 				const persisted_node = await repository.fetchNode(
-					'public',
 					'wizard',
 					'gandalf'
 				);
 
 				expect(persisted_node).toStrictEqual({
-					namespace_key: 'public',
-					type_key: 'wizard',
-					key: 'gandalf',
+					id: 'gandalf',
+					type_id: 'wizard',
 					mutterings: ['hrm', 'oho', 'hrm'],
 					creator: `${hostname}/public/account/iluvatar`,
 					created_at: 0,
@@ -447,12 +424,11 @@ describe('ChangeFieldOperation', () => {
 
 				await operation.perform();
 
-				const change_node = await repository.fetchNode('system', 'change', '0');
+				const change_node = await repository.fetchNode('change', '0');
 
 				expect(change_node).toStrictEqual({
-					namespace_key: SystemKey.SYSTEM_NAMESPACE,
-					type_key: SystemKey.CHANGE_TYPE,
-					key: '0',
+					id: '0',
+					type_id: SystemId.CHANGE_TYPE,
 					field: 'mutterings',
 					value: 'hrm',
 					previous_value: null,
@@ -485,9 +461,8 @@ describe('ChangeFieldOperation', () => {
 			const account = await repository.fetchAnonymousAccount();
 
 			const input = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				id: 'gandalf',
+				type_id: 'wizard',
 				change_type: ChangeType.REMOVE_LIST_VALUE,
 				field: 'mutterings',
 				value: 'hrm',
@@ -496,9 +471,8 @@ describe('ChangeFieldOperation', () => {
 			};
 
 			const node = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				id: 'gandalf',
+				type_id: 'wizard',
 				mutterings: ['hrm', 'oho', 'hrm'],
 				creator: `${hostname}/public/account/iluvatar`,
 				created_at: 0,
@@ -513,9 +487,8 @@ describe('ChangeFieldOperation', () => {
 				const result = await operation.perform();
 
 				expect(result).toStrictEqual({
-					namespace_key: 'public',
-					type_key: 'wizard',
-					key: 'gandalf',
+					id: 'gandalf',
+					type_id: 'wizard',
 					mutterings: ['hrm', 'oho'],
 					creator: `${hostname}/public/account/iluvatar`,
 					created_at: 0,
@@ -532,15 +505,13 @@ describe('ChangeFieldOperation', () => {
 				await operation.perform();
 
 				const persisted_node = await repository.fetchNode(
-					'public',
 					'wizard',
 					'gandalf'
 				);
 
 				expect(persisted_node).toStrictEqual({
-					namespace_key: 'public',
-					type_key: 'wizard',
-					key: 'gandalf',
+					id: 'gandalf',
+					type_id: 'wizard',
 					mutterings: ['hrm', 'oho'],
 					creator: `${hostname}/public/account/iluvatar`,
 					created_at: 0,
@@ -556,12 +527,11 @@ describe('ChangeFieldOperation', () => {
 
 				await operation.perform();
 
-				const change_node = await repository.fetchNode('system', 'change', '0');
+				const change_node = await repository.fetchNode('change', '0');
 
 				expect(change_node).toStrictEqual({
-					namespace_key: SystemKey.SYSTEM_NAMESPACE,
-					type_key: SystemKey.CHANGE_TYPE,
-					key: '0',
+					id: '0',
+					type_id: SystemId.CHANGE_TYPE,
 					field: 'mutterings',
 					value: 'hrm',
 					previous_value: null,
@@ -594,9 +564,8 @@ describe('ChangeFieldOperation', () => {
 			const account = await repository.fetchAnonymousAccount();
 
 			const input = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				id: 'gandalf',
+				type_id: 'wizard',
 				change_type: 'something_unsupported' as ChangeType,
 				field: 'weapons',
 				value: 'glamdring',
@@ -605,9 +574,8 @@ describe('ChangeFieldOperation', () => {
 			};
 
 			const node = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				id: 'gandalf',
+				type_id: 'wizard',
 				weapons: [],
 				creator: `${hostname}/public/account/iluvatar`,
 				created_at: 0,

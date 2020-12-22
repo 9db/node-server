@@ -1,5 +1,5 @@
 import Node from 'type/node';
-import SystemKey from 'system/enum/key';
+import SystemId from 'system/enum/id';
 import ChangeType from 'enum/change-type';
 import ChangeStatus from 'enum/change-status';
 import KeyGenerator from 'utility/key-generator';
@@ -8,8 +8,8 @@ import { PrimitiveValue } from 'type/field-value';
 import Operation, {OperationInput} from 'operation';
 
 interface Input extends OperationInput {
-	readonly type_key: string;
-	readonly key: string;
+	readonly id: string;
+	readonly type_id: string;
 	readonly change_type: ChangeType;
 	readonly field: string;
 	readonly value: PrimitiveValue;
@@ -33,8 +33,8 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const change_url = repository.buildNodeUrl(change_node);
 
 		await repository.addValueToList(
-			input.type_key,
-			input.key,
+			input.type_id,
+			input.id,
 			'changes',
 			change_url
 		);
@@ -64,8 +64,8 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const repository = this.getRepository();
 
 		return repository.setField(
-			input.type_key,
-			input.key,
+			input.type_id,
+			input.id,
 			input.field,
 			input.value
 		);
@@ -76,8 +76,8 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const repository = this.getRepository();
 
 		return repository.addValueToList(
-			input.type_key,
-			input.key,
+			input.type_id,
+			input.id,
 			input.field,
 			input.value
 		);
@@ -88,8 +88,8 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const repository = this.getRepository();
 
 		return repository.removeValueFromList(
-			input.type_key,
-			input.key,
+			input.type_id,
+			input.id,
 			input.field,
 			input.value
 		);
@@ -100,8 +100,8 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const repository = this.getRepository();
 
 		return repository.addValueToSet(
-			input.type_key,
-			input.key,
+			input.type_id,
+			input.id,
 			input.field,
 			input.value
 		);
@@ -112,16 +112,16 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const repository = this.getRepository();
 
 		return repository.removeValueFromSet(
-			input.type_key,
-			input.key,
+			input.type_id,
+			input.id,
 			input.field,
 			input.value
 		);
 	}
 
 	private buildChangeNode(): Node {
-		const type_key = SystemKey.CHANGE_TYPE;
-		const key = KeyGenerator.id();
+		const id = KeyGenerator.id();
+		const type_id = SystemId.CHANGE_TYPE;
 		const status = ChangeStatus.APPROVED;
 		const change_type = this.getInputChangeType();
 		const field = this.getInputField();
@@ -133,8 +133,8 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const updated_at = created_at;
 
 		return {
-			type_key,
-			key,
+			id,
+			type_id,
 			status,
 			change_type,
 			field,

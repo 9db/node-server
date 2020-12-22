@@ -1,4 +1,4 @@
-import SystemKey from 'system/enum/key';
+import SystemId from 'system/enum/id';
 import SystemCache from 'system/cache';
 
 describe('SystemCache', () => {
@@ -10,15 +10,13 @@ describe('SystemCache', () => {
 		describe('when fetching the generic type', () => {
 			it('returns expected node', () => {
 				const node = cache.fetchNode(
-					SystemKey.SYSTEM_NAMESPACE,
-					SystemKey.GENERIC_TYPE,
-					SystemKey.GENERIC_TYPE
+					SystemId.GENERIC_TYPE,
+					SystemId.GENERIC_TYPE
 				);
 
 				expect(node).toStrictEqual({
-					namespace_key: SystemKey.SYSTEM_NAMESPACE,
-					type_key: SystemKey.GENERIC_TYPE,
-					key: SystemKey.GENERIC_TYPE,
+					id: SystemId.GENERIC_TYPE,
+					type_id: SystemId.GENERIC_TYPE,
 					creator,
 					created_at: 0,
 					updated_at: 0,
@@ -30,55 +28,13 @@ describe('SystemCache', () => {
 		describe('when fetching the account type', () => {
 			it('returns expected node', () => {
 				const node = cache.fetchNode(
-					SystemKey.SYSTEM_NAMESPACE,
-					SystemKey.GENERIC_TYPE,
-					SystemKey.ACCOUNT_TYPE
+					SystemId.GENERIC_TYPE,
+					SystemId.ACCOUNT_TYPE
 				);
 
 				expect(node).toStrictEqual({
-					namespace_key: SystemKey.SYSTEM_NAMESPACE,
-					type_key: SystemKey.GENERIC_TYPE,
-					key: SystemKey.ACCOUNT_TYPE,
-					creator,
-					created_at: 0,
-					updated_at: 0,
-					changes: []
-				});
-			});
-		});
-
-		describe('when fetching the namespace type', () => {
-			it('returns expected node', () => {
-				const node = cache.fetchNode(
-					SystemKey.SYSTEM_NAMESPACE,
-					SystemKey.GENERIC_TYPE,
-					SystemKey.NAMESPACE_TYPE
-				);
-
-				expect(node).toStrictEqual({
-					namespace_key: SystemKey.SYSTEM_NAMESPACE,
-					type_key: SystemKey.GENERIC_TYPE,
-					key: SystemKey.NAMESPACE_TYPE,
-					creator,
-					created_at: 0,
-					updated_at: 0,
-					changes: []
-				});
-			});
-		});
-
-		describe('when fetching the system namespace', () => {
-			it('returns expected node', () => {
-				const node = cache.fetchNode(
-					SystemKey.SYSTEM_NAMESPACE,
-					SystemKey.NAMESPACE_TYPE,
-					SystemKey.SYSTEM_NAMESPACE
-				);
-
-				expect(node).toStrictEqual({
-					namespace_key: SystemKey.SYSTEM_NAMESPACE,
-					type_key: SystemKey.NAMESPACE_TYPE,
-					key: SystemKey.SYSTEM_NAMESPACE,
+					id: SystemId.ACCOUNT_TYPE,
+					type_id: SystemId.GENERIC_TYPE,
 					creator,
 					created_at: 0,
 					updated_at: 0,
@@ -90,15 +46,13 @@ describe('SystemCache', () => {
 		describe('when fetching the system account', () => {
 			it('returns expected node', () => {
 				const node = cache.fetchNode(
-					SystemKey.SYSTEM_NAMESPACE,
-					SystemKey.ACCOUNT_TYPE,
-					SystemKey.SYSTEM_ACCOUNT
+					SystemId.ACCOUNT_TYPE,
+					SystemId.SYSTEM_ACCOUNT
 				);
 
 				expect(node).toStrictEqual({
-					namespace_key: SystemKey.SYSTEM_NAMESPACE,
-					type_key: SystemKey.ACCOUNT_TYPE,
-					key: SystemKey.SYSTEM_ACCOUNT,
+					id: SystemId.SYSTEM_ACCOUNT,
+					type_id: SystemId.ACCOUNT_TYPE,
 					creator,
 					created_at: 0,
 					updated_at: 0,
@@ -110,15 +64,13 @@ describe('SystemCache', () => {
 		describe('when fetching the anonymous account', () => {
 			it('returns expected node', () => {
 				const node = cache.fetchNode(
-					SystemKey.SYSTEM_NAMESPACE,
-					SystemKey.ACCOUNT_TYPE,
-					SystemKey.ANONYMOUS_ACCOUNT
+					SystemId.ACCOUNT_TYPE,
+					SystemId.ANONYMOUS_ACCOUNT
 				);
 
 				expect(node).toStrictEqual({
-					namespace_key: SystemKey.SYSTEM_NAMESPACE,
-					type_key: SystemKey.ACCOUNT_TYPE,
-					key: SystemKey.ANONYMOUS_ACCOUNT,
+					id: SystemId.ANONYMOUS_ACCOUNT,
+					type_id: SystemId.ACCOUNT_TYPE,
 					creator,
 					created_at: 0,
 					updated_at: 0,
@@ -130,8 +82,7 @@ describe('SystemCache', () => {
 		describe('when fetching a node that does not exist', () => {
 			it('returns undefined', () => {
 				const node = cache.fetchNode(
-					SystemKey.SYSTEM_NAMESPACE,
-					SystemKey.ACCOUNT_TYPE,
+					SystemId.ACCOUNT_TYPE,
 					'gandalf'
 				);
 

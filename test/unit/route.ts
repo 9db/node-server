@@ -86,7 +86,7 @@ describe('Route', () => {
 			const route = new Route(
 				ContentType.TEXT,
 				HttpMethod.GET,
-				'/v1/:namespace/type/:node_key',
+				'/v1/:namespace/type/:node_id',
 				MockEndpoint
 			);
 

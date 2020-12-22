@@ -1,7 +1,7 @@
 import HTTP from 'http';
 
 import postJson from 'http/utility/post-json';
-import SystemKey from 'system/enum/key';
+import SystemId from 'system/enum/id';
 import Repository from 'repository';
 import HttpHeader from 'http/enum/header';
 import StatusCode from 'http/enum/status-code';
@@ -34,9 +34,8 @@ describe('JsonCreateNodeEndpoint', () => {
 				request,
 				response,
 				{
-					namespace_key: 'public',
-					type_key: 'type',
-					key: 'wizard'
+					type_id: 'type',
+					id: 'wizard'
 				},
 				repository
 			);
@@ -63,9 +62,8 @@ describe('JsonCreateNodeEndpoint', () => {
 			const result = await postJson(url, data);
 
 			expect(result.body).toStrictEqual({
-				key: 'wizard',
-				type_key: SystemKey.GENERIC_TYPE,
-				namespace_key: 'public',
+				id: 'wizard',
+				type_id: SystemId.GENERIC_TYPE,
 				creator: 'http://localhost/system/account/anonymous',
 				created_at: current_timestamp,
 				updated_at: current_timestamp,
@@ -101,15 +99,13 @@ describe('JsonCreateNodeEndpoint', () => {
 			await postJson(url, data);
 
 			const persisted_node = await repository.fetchNode(
-				'public',
 				'type',
 				'wizard'
 			);
 
 			expect(persisted_node).toStrictEqual({
-				key: 'wizard',
-				type_key: SystemKey.GENERIC_TYPE,
-				namespace_key: 'public',
+				id: 'wizard',
+				type_id: SystemId.GENERIC_TYPE,
 				creator: 'http://localhost/system/account/anonymous',
 				created_at: current_timestamp,
 				updated_at: current_timestamp,

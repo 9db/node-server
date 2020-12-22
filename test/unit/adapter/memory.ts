@@ -12,9 +12,8 @@ describe('MemoryAdapter', () => {
 				await adapter.storeNode(expected_node);
 
 				const actual_node = await adapter.fetchNode(
-					expected_node.namespace_key,
-					expected_node.type_key,
-					expected_node.key
+					expected_node.type_id,
+					expected_node.id
 				);
 
 				expect(actual_node).toStrictEqual(expected_node);
@@ -24,7 +23,7 @@ describe('MemoryAdapter', () => {
 		describe('when node does not exist in cache', () => {
 			it('returns undefined', async () => {
 				const adapter = new MemoryAdapter();
-				const node = await adapter.fetchNode('non', 'existent', 'node');
+				const node = await adapter.fetchNode('nonexistent', 'node');
 
 				expect(node).toStrictEqual(undefined);
 			});
@@ -39,9 +38,8 @@ describe('MemoryAdapter', () => {
 			await adapter.storeNode(expected_node);
 
 			const actual_node = await adapter.fetchNode(
-				expected_node.namespace_key,
-				expected_node.type_key,
-				expected_node.key
+				expected_node.type_id,
+				expected_node.id
 			);
 
 			expect(actual_node).toStrictEqual(expected_node);
@@ -57,17 +55,15 @@ describe('MemoryAdapter', () => {
 				await adapter.storeNode(node);
 
 				await adapter.setField(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizard',
 					'gandalf'
 				);
 
 				const persisted_node = await adapter.fetchNode(
-					node.namespace_key,
-					node.type_key,
-					node.key
+					node.type_id,
+					node.id
 				);
 
 				expect(persisted_node).toStrictEqual({
@@ -83,9 +79,8 @@ describe('MemoryAdapter', () => {
 				await adapter.storeNode(node);
 
 				const result = await adapter.setField(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizard',
 					'gandalf'
 				);
@@ -104,9 +99,8 @@ describe('MemoryAdapter', () => {
 				await adapter.storeNode(node);
 
 				await adapter.setField(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizard',
 					'gandalf'
 				);
@@ -122,9 +116,8 @@ describe('MemoryAdapter', () => {
 
 				try {
 					await adapter.setField(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizard',
 						'gandalf'
 					);
@@ -145,9 +138,8 @@ describe('MemoryAdapter', () => {
 
 				try {
 					await adapter.addValueToSet(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -168,9 +160,8 @@ describe('MemoryAdapter', () => {
 
 				try {
 					await adapter.addValueToSet(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -195,9 +186,8 @@ describe('MemoryAdapter', () => {
 
 				try {
 					await adapter.addValueToSet(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -218,17 +208,15 @@ describe('MemoryAdapter', () => {
 
 				await adapter.storeNode(node);
 				await adapter.addValueToSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
 
 				const persisted_node = await adapter.fetchNode(
-					node.namespace_key,
-					node.type_key,
-					node.key
+					node.type_id,
+					node.id
 				);
 
 				expect(persisted_node).toStrictEqual(node);
@@ -243,9 +231,8 @@ describe('MemoryAdapter', () => {
 				await adapter.storeNode(node);
 
 				const result = await adapter.addValueToSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -263,17 +250,15 @@ describe('MemoryAdapter', () => {
 
 				await adapter.storeNode(node);
 				await adapter.addValueToSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
 
 				const persisted_node = await adapter.fetchNode(
-					node.namespace_key,
-					node.type_key,
-					node.key
+					node.type_id,
+					node.id
 				);
 
 				expect(persisted_node).toStrictEqual({
@@ -291,9 +276,8 @@ describe('MemoryAdapter', () => {
 				await adapter.storeNode(node);
 
 				const result = await adapter.addValueToSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -314,9 +298,8 @@ describe('MemoryAdapter', () => {
 
 				await adapter.storeNode(node);
 				await adapter.addValueToSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -336,9 +319,8 @@ describe('MemoryAdapter', () => {
 
 				try {
 					await adapter.removeValueFromSet(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -359,9 +341,8 @@ describe('MemoryAdapter', () => {
 
 				try {
 					await adapter.removeValueFromSet(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -386,9 +367,8 @@ describe('MemoryAdapter', () => {
 
 				try {
 					await adapter.removeValueFromSet(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -409,17 +389,15 @@ describe('MemoryAdapter', () => {
 
 				await adapter.storeNode(node);
 				await adapter.removeValueFromSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
 
 				const persisted_node = await adapter.fetchNode(
-					node.namespace_key,
-					node.type_key,
-					node.key
+					node.type_id,
+					node.id
 				);
 
 				expect(persisted_node).toStrictEqual(node);
@@ -434,9 +412,8 @@ describe('MemoryAdapter', () => {
 				await adapter.storeNode(node);
 
 				const result = await adapter.removeValueFromSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -454,17 +431,15 @@ describe('MemoryAdapter', () => {
 
 				await adapter.storeNode(node);
 				await adapter.removeValueFromSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
 
 				const persisted_node = await adapter.fetchNode(
-					node.namespace_key,
-					node.type_key,
-					node.key
+					node.type_id,
+					node.id
 				);
 
 				expect(persisted_node).toStrictEqual({
@@ -482,9 +457,8 @@ describe('MemoryAdapter', () => {
 				await adapter.storeNode(node);
 
 				const result = await adapter.removeValueFromSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -505,9 +479,8 @@ describe('MemoryAdapter', () => {
 
 				await adapter.storeNode(node);
 				await adapter.removeValueFromSet(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -527,9 +500,8 @@ describe('MemoryAdapter', () => {
 
 				try {
 					await adapter.addValueToList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -550,9 +522,8 @@ describe('MemoryAdapter', () => {
 
 				try {
 					await adapter.addValueToList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -577,9 +548,8 @@ describe('MemoryAdapter', () => {
 
 				try {
 					await adapter.addValueToList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -600,17 +570,15 @@ describe('MemoryAdapter', () => {
 
 				await adapter.storeNode(node);
 				await adapter.addValueToList(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
 
 				const persisted_node = await adapter.fetchNode(
-					node.namespace_key,
-					node.type_key,
-					node.key
+					node.type_id,
+					node.id
 				);
 
 				expect(persisted_node).toStrictEqual({
@@ -628,9 +596,8 @@ describe('MemoryAdapter', () => {
 				await adapter.storeNode(node);
 
 				const result = await adapter.addValueToList(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -651,9 +618,8 @@ describe('MemoryAdapter', () => {
 
 				await adapter.storeNode(node);
 				await adapter.addValueToList(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -671,9 +637,8 @@ describe('MemoryAdapter', () => {
 					await adapter.storeNode(node);
 
 					const result = await adapter.addValueToList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf',
 						0
@@ -696,9 +661,8 @@ describe('MemoryAdapter', () => {
 					await adapter.storeNode(node);
 
 					const result = await adapter.addValueToList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf',
 						2
@@ -721,9 +685,8 @@ describe('MemoryAdapter', () => {
 					await adapter.storeNode(node);
 
 					const result = await adapter.addValueToList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf',
 						5
@@ -748,9 +711,8 @@ describe('MemoryAdapter', () => {
 
 				try {
 					await adapter.removeValueFromList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -771,9 +733,8 @@ describe('MemoryAdapter', () => {
 
 				try {
 					await adapter.removeValueFromList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -798,9 +759,8 @@ describe('MemoryAdapter', () => {
 
 				try {
 					await adapter.removeValueFromList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -821,17 +781,15 @@ describe('MemoryAdapter', () => {
 
 				await adapter.storeNode(node);
 				await adapter.removeValueFromList(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
 
 				const persisted_node = await adapter.fetchNode(
-					node.namespace_key,
-					node.type_key,
-					node.key
+					node.type_id,
+					node.id
 				);
 
 				expect(persisted_node).toStrictEqual({
@@ -849,9 +807,8 @@ describe('MemoryAdapter', () => {
 				await adapter.storeNode(node);
 
 				const result = await adapter.removeValueFromList(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -872,9 +829,8 @@ describe('MemoryAdapter', () => {
 
 				await adapter.storeNode(node);
 				await adapter.removeValueFromList(
-					node.namespace_key,
-					node.type_key,
-					node.key,
+					node.type_id,
+					node.id,
 					'wizards',
 					'gandalf'
 				);
@@ -892,9 +848,8 @@ describe('MemoryAdapter', () => {
 					await adapter.storeNode(node);
 
 					const result = await adapter.removeValueFromList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
@@ -910,17 +865,15 @@ describe('MemoryAdapter', () => {
 
 					await adapter.storeNode(node);
 					await adapter.removeValueFromList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);
 
 					const persisted_node = await adapter.fetchNode(
-						node.namespace_key,
-						node.type_key,
-						node.key
+						node.type_id,
+						node.id
 					);
 
 					expect(persisted_node).toStrictEqual(node);
@@ -940,9 +893,8 @@ describe('MemoryAdapter', () => {
 
 					try {
 						await adapter.removeValueFromList(
-							node.namespace_key,
-							node.type_key,
-							node.key,
+							node.type_id,
+							node.id,
 							'wizards',
 							'gandalf',
 							0
@@ -965,9 +917,8 @@ describe('MemoryAdapter', () => {
 					await adapter.storeNode(node);
 
 					const result = await adapter.removeValueFromList(
-						node.namespace_key,
-						node.type_key,
-						node.key,
+						node.type_id,
+						node.id,
 						'wizards',
 						'gandalf'
 					);

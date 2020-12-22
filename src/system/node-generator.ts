@@ -1,5 +1,5 @@
 import Node from 'type/node';
-import SystemKey from 'system/enum/key';
+import SystemId from 'system/enum/id';
 import buildNodeUrl from 'utility/build-node-url';
 
 abstract class SystemNodeGenerator {
@@ -11,8 +11,8 @@ abstract class SystemNodeGenerator {
 
 	public generate(): Node {
 		return {
-			type_key: this.getTypeKey(),
-			key: this.getNodeKey(),
+			id: this.getNodeId(),
+			type_id: this.getTypeId(),
 			creator: this.getCreator(),
 			created_at: 0,
 			updated_at: 0,
@@ -22,12 +22,12 @@ abstract class SystemNodeGenerator {
 
 	protected getCreator(): string {
 		const hostname = this.getHostname();
-		const type_key = SystemKey.ACCOUNT_TYPE;
-		const key = SystemKey.SYSTEM_ACCOUNT;
+		const id = SystemId.SYSTEM_ACCOUNT;
+		const type_id = SystemId.ACCOUNT_TYPE;
 
 		return buildNodeUrl(hostname, {
-			type_key,
-			key
+			id,
+			type_id
 		});
 	}
 
@@ -35,8 +35,8 @@ abstract class SystemNodeGenerator {
 		return this.hostname;
 	}
 
-	protected abstract getTypeKey(): string;
-	protected abstract getNodeKey(): string;
+	protected abstract getTypeId(): string;
+	protected abstract getNodeId(): string;
 }
 
 export interface GeneratorConstructor {

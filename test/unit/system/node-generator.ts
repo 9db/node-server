@@ -1,13 +1,12 @@
-import SystemKey from 'system/enum/key';
 import SystemNodeGenerator from 'system/node-generator';
 
 describe('NodeGenerator', () => {
 	class MockGenerator extends SystemNodeGenerator {
-		protected getTypeKey(): string {
+		protected getTypeId(): string {
 			return 'foo';
 		}
 
-		protected getNodeKey(): string {
+		protected getNodeId(): string {
 			return 'bar';
 		}
 	}
@@ -20,29 +19,13 @@ describe('NodeGenerator', () => {
 			const node = generator.generate();
 
 			expect(node).toStrictEqual({
-				namespace_key: SystemKey.SYSTEM_NAMESPACE,
-				type_key: 'foo',
-				key: 'bar',
+				id: 'bar',
+				type_id: 'foo',
 				creator: `${hostname}/system/account/system`,
 				created_at: 0,
 				updated_at: 0,
 				changes: []
 			});
-		});
-	});
-
-	describe('getNamespaceKey()', () => {
-		class ThrowawayGenerator extends MockGenerator {
-			public privilegedGetNamespaceKey(): string {
-				return this.getNamespaceKey();
-			}
-		}
-
-		it('returns the expected value', () => {
-			const generator = new ThrowawayGenerator(hostname);
-			const namespace_key = generator.privilegedGetNamespaceKey();
-
-			expect(namespace_key).toStrictEqual(SystemKey.SYSTEM_NAMESPACE);
 		});
 	});
 

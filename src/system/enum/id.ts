@@ -1,4 +1,4 @@
-enum SystemKey {
+enum SystemId {
 	ACCOUNT_TYPE = 'account',
 	CHANGE_TYPE = 'change',
 	GENERIC_TYPE = 'type',
@@ -8,4 +8,4 @@ enum SystemKey {
 	ANONYMOUS_ACCOUNT = 'anonymous'
 }
 
-export default SystemKey;
+export default SystemId;

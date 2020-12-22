@@ -4,14 +4,14 @@ import FetchNodeOperation from 'operation/fetch-node';
 
 class JsonFetchNodeEndpoint extends JsonEndpoint<Record<string, never>> {
 	protected async process(): Promise<Node> {
-		const type_key = this.getUrlParameter('type_key');
-		const key = this.getUrlParameter('key');
+		const id = this.getUrlParameter('id');
+		const type_id = this.getUrlParameter('type_id');
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
 		const input = {
-			type_key,
-			key,
+			id,
+			type_id,
 			repository,
 			account
 		};

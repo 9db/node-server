@@ -1,13 +1,13 @@
-import SystemKey from 'system/enum/key';
+import SystemId from 'system/enum/id';
 import SystemNodeGenerator from 'system/node-generator';
 
 class AccountTypeGenerator extends SystemNodeGenerator {
-	protected getTypeKey(): string {
-		return SystemKey.GENERIC_TYPE;
+	protected getTypeId(): string {
+		return SystemId.GENERIC_TYPE;
 	}
 
-	protected getNodeKey(): string {
-		return SystemKey.ACCOUNT_TYPE;
+	protected getNodeId(): string {
+		return SystemId.ACCOUNT_TYPE;
 	}
 }
 

@@ -18,17 +18,15 @@ describe('FetchNodeOperation', () => {
 			const account = await repository.fetchAnonymousAccount();
 
 			const node = NodeFactory.create({
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf'
+				type_id: 'wizard',
+				id: 'gandalf'
 			});
 
 			await repository.storeNode(node);
 
 			const input = {
-				namespace_key: node.namespace_key,
-				type_key: node.type_key,
-				key: node.key,
+				id: node.id,
+				type_id: node.type_id,
 				repository,
 				account
 			};
@@ -48,9 +46,8 @@ describe('FetchNodeOperation', () => {
 			const account = await repository.fetchAnonymousAccount();
 
 			const input = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				id: 'gandalf',
+				type_id: 'wizard',
 				repository,
 				account
 			};

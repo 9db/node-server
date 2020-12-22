@@ -1,8 +1,8 @@
 import FieldValue from 'type/field-value';
 
 interface Node {
-	readonly type_key: string;
-	readonly key: string;
+	readonly id: string;
+	readonly type_id: string;
 	readonly creator: string;
 	readonly created_at: number;
 	readonly updated_at: number;

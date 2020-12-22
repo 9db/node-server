@@ -1,5 +1,5 @@
 import Node from 'type/node';
-import SystemKey from 'system/enum/key';
+import SystemId from 'system/enum/id';
 import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
 interface Input extends PageTemplateInput {
@@ -9,28 +9,28 @@ interface Input extends PageTemplateInput {
 
 class NodeDetailsTemplate extends PageTemplate<Input> {
 	protected getBreadcrumbs(): Breadcrumb[] {
-		const type_key = this.getTypeKey();
+		const type_id = this.getTypeId();
 		const type_url = this.getTypeUrl();
-		const node_key = this.getNodeKey();
+		const node_id = this.getNodeId();
 
 		return [
 			{
-				label: type_key,
+				label: type_id,
 				url: type_url
 			},
 			{
-				label: node_key
+				label: node_id
 			}
 		];
 	}
 
 	protected getContentTitle(): string {
-		return this.getNodeKey();
+		return this.getNodeId();
 	}
 
 	protected getContentHtml(): string {
 		const creator_url = this.getCreatorUrl();
-		const creator_key = this.getCreatorKey();
+		const creator_id = this.getCreatorId();
 		const created_at = this.serializeCreatedAt();
 		const updated_at = this.serializeUpdatedAt();
 		const field_table_html = this.getFieldTableHtml();
@@ -41,7 +41,7 @@ class NodeDetailsTemplate extends PageTemplate<Input> {
 				<small>
 					<p>
 						Created by
-						<a href="${creator_url}">${creator_key}</a>
+						<a href="${creator_url}">${creator_id}</a>
 						on <time>${created_at}</time>.
 					</p>
 					<p>
@@ -107,11 +107,11 @@ class NodeDetailsTemplate extends PageTemplate<Input> {
 		}
 
 		const list_url = this.getListUrl();
-		const node_key = this.getNodeKey();
+		const node_id = this.getNodeId();
 
 		return `
 			<li>
-				<a href="${list_url}">View list of ${node_key} instances</a>
+				<a href="${list_url}">View list of ${node_id} instances</a>
 			</li>
 		`;
 	}
@@ -122,11 +122,11 @@ class NodeDetailsTemplate extends PageTemplate<Input> {
 		}
 
 		const new_url = this.getNewUrl();
-		const node_key = this.getNodeKey();
+		const node_id = this.getNodeId();
 
 		return `
 			<li>
-				<a href="${new_url}">Create new ${node_key} instance</a>
+				<a href="${new_url}">Create new ${node_id} instance</a>
 			</li>
 		`;
 	}
@@ -138,22 +138,22 @@ class NodeDetailsTemplate extends PageTemplate<Input> {
 	}
 
 	private getListUrl(): string {
-		const node_key = this.getNodeKey();
+		const node_id = this.getNodeId();
 
-		return this.buildUrl(node_key, 'list');
+		return this.buildUrl(node_id, 'list');
 	}
 
 	private getNewUrl(): string {
-		const node_key = this.getNodeKey();
+		const node_id = this.getNodeId();
 
-		return this.buildUrl(node_key, 'new');
+		return this.buildUrl(node_id, 'new');
 	}
 
 	private getNodeUrl(): string {
-		const type_key = this.getTypeKey();
-		const node_key = this.getNodeKey();
+		const type_id = this.getTypeId();
+		const node_id = this.getNodeId();
 
-		return this.buildUrl(type_key, node_key);
+		return this.buildUrl(type_id, node_id);
 	}
 
 	private isInstanceNode(): boolean {
@@ -161,24 +161,24 @@ class NodeDetailsTemplate extends PageTemplate<Input> {
 	}
 
 	private isTypeNode(): boolean {
-		const type_key = this.getTypeKey();
+		const type_id = this.getTypeId();
 
-		return type_key === SystemKey.GENERIC_TYPE;
+		return type_id === SystemId.GENERIC_TYPE;
 	}
 
 	private getTypeUrl(): string {
-		const type_key = this.getTypeKey();
+		const type_id = this.getTypeId();
 
-		return this.buildUrl(SystemKey.GENERIC_TYPE, type_key);
+		return this.buildUrl(SystemId.GENERIC_TYPE, type_id);
 	}
 
-	private getTypeKey(): string {
+	private getTypeId(): string {
 		const node = this.getNode();
 
-		return node.type_key;
+		return node.type_id;
 	}
 
-	private getCreatorKey(): string {
+	private getCreatorId(): string {
 		const creator_url = this.getCreatorUrl();
 		const parts = creator_url.split('/');
 
@@ -221,10 +221,10 @@ class NodeDetailsTemplate extends PageTemplate<Input> {
 		return node.updated_at;
 	}
 
-	private getNodeKey(): string {
+	private getNodeId(): string {
 		const node = this.getNode();
 
-		return node.key;
+		return node.id;
 	}
 
 	private getNodeType(): string {

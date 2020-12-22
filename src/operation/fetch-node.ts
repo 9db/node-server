@@ -3,8 +3,8 @@ import NotFoundError from 'http/error/not-found';
 import Operation, {OperationInput} from 'operation';
 
 interface Input extends OperationInput {
-	readonly type_key: string;
-	readonly key: string;
+	readonly id: string;
+	readonly type_id: string;
 }
 
 class FetchNodeOperation extends Operation<Input, Node> {
@@ -13,8 +13,8 @@ class FetchNodeOperation extends Operation<Input, Node> {
 		const repository = this.getRepository();
 
 		const node = await repository.fetchNode(
-			input.type_key,
-			input.key
+			input.type_id,
+			input.id
 		);
 
 		if (node === undefined) {

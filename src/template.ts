@@ -19,14 +19,14 @@ abstract class Template<Input> {
 	}
 
 	protected buildNodeUrl(node: Node): string {
-		return this.buildUrl(node.type_key, node.key);
+		return this.buildUrl(node.type_id, node.id);
 	}
 
 	protected buildUrl(
-		type_key: string,
-		node_key: string
+		type_id: string,
+		node_id: string
 	): string {
-		return `/${type_key}/${node_key}`;
+		return `/${type_id}/${node_id}`;
 	}
 
 	protected abstract getHtml(): string;

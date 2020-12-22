@@ -1,5 +1,5 @@
 import Node from 'type/node';
-import SystemKey from 'system/enum/key';
+import SystemId from 'system/enum/id';
 import HttpHeader from 'http/enum/header';
 import buildCookie from 'http/utility/build-cookie';
 import HtmlEndpoint from 'endpoint/html';
@@ -43,14 +43,14 @@ class HtmlCreateSessionEndpoint extends HtmlEndpoint<Input> {
 	}
 
 	private async createSession(account: Node): Promise<Node> {
-		const key = KeyGenerator.id();
+		const id = KeyGenerator.id();
 		const repository = this.getRepository();
 		const system_account = await repository.fetchSystemAccount();
 		const account_url = repository.buildNodeUrl(account);
 
 		const node = {
-			type_key: SystemKey.SESSION_TYPE,
-			key,
+			id,
+			type_id: SystemId.SESSION_TYPE,
 			account: account_url
 		};
 
@@ -66,7 +66,7 @@ class HtmlCreateSessionEndpoint extends HtmlEndpoint<Input> {
 	}
 
 	private setCookieFromSession(session: Node): void {
-		const cookie = buildCookie(session.key, TimeInterval.ONE_DAY);
+		const cookie = buildCookie(session.id, TimeInterval.ONE_DAY);
 
 		this.setHeaderValue(HttpHeader.SET_COOKIE, cookie);
 	}

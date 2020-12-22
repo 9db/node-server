@@ -1,4 +1,4 @@
-import SystemKey from 'system/enum/key';
+import SystemId from 'system/enum/id';
 import Repository from 'repository';
 import ChangeType from 'enum/change-type';
 import ChangeStatus from 'enum/change-status';
@@ -45,9 +45,8 @@ describe('UpdateNodeOperation', () => {
 	describe('perform()', () => {
 		it('processes multiple node changes', async () => {
 			const node = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				id: 'gandalf',
+				type_id: 'wizard',
 				name: 'Gandalf the Grey',
 				horses: [],
 				colors: ['grey'],
@@ -62,9 +61,8 @@ describe('UpdateNodeOperation', () => {
 			const account = await repository.fetchAnonymousAccount();
 
 			const input = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				id: 'gandalf',
+				type_id: 'wizard',
 				changes: [
 					{
 						change_type: ChangeType.SET_FIELD_VALUE,
@@ -99,9 +97,8 @@ describe('UpdateNodeOperation', () => {
 			const result = await operation.perform();
 
 			expect(result).toStrictEqual({
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				id: 'gandalf',
+				type_id: 'wizard',
 				name: 'Gandalf the White',
 				horses: ['Shadowfax'],
 				colors: ['white'],
@@ -119,9 +116,8 @@ describe('UpdateNodeOperation', () => {
 
 		it('stores each node change to the database', async () => {
 			const node = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				id: 'gandalf',
+				type_id: 'wizard',
 				name: 'Gandalf the Grey',
 				horses: [],
 				colors: ['grey'],
@@ -136,9 +132,8 @@ describe('UpdateNodeOperation', () => {
 			const account = await repository.fetchAnonymousAccount();
 
 			const input = {
-				namespace_key: 'public',
-				type_key: 'wizard',
-				key: 'gandalf',
+				id: 'gandalf',
+				type_id: 'wizard',
 				changes: [
 					{
 						change_type: ChangeType.SET_FIELD_VALUE,
@@ -175,20 +170,18 @@ describe('UpdateNodeOperation', () => {
 			const promises = result.changes.map((change_url) => {
 				const path = change_url.replace(hostname, '');
 				const parts = path.split('/');
-				const key = parts.pop() as string;
-				const type_key = parts.pop() as string;
-				const namespace_key = parts.pop() as string;
+				const id = parts.pop() as string;
+				const type_id = parts.pop() as string;
 
-				return repository.fetchNode(namespace_key, type_key, key);
+				return repository.fetchNode(type_id, id);
 			});
 
 			const changes = await Promise.all(promises);
 
 			expect(changes).toStrictEqual([
 				{
-					namespace_key: SystemKey.SYSTEM_NAMESPACE,
-					type_key: SystemKey.CHANGE_TYPE,
-					key: '0',
+					id: '0',
+					type_id: SystemId.CHANGE_TYPE,
 					change_type: ChangeType.SET_FIELD_VALUE,
 					field: 'name',
 					value: 'Gandalf the White',
@@ -201,9 +194,8 @@ describe('UpdateNodeOperation', () => {
 					changes: []
 				},
 				{
-					namespace_key: SystemKey.SYSTEM_NAMESPACE,
-					type_key: SystemKey.CHANGE_TYPE,
-					key: '1',
+					id: '1',
+					type_id: SystemId.CHANGE_TYPE,
 					change_type: ChangeType.ADD_SET_VALUE,
 					field: 'horses',
 					value: 'Shadowfax',
@@ -216,9 +208,8 @@ describe('UpdateNodeOperation', () => {
 					changes: []
 				},
 				{
-					namespace_key: SystemKey.SYSTEM_NAMESPACE,
-					type_key: SystemKey.CHANGE_TYPE,
-					key: '2',
+					id: '2',
+					type_id: SystemId.CHANGE_TYPE,
 					change_type: ChangeType.ADD_LIST_VALUE,
 					field: 'colors',
 					value: 'white',
@@ -231,9 +222,8 @@ describe('UpdateNodeOperation', () => {
 					changes: []
 				},
 				{
-					namespace_key: SystemKey.SYSTEM_NAMESPACE,
-					type_key: SystemKey.CHANGE_TYPE,
-					key: '3',
+					id: '3',
+					type_id: SystemId.CHANGE_TYPE,
 					change_type: ChangeType.REMOVE_LIST_VALUE,
 					field: 'colors',
 					value: 'grey',
@@ -251,9 +241,8 @@ describe('UpdateNodeOperation', () => {
 		describe('when no changes are supplied', () => {
 			it('raises a BadRequestError', async () => {
 				const node = {
-					namespace_key: 'public',
-					type_key: 'wizard',
-					key: 'gandalf',
+					id: 'gandalf',
+					type_id: 'wizard',
 					name: 'Gandalf the Grey',
 					horses: [],
 					colors: ['grey'],
@@ -268,9 +257,8 @@ describe('UpdateNodeOperation', () => {
 				const account = await repository.fetchAnonymousAccount();
 
 				const input = {
-					namespace_key: 'public',
-					type_key: 'wizard',
-					key: 'gandalf',
+					id: 'gandalf',
+					type_id: 'wizard',
 					changes: [],
 					repository,
 					account
