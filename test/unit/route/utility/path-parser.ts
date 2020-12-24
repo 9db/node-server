@@ -6,7 +6,7 @@ describe('PathParser', () => {
 		const result = parser.parse();
 
 		expect(result).toStrictEqual({
-			regex: /^\/v1\/([^\/]+)\/passwords\/([^\/]+)$/,
+			regex: /^\/v1\/([^\/]+)\/passwords\/([^\/]+)(\?[^\/]+)?$/,
 			parameter_keys: ['wizard', 'password']
 		});
 	});

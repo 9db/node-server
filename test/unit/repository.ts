@@ -43,7 +43,9 @@ describe('Repository', () => {
 					some_url: '<9dbhost>/foo/bar/baz'
 				});
 
-				await adapter.storeNode(expected_node);
+				const node_key = `${expected_node.type_id}/${expected_node.id}`;
+
+				await adapter.storeNode(node_key, expected_node);
 
 				const actual_node = await repository.fetchNode(
 					expected_node.type_id,
@@ -99,10 +101,8 @@ describe('Repository', () => {
 
 			await repository.storeNode(expected_node);
 
-			const actual_node = await adapter.fetchNode(
-				expected_node.type_id,
-				expected_node.id
-			);
+			const node_key = `${expected_node.type_id}/${expected_node.id}`;
+			const actual_node = await adapter.fetchNode(node_key);
 
 			expect(actual_node).toStrictEqual({
 				...expected_node,
@@ -172,7 +172,8 @@ describe('Repository', () => {
 				`${hostname}/gandalf`
 			);
 
-			const persisted_node = await adapter.fetchNode(node.type_id, node.id);
+			const node_key = `${node.type_id}/${node.id}`;
+			const persisted_node = await adapter.fetchNode(node_key);
 
 			expect(persisted_node).toStrictEqual({
 				...node,
@@ -348,7 +349,8 @@ describe('Repository', () => {
 					`${hostname}/gandalf`
 				);
 
-				const persisted_node = await adapter.fetchNode(node.type_id, node.id);
+				const node_key = `${node.type_id}/${node.id}`;
+				const persisted_node = await adapter.fetchNode(node_key);
 
 				expect(persisted_node).toStrictEqual({
 					...node,
@@ -640,7 +642,8 @@ describe('Repository', () => {
 					`${hostname}/gandalf`
 				);
 
-				const persisted_node = await adapter.fetchNode(node.type_id, node.id);
+				const node_key = `${node.type_id}/${node.id}`;
+				const persisted_node = await adapter.fetchNode(node_key);
 
 				expect(persisted_node).toStrictEqual({
 					...node,

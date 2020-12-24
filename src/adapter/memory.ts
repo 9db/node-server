@@ -20,49 +20,42 @@ class MemoryAdapter implements Adapter {
 		this.account_ids = {};
 	}
 
-	public async fetchNode(
-		type_id: string,
-		node_id: string
-	): Promise<Node | undefined> {
-		const cache_key = this.createCacheKey(type_id, node_id);
+	public async fetchNode(node_key: string): Promise<Node | undefined> {
 		const cache = this.getCache();
-		const node = cache[cache_key];
+		const node = cache[node_key];
 
 		return Promise.resolve(node);
 	}
 
-	public storeNode(node: Node): Promise<Node> {
-		const cache_key = this.createCacheKeyForNode(node);
+	public storeNode(node_key: string, node: Node): Promise<Node> {
 		const cache = this.getCache();
 
-		cache[cache_key] = node;
+		cache[node_key] = node;
 
 		return Promise.resolve(node);
 	}
 
 	public async setField(
-		type_id: string,
-		node_id: string,
+		node_key: string,
 		field_key: string,
 		value: FieldValue
 	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(type_id, node_id);
+		const node = await this.fetchNodeUnsafe(node_key);
 
 		const updated_node = {
 			...node,
 			[field_key]: value
 		};
 
-		return this.storeNode(updated_node);
+		return this.storeNode(node_key, updated_node);
 	}
 
 	public async addValueToSet(
-		type_id: string,
-		node_id: string,
+		node_key: string,
 		field_key: string,
 		value: PrimitiveValue
 	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(type_id, node_id);
+		const node = await this.fetchNodeUnsafe(node_key);
 		const set_field = this.getArrayField(node, field_key);
 
 		if (set_field.includes(value)) {
@@ -76,16 +69,15 @@ class MemoryAdapter implements Adapter {
 			[field_key]: updated_set
 		};
 
-		return this.storeNode(updated_node);
+		return this.storeNode(node_key, updated_node);
 	}
 
 	public async removeValueFromSet(
-		type_id: string,
-		node_id: string,
+		node_key: string,
 		field_key: string,
 		value: PrimitiveValue
 	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(type_id, node_id);
+		const node = await this.fetchNodeUnsafe(node_key);
 		const set_field = this.getArrayField(node, field_key);
 
 		if (!set_field.includes(value)) {
@@ -101,17 +93,16 @@ class MemoryAdapter implements Adapter {
 			[field_key]: updated_set
 		};
 
-		return this.storeNode(updated_node);
+		return this.storeNode(node_key, updated_node);
 	}
 
 	public async addValueToList(
-		type_id: string,
-		node_id: string,
+		node_key: string,
 		field_key: string,
 		value: PrimitiveValue,
 		position?: number
 	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(type_id, node_id);
+		const node = await this.fetchNodeUnsafe(node_key);
 		const list_field = this.getArrayField(node, field_key);
 
 		if (position === undefined) {
@@ -144,17 +135,16 @@ class MemoryAdapter implements Adapter {
 			[field_key]: updated_list
 		};
 
-		return this.storeNode(updated_node);
+		return this.storeNode(node_key, updated_node);
 	}
 
 	public async removeValueFromList(
-		type_id: string,
-		node_id: string,
+		node_key: string,
 		field_key: string,
 		value: PrimitiveValue,
 		position?: number
 	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(type_id, node_id);
+		const node = await this.fetchNodeUnsafe(node_key);
 		const list_field = this.getArrayField(node, field_key);
 
 		if (position === undefined) {
@@ -183,7 +173,7 @@ class MemoryAdapter implements Adapter {
 			[field_key]: updated_list
 		};
 
-		return this.storeNode(updated_node);
+		return this.storeNode(node_key, updated_node);
 	}
 
 	public fetchAccountId(
@@ -210,11 +200,8 @@ class MemoryAdapter implements Adapter {
 		return Promise.resolve();
 	}
 
-	private async fetchNodeUnsafe(
-		type_id: string,
-		node_id: string
-	): Promise<Node> {
-		const node = await this.fetchNode(type_id, node_id);
+	private async fetchNodeUnsafe(node_key: string): Promise<Node> {
+		const node = await this.fetchNode(node_key);
 
 		if (node === undefined) {
 			throw new NotFoundError();
@@ -235,14 +222,6 @@ class MemoryAdapter implements Adapter {
 		}
 
 		return field as PrimitiveValue[];
-	}
-
-	private createCacheKey(type_id: string, node_id: string): string {
-		return `${type_id}/${node_id}`;
-	}
-
-	private createCacheKeyForNode(node: Node): string {
-		return this.createCacheKey(node.type_id, node.id);
 	}
 
 	private getCache(): NodeCache {

@@ -102,10 +102,10 @@ databases that are not supported by the included adapters.
 
 An adapter must implement the following methods:
 
-- `retrieveNode(type_id, node_id)`
-- `storeNode(node)`
-- `setField(node, field_key, field_value)`
-- `addItemToSet(node, set_key, item)`
-- `remoteItemFromSet(node, set_key, item)`
-- `addItemToList(node, list_key, item, previous_item)`
-- `removeItemFromList(node, list_key, item, previous_item)`
+- `retrieveNode(node_key)`
+- `storeNode(node_key, node)`
+- `setField(node_key, field_key, field_value)`
+- `addItemToSet(node_key, set_key, item)`
+- `remoteItemFromSet(node_key, set_key, item)`
+- `addItemToList(node_key, list_key, item, previous_item)`
+- `removeItemFromList(node_key, list_key, item, previous_item)`

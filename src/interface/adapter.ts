@@ -2,42 +2,37 @@ import Node from 'type/node';
 import FieldValue, { PrimitiveValue } from 'type/field-value';
 
 interface Adapter {
-	fetchNode(type_id: string, node_id: string): Promise<Node | undefined>;
+	fetchNode(node_key: string): Promise<Node | undefined>;
 
-	storeNode(node: Node): Promise<Node>;
+	storeNode(node_key: string, node: Node): Promise<Node>;
 
 	setField(
-		type_id: string,
-		node_id: string,
+		node_key: string,
 		field_key: string,
 		field_value: FieldValue
 	): Promise<Node>;
 
 	addValueToSet(
-		type_id: string,
-		node_id: string,
+		node_key: string,
 		field_key: string,
 		value: PrimitiveValue
 	): Promise<Node>;
 
 	removeValueFromSet(
-		type_id: string,
-		node_id: string,
+		node_key: string,
 		field_key: string,
 		value: PrimitiveValue
 	): Promise<Node>;
 
 	addValueToList(
-		type_id: string,
-		node_id: string,
+		node_key: string,
 		field_key: string,
 		value: PrimitiveValue,
 		position?: number
 	): Promise<Node>;
 
 	removeValueFromList(
-		type_id: string,
-		node_id: string,
+		node_key: string,
 		field_key: string,
 		value: PrimitiveValue,
 		position?: number

@@ -36,7 +36,8 @@ class Repository {
 		}
 
 		const adapter = this.getAdapter();
-		const node = await adapter.fetchNode(type_id, node_id);
+		const node_key = `${type_id}/${node_id}`;
+		const node = await adapter.fetchNode(node_key);
 
 		if (node === undefined) {
 			return undefined;
@@ -46,10 +47,11 @@ class Repository {
 	}
 
 	public async storeNode(node: Node): Promise<Node> {
+		const node_key = `${node.type_id}/${node.id}`;
 		const adapter = this.getAdapter();
 		const standardized_node = this.standardizeNode(node);
 
-		await adapter.storeNode(standardized_node);
+		await adapter.storeNode(node_key, standardized_node);
 
 		return node;
 	}
@@ -60,12 +62,12 @@ class Repository {
 		field_key: string,
 		field_value: FieldValue
 	): Promise<Node> {
+		const node_key = `${type_id}/${node_id}`;
 		const standardized_value = this.standardizeValue(field_value);
 		const adapter = this.getAdapter();
 
 		const node = await adapter.setField(
-			type_id,
-			node_id,
+			node_key,
 			field_key,
 			standardized_value
 		);
@@ -79,12 +81,12 @@ class Repository {
 		field_key: string,
 		value: PrimitiveValue
 	): Promise<Node> {
+		const node_key = `${type_id}/${node_id}`;
 		const standardized_value = this.standardizePrimitiveValue(value);
 		const adapter = this.getAdapter();
 
 		const node = await adapter.addValueToSet(
-			type_id,
-			node_id,
+			node_key,
 			field_key,
 			standardized_value
 		);
@@ -98,12 +100,12 @@ class Repository {
 		field_key: string,
 		value: PrimitiveValue
 	): Promise<Node> {
+		const node_key = `${type_id}/${node_id}`;
 		const standardized_value = this.standardizePrimitiveValue(value);
 		const adapter = this.getAdapter();
 
 		const node = await adapter.removeValueFromSet(
-			type_id,
-			node_id,
+			node_key,
 			field_key,
 			standardized_value
 		);
@@ -118,12 +120,12 @@ class Repository {
 		value: PrimitiveValue,
 		position?: number
 	): Promise<Node> {
+		const node_key = `${type_id}/${node_id}`;
 		const standardized_value = this.standardizePrimitiveValue(value);
 		const adapter = this.getAdapter();
 
 		const node = await adapter.addValueToList(
-			type_id,
-			node_id,
+			node_key,
 			field_key,
 			standardized_value,
 			position
@@ -139,12 +141,12 @@ class Repository {
 		value: PrimitiveValue,
 		position?: number
 	): Promise<Node> {
+		const node_key = `${type_id}/${node_id}`;
 		const standardized_value = this.standardizePrimitiveValue(value);
 		const adapter = this.getAdapter();
 
 		const node = await adapter.removeValueFromList(
-			type_id,
-			node_id,
+			node_key,
 			field_key,
 			standardized_value,
 			position

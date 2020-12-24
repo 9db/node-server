@@ -1,6 +1,11 @@
+import Node from 'type/node';
 import NodeFactory from 'factory/node';
 import MemoryAdapter from 'adapter/memory';
 import NotFoundError from 'http/error/not-found';
+
+function getNodeKey(node: Node): string {
+	return `${node.type_id}/${node.id}`;
+}
 
 describe('MemoryAdapter', () => {
 	describe('fetchNode()', () => {
@@ -8,13 +13,11 @@ describe('MemoryAdapter', () => {
 			it('returns the expected node', async () => {
 				const adapter = new MemoryAdapter();
 				const expected_node = NodeFactory.create();
+				const node_key = getNodeKey(expected_node);
 
-				await adapter.storeNode(expected_node);
+				await adapter.storeNode(node_key, expected_node);
 
-				const actual_node = await adapter.fetchNode(
-					expected_node.type_id,
-					expected_node.id
-				);
+				const actual_node = await adapter.fetchNode(node_key);
 
 				expect(actual_node).toStrictEqual(expected_node);
 			});
@@ -23,7 +26,7 @@ describe('MemoryAdapter', () => {
 		describe('when node does not exist in cache', () => {
 			it('returns undefined', async () => {
 				const adapter = new MemoryAdapter();
-				const node = await adapter.fetchNode('nonexistent', 'node');
+				const node = await adapter.fetchNode('nonexistent/node');
 
 				expect(node).toStrictEqual(undefined);
 			});
@@ -34,13 +37,11 @@ describe('MemoryAdapter', () => {
 		it('stores the node in the cache', async () => {
 			const adapter = new MemoryAdapter();
 			const expected_node = NodeFactory.create();
+			const node_key = getNodeKey(expected_node);
 
-			await adapter.storeNode(expected_node);
+			await adapter.storeNode(node_key, expected_node);
 
-			const actual_node = await adapter.fetchNode(
-				expected_node.type_id,
-				expected_node.id
-			);
+			const actual_node = await adapter.fetchNode(node_key);
 
 			expect(actual_node).toStrictEqual(expected_node);
 		});
@@ -51,12 +52,12 @@ describe('MemoryAdapter', () => {
 			it('updates the persisted node to include the new field', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create();
+				const node_key = getNodeKey(node);
 
-				await adapter.storeNode(node);
+				await adapter.storeNode(node_key, node);
+				await adapter.setField(node_key, 'wizard', 'gandalf');
 
-				await adapter.setField(node.type_id, node.id, 'wizard', 'gandalf');
-
-				const persisted_node = await adapter.fetchNode(node.type_id, node.id);
+				const persisted_node = await adapter.fetchNode(node_key);
 
 				expect(persisted_node).toStrictEqual({
 					...node,
@@ -67,15 +68,11 @@ describe('MemoryAdapter', () => {
 			it('returns the new node', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create();
+				const node_key = getNodeKey(node);
 
-				await adapter.storeNode(node);
+				await adapter.storeNode(node_key, node);
 
-				const result = await adapter.setField(
-					node.type_id,
-					node.id,
-					'wizard',
-					'gandalf'
-				);
+				const result = await adapter.setField(node_key, 'wizard', 'gandalf');
 
 				expect(result).toStrictEqual({
 					...node,
@@ -87,10 +84,10 @@ describe('MemoryAdapter', () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create();
 				const original_node = { ...node };
+				const node_key = getNodeKey(node);
 
-				await adapter.storeNode(node);
-
-				await adapter.setField(node.type_id, node.id, 'wizard', 'gandalf');
+				await adapter.storeNode(node_key, node);
+				await adapter.setField(node_key, 'wizard', 'gandalf');
 
 				expect(node).toStrictEqual(original_node);
 			});
@@ -100,9 +97,10 @@ describe('MemoryAdapter', () => {
 			it('returns a NotFoundError', async () => {
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create();
+				const node_key = getNodeKey(node);
 
 				try {
-					await adapter.setField(node.type_id, node.id, 'wizard', 'gandalf');
+					await adapter.setField(node_key, 'wizard', 'gandalf');
 				} catch (error) {
 					expect(error).toBeInstanceOf(NotFoundError);
 				}
@@ -117,14 +115,10 @@ describe('MemoryAdapter', () => {
 
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create();
+				const node_key = getNodeKey(node);
 
 				try {
-					await adapter.addValueToSet(
-						node.type_id,
-						node.id,
-						'wizards',
-						'gandalf'
-					);
+					await adapter.addValueToSet(node_key, 'wizards', 'gandalf');
 				} catch (error) {
 					expect(error).toBeInstanceOf(NotFoundError);
 				}
@@ -137,16 +131,12 @@ describe('MemoryAdapter', () => {
 
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create();
+				const node_key = getNodeKey(node);
 
-				await adapter.storeNode(node);
+				await adapter.storeNode(node_key, node);
 
 				try {
-					await adapter.addValueToSet(
-						node.type_id,
-						node.id,
-						'wizards',
-						'gandalf'
-					);
+					await adapter.addValueToSet(node_key, 'wizards', 'gandalf');
 				} catch (error) {
 					expect(error.message).toStrictEqual(
 						'Unable to find field for key: wizards'
@@ -164,15 +154,12 @@ describe('MemoryAdapter', () => {
 					wizards: 'apply inside'
 				});
 
-				await adapter.storeNode(node);
+				const node_key = getNodeKey(node);
+
+				await adapter.storeNode(node_key, node);
 
 				try {
-					await adapter.addValueToSet(
-						node.type_id,
-						node.id,
-						'wizards',
-						'gandalf'
-					);
+					await adapter.addValueToSet(node_key, 'wizards', 'gandalf');
 				} catch (error) {
 					expect(error.message).toStrictEqual(
 						'Field key wizards did not point to an array'
@@ -188,15 +175,12 @@ describe('MemoryAdapter', () => {
 					wizards: ['gandalf']
 				});
 
-				await adapter.storeNode(node);
-				await adapter.addValueToSet(
-					node.type_id,
-					node.id,
-					'wizards',
-					'gandalf'
-				);
+				const node_key = getNodeKey(node);
 
-				const persisted_node = await adapter.fetchNode(node.type_id, node.id);
+				await adapter.storeNode(node_key, node);
+				await adapter.addValueToSet(node_key, 'wizards', 'gandalf');
+
+				const persisted_node = await adapter.fetchNode(node_key);
 
 				expect(persisted_node).toStrictEqual(node);
 			});
@@ -207,11 +191,12 @@ describe('MemoryAdapter', () => {
 					wizards: ['gandalf']
 				});
 
-				await adapter.storeNode(node);
+				const node_key = getNodeKey(node);
+
+				await adapter.storeNode(node_key, node);
 
 				const result = await adapter.addValueToSet(
-					node.type_id,
-					node.id,
+					node_key,
 					'wizards',
 					'gandalf'
 				);
@@ -227,15 +212,12 @@ describe('MemoryAdapter', () => {
 					wizards: ['saruman']
 				});
 
-				await adapter.storeNode(node);
-				await adapter.addValueToSet(
-					node.type_id,
-					node.id,
-					'wizards',
-					'gandalf'
-				);
+				const node_key = getNodeKey(node);
 
-				const persisted_node = await adapter.fetchNode(node.type_id, node.id);
+				await adapter.storeNode(node_key, node);
+				await adapter.addValueToSet(node_key, 'wizards', 'gandalf');
+
+				const persisted_node = await adapter.fetchNode(node_key);
 
 				expect(persisted_node).toStrictEqual({
 					...node,
@@ -249,11 +231,12 @@ describe('MemoryAdapter', () => {
 					wizards: ['saruman']
 				});
 
-				await adapter.storeNode(node);
+				const node_key = getNodeKey(node);
+
+				await adapter.storeNode(node_key, node);
 
 				const result = await adapter.addValueToSet(
-					node.type_id,
-					node.id,
+					node_key,
 					'wizards',
 					'gandalf'
 				);
@@ -270,15 +253,11 @@ describe('MemoryAdapter', () => {
 					wizards: ['saruman']
 				});
 
+				const node_key = getNodeKey(node);
 				const original_node = { ...node };
 
-				await adapter.storeNode(node);
-				await adapter.addValueToSet(
-					node.type_id,
-					node.id,
-					'wizards',
-					'gandalf'
-				);
+				await adapter.storeNode(node_key, node);
+				await adapter.addValueToSet(node_key, 'wizards', 'gandalf');
 
 				expect(node).toStrictEqual(original_node);
 			});
@@ -292,14 +271,10 @@ describe('MemoryAdapter', () => {
 
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create();
+				const node_key = getNodeKey(node);
 
 				try {
-					await adapter.removeValueFromSet(
-						node.type_id,
-						node.id,
-						'wizards',
-						'gandalf'
-					);
+					await adapter.removeValueFromSet(node_key, 'wizards', 'gandalf');
 				} catch (error) {
 					expect(error).toBeInstanceOf(NotFoundError);
 				}
@@ -312,16 +287,12 @@ describe('MemoryAdapter', () => {
 
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create();
+				const node_key = getNodeKey(node);
 
-				await adapter.storeNode(node);
+				await adapter.storeNode(node_key, node);
 
 				try {
-					await adapter.removeValueFromSet(
-						node.type_id,
-						node.id,
-						'wizards',
-						'gandalf'
-					);
+					await adapter.removeValueFromSet(node_key, 'wizards', 'gandalf');
 				} catch (error) {
 					expect(error.message).toStrictEqual(
 						'Unable to find field for key: wizards'
@@ -339,15 +310,12 @@ describe('MemoryAdapter', () => {
 					wizards: 'apply inside'
 				});
 
-				await adapter.storeNode(node);
+				const node_key = getNodeKey(node);
+
+				await adapter.storeNode(node_key, node);
 
 				try {
-					await adapter.removeValueFromSet(
-						node.type_id,
-						node.id,
-						'wizards',
-						'gandalf'
-					);
+					await adapter.removeValueFromSet(node_key, 'wizards', 'gandalf');
 				} catch (error) {
 					expect(error.message).toStrictEqual(
 						'Field key wizards did not point to an array'
@@ -363,15 +331,12 @@ describe('MemoryAdapter', () => {
 					wizards: ['saruman']
 				});
 
-				await adapter.storeNode(node);
-				await adapter.removeValueFromSet(
-					node.type_id,
-					node.id,
-					'wizards',
-					'gandalf'
-				);
+				const node_key = getNodeKey(node);
 
-				const persisted_node = await adapter.fetchNode(node.type_id, node.id);
+				await adapter.storeNode(node_key, node);
+				await adapter.removeValueFromSet(node_key, 'wizards', 'gandalf');
+
+				const persisted_node = await adapter.fetchNode(node_key);
 
 				expect(persisted_node).toStrictEqual(node);
 			});
@@ -382,11 +347,12 @@ describe('MemoryAdapter', () => {
 					wizards: ['saruman']
 				});
 
-				await adapter.storeNode(node);
+				const node_key = getNodeKey(node);
+
+				await adapter.storeNode(node_key, node);
 
 				const result = await adapter.removeValueFromSet(
-					node.type_id,
-					node.id,
+					node_key,
 					'wizards',
 					'gandalf'
 				);
@@ -402,15 +368,12 @@ describe('MemoryAdapter', () => {
 					wizards: ['saruman', 'gandalf']
 				});
 
-				await adapter.storeNode(node);
-				await adapter.removeValueFromSet(
-					node.type_id,
-					node.id,
-					'wizards',
-					'gandalf'
-				);
+				const node_key = getNodeKey(node);
 
-				const persisted_node = await adapter.fetchNode(node.type_id, node.id);
+				await adapter.storeNode(node_key, node);
+				await adapter.removeValueFromSet(node_key, 'wizards', 'gandalf');
+
+				const persisted_node = await adapter.fetchNode(node_key);
 
 				expect(persisted_node).toStrictEqual({
 					...node,
@@ -424,11 +387,12 @@ describe('MemoryAdapter', () => {
 					wizards: ['saruman', 'gandalf']
 				});
 
-				await adapter.storeNode(node);
+				const node_key = getNodeKey(node);
+
+				await adapter.storeNode(node_key, node);
 
 				const result = await adapter.removeValueFromSet(
-					node.type_id,
-					node.id,
+					node_key,
 					'wizards',
 					'gandalf'
 				);
@@ -445,15 +409,11 @@ describe('MemoryAdapter', () => {
 					wizards: ['saruman', 'gandalf']
 				});
 
+				const node_key = getNodeKey(node);
 				const original_node = { ...node };
 
-				await adapter.storeNode(node);
-				await adapter.removeValueFromSet(
-					node.type_id,
-					node.id,
-					'wizards',
-					'gandalf'
-				);
+				await adapter.storeNode(node_key, node);
+				await adapter.removeValueFromSet(node_key, 'wizards', 'gandalf');
 
 				expect(node).toStrictEqual(original_node);
 			});
@@ -467,14 +427,10 @@ describe('MemoryAdapter', () => {
 
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create();
+				const node_key = getNodeKey(node);
 
 				try {
-					await adapter.addValueToList(
-						node.type_id,
-						node.id,
-						'wizards',
-						'gandalf'
-					);
+					await adapter.addValueToList(node_key, 'wizards', 'gandalf');
 				} catch (error) {
 					expect(error).toBeInstanceOf(NotFoundError);
 				}
@@ -487,16 +443,12 @@ describe('MemoryAdapter', () => {
 
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create();
+				const node_key = getNodeKey(node);
 
-				await adapter.storeNode(node);
+				await adapter.storeNode(node_key, node);
 
 				try {
-					await adapter.addValueToList(
-						node.type_id,
-						node.id,
-						'wizards',
-						'gandalf'
-					);
+					await adapter.addValueToList(node_key, 'wizards', 'gandalf');
 				} catch (error) {
 					expect(error.message).toStrictEqual(
 						'Unable to find field for key: wizards'
@@ -514,15 +466,12 @@ describe('MemoryAdapter', () => {
 					wizards: 'apply inside'
 				});
 
-				await adapter.storeNode(node);
+				const node_key = getNodeKey(node);
+
+				await adapter.storeNode(node_key, node);
 
 				try {
-					await adapter.addValueToList(
-						node.type_id,
-						node.id,
-						'wizards',
-						'gandalf'
-					);
+					await adapter.addValueToList(node_key, 'wizards', 'gandalf');
 				} catch (error) {
 					expect(error.message).toStrictEqual(
 						'Field key wizards did not point to an array'
@@ -538,15 +487,12 @@ describe('MemoryAdapter', () => {
 					wizards: ['saruman']
 				});
 
-				await adapter.storeNode(node);
-				await adapter.addValueToList(
-					node.type_id,
-					node.id,
-					'wizards',
-					'gandalf'
-				);
+				const node_key = getNodeKey(node);
 
-				const persisted_node = await adapter.fetchNode(node.type_id, node.id);
+				await adapter.storeNode(node_key, node);
+				await adapter.addValueToList(node_key, 'wizards', 'gandalf');
+
+				const persisted_node = await adapter.fetchNode(node_key);
 
 				expect(persisted_node).toStrictEqual({
 					...node,
@@ -560,11 +506,12 @@ describe('MemoryAdapter', () => {
 					wizards: ['saruman']
 				});
 
-				await adapter.storeNode(node);
+				const node_key = getNodeKey(node);
+
+				await adapter.storeNode(node_key, node);
 
 				const result = await adapter.addValueToList(
-					node.type_id,
-					node.id,
+					node_key,
 					'wizards',
 					'gandalf'
 				);
@@ -581,15 +528,11 @@ describe('MemoryAdapter', () => {
 					wizards: ['saruman']
 				});
 
+				const node_key = getNodeKey(node);
 				const original_node = { ...node };
 
-				await adapter.storeNode(node);
-				await adapter.addValueToList(
-					node.type_id,
-					node.id,
-					'wizards',
-					'gandalf'
-				);
+				await adapter.storeNode(node_key, node);
+				await adapter.addValueToList(node_key, 'wizards', 'gandalf');
 
 				expect(node).toStrictEqual(original_node);
 			});
@@ -601,11 +544,12 @@ describe('MemoryAdapter', () => {
 						wizards: ['saruman']
 					});
 
-					await adapter.storeNode(node);
+					const node_key = getNodeKey(node);
+
+					await adapter.storeNode(node_key, node);
 
 					const result = await adapter.addValueToList(
-						node.type_id,
-						node.id,
+						node_key,
 						'wizards',
 						'gandalf',
 						0
@@ -625,11 +569,12 @@ describe('MemoryAdapter', () => {
 						wizards: ['saruman', 'radagast', 'alatar']
 					});
 
-					await adapter.storeNode(node);
+					const node_key = getNodeKey(node);
+
+					await adapter.storeNode(node_key, node);
 
 					const result = await adapter.addValueToList(
-						node.type_id,
-						node.id,
+						node_key,
 						'wizards',
 						'gandalf',
 						2
@@ -649,11 +594,12 @@ describe('MemoryAdapter', () => {
 						wizards: ['saruman', 'radagast']
 					});
 
-					await adapter.storeNode(node);
+					const node_key = getNodeKey(node);
+
+					await adapter.storeNode(node_key, node);
 
 					const result = await adapter.addValueToList(
-						node.type_id,
-						node.id,
+						node_key,
 						'wizards',
 						'gandalf',
 						5
@@ -675,14 +621,10 @@ describe('MemoryAdapter', () => {
 
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create();
+				const node_key = getNodeKey(node);
 
 				try {
-					await adapter.removeValueFromList(
-						node.type_id,
-						node.id,
-						'wizards',
-						'gandalf'
-					);
+					await adapter.removeValueFromList(node_key, 'wizards', 'gandalf');
 				} catch (error) {
 					expect(error).toBeInstanceOf(NotFoundError);
 				}
@@ -695,16 +637,12 @@ describe('MemoryAdapter', () => {
 
 				const adapter = new MemoryAdapter();
 				const node = NodeFactory.create();
+				const node_key = getNodeKey(node);
 
-				await adapter.storeNode(node);
+				await adapter.storeNode(node_key, node);
 
 				try {
-					await adapter.removeValueFromList(
-						node.type_id,
-						node.id,
-						'wizards',
-						'gandalf'
-					);
+					await adapter.removeValueFromList(node_key, 'wizards', 'gandalf');
 				} catch (error) {
 					expect(error.message).toStrictEqual(
 						'Unable to find field for key: wizards'
@@ -722,15 +660,12 @@ describe('MemoryAdapter', () => {
 					wizards: 'apply inside'
 				});
 
-				await adapter.storeNode(node);
+				const node_key = getNodeKey(node);
+
+				await adapter.storeNode(node_key, node);
 
 				try {
-					await adapter.removeValueFromList(
-						node.type_id,
-						node.id,
-						'wizards',
-						'gandalf'
-					);
+					await adapter.removeValueFromList(node_key, 'wizards', 'gandalf');
 				} catch (error) {
 					expect(error.message).toStrictEqual(
 						'Field key wizards did not point to an array'
@@ -746,15 +681,12 @@ describe('MemoryAdapter', () => {
 					wizards: ['gandalf', 'saruman']
 				});
 
-				await adapter.storeNode(node);
-				await adapter.removeValueFromList(
-					node.type_id,
-					node.id,
-					'wizards',
-					'gandalf'
-				);
+				const node_key = getNodeKey(node);
 
-				const persisted_node = await adapter.fetchNode(node.type_id, node.id);
+				await adapter.storeNode(node_key, node);
+				await adapter.removeValueFromList(node_key, 'wizards', 'gandalf');
+
+				const persisted_node = await adapter.fetchNode(node_key);
 
 				expect(persisted_node).toStrictEqual({
 					...node,
@@ -768,11 +700,12 @@ describe('MemoryAdapter', () => {
 					wizards: ['gandalf', 'saruman']
 				});
 
-				await adapter.storeNode(node);
+				const node_key = getNodeKey(node);
+
+				await adapter.storeNode(node_key, node);
 
 				const result = await adapter.removeValueFromList(
-					node.type_id,
-					node.id,
+					node_key,
 					'wizards',
 					'gandalf'
 				);
@@ -789,15 +722,11 @@ describe('MemoryAdapter', () => {
 					wizards: ['gandalf', 'saruman']
 				});
 
+				const node_key = getNodeKey(node);
 				const original_node = { ...node };
 
-				await adapter.storeNode(node);
-				await adapter.removeValueFromList(
-					node.type_id,
-					node.id,
-					'wizards',
-					'gandalf'
-				);
+				await adapter.storeNode(node_key, node);
+				await adapter.removeValueFromList(node_key, 'wizards', 'gandalf');
 
 				expect(node).toStrictEqual(original_node);
 			});
@@ -809,11 +738,12 @@ describe('MemoryAdapter', () => {
 						wizards: []
 					});
 
-					await adapter.storeNode(node);
+					const node_key = getNodeKey(node);
+
+					await adapter.storeNode(node_key, node);
 
 					const result = await adapter.removeValueFromList(
-						node.type_id,
-						node.id,
+						node_key,
 						'wizards',
 						'gandalf'
 					);
@@ -827,15 +757,12 @@ describe('MemoryAdapter', () => {
 						wizards: []
 					});
 
-					await adapter.storeNode(node);
-					await adapter.removeValueFromList(
-						node.type_id,
-						node.id,
-						'wizards',
-						'gandalf'
-					);
+					const node_key = getNodeKey(node);
 
-					const persisted_node = await adapter.fetchNode(node.type_id, node.id);
+					await adapter.storeNode(node_key, node);
+					await adapter.removeValueFromList(node_key, 'wizards', 'gandalf');
+
+					const persisted_node = await adapter.fetchNode(node_key);
 
 					expect(persisted_node).toStrictEqual(node);
 				});
@@ -850,12 +777,13 @@ describe('MemoryAdapter', () => {
 						wizards: ['saruman', 'gandalf']
 					});
 
-					await adapter.storeNode(node);
+					const node_key = getNodeKey(node);
+
+					await adapter.storeNode(node_key, node);
 
 					try {
 						await adapter.removeValueFromList(
-							node.type_id,
-							node.id,
+							node_key,
 							'wizards',
 							'gandalf',
 							0
@@ -875,11 +803,12 @@ describe('MemoryAdapter', () => {
 						wizards: ['gandalf', 'saruman', 'gandalf', 'saruman']
 					});
 
-					await adapter.storeNode(node);
+					const node_key = getNodeKey(node);
+
+					await adapter.storeNode(node_key, node);
 
 					const result = await adapter.removeValueFromList(
-						node.type_id,
-						node.id,
+						node_key,
 						'wizards',
 						'gandalf'
 					);
