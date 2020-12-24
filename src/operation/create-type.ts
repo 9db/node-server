@@ -34,7 +34,7 @@ class CreateTypeOperation extends Operation<Input, Node> {
 		};
 
 		draft_fields.forEach((draft_field) => {
-			const {key, value} = draft_field;
+			const { key, value } = draft_field;
 
 			node = {
 				...node,

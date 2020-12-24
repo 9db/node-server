@@ -10,5 +10,4 @@ class UrlEncodedBodyParser extends BodyParser {
 	}
 }
 
-
 export default UrlEncodedBodyParser;

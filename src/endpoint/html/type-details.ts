@@ -2,7 +2,7 @@ import Node from 'type/node';
 import SystemId from 'system/enum/id';
 import HtmlEndpoint from 'endpoint/html';
 import FetchNodeOperation from 'operation/fetch-node';
-import NodeDetailsTemplate from 'template/page/instance-details';
+import TypeDetailsTemplate from 'template/page/type-details';
 
 class HtmlTypeDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 	protected async process(): Promise<string> {
@@ -32,7 +32,7 @@ class HtmlTypeDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 	private renderNode(node: Node): string {
 		const account = this.getAccount();
 
-		const template = new NodeDetailsTemplate({
+		const template = new TypeDetailsTemplate({
 			node,
 			type_nodes: [],
 			account

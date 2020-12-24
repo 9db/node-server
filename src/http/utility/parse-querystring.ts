@@ -8,7 +8,11 @@ function isNumericKey(key: string): boolean {
 	return isNaN(parsed_key) === false;
 }
 
-function mergeValue(result: Record<string, unknown>, key: string, value: any): void {
+function mergeValue(
+	result: Record<string, unknown>,
+	key: string,
+	value: any
+): void {
 	const brace_index = key.indexOf('[');
 
 	if (brace_index === -1) {
@@ -33,7 +37,7 @@ function mergeValue(result: Record<string, unknown>, key: string, value: any): v
 			current_key = '';
 		} else if (character === ']') {
 			if (previous_key === '') {
-				const array = target as unknown as any[];
+				const array = (target as unknown) as any[];
 				const index_key = Math.max(0, array.length - 1);
 
 				previous_key = index_key.toString();

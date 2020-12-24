@@ -63,7 +63,7 @@ class HtmlTypeFormEndpoint extends HtmlEndpoint<Input> {
 			];
 		}
 
-		const draft_fields = body.fields as DraftField[];
+		const draft_fields = body.fields;
 		const action = this.getQueryParameter('action');
 
 		if (action === undefined) {

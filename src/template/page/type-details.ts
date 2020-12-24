@@ -1,4 +1,5 @@
 import Node from 'type/node';
+import FieldTableTemplate from 'template/page/type-details/field-table';
 import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
 interface Input extends PageTemplateInput {
@@ -6,7 +7,7 @@ interface Input extends PageTemplateInput {
 	readonly type_nodes: Node[];
 }
 
-class InstanceDetailsTemplate extends PageTemplate<Input> {
+class TypeDetailsTemplate extends PageTemplate<Input> {
 	protected getBreadcrumbs(): Breadcrumb[] {
 		const type_id = this.getTypeId();
 		const type_url = this.getTypeUrl();
@@ -64,23 +65,29 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 	}
 
 	private getFieldTableHtml(): string {
-		/*
 		const node = this.getNode();
 		const type_nodes = this.getTypeNodes();
-		const serializer = new InstanceDetailsFieldTableSerializer(node, type_nodes);
 
-		return serializer.serialize();
-		*/
+		const input = {
+			node,
+			type_nodes
+		};
 
-		return 'field table';
+		const template = new FieldTableTemplate(input);
+
+		return template.render();
 	}
 
 	private getLinksHtml(): string {
 		const edit_link_html = this.getEditLinkHtml();
+		const list_link_html = this.getListLinkHtml();
+		const new_link_html = this.getNewLinkHtml();
 
 		return `
 			<ul>
 				${edit_link_html}
+				${list_link_html}
+				${new_link_html}
 			</ul>
 		`;
 	}
@@ -90,7 +97,29 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 
 		return `
 			<li>
-				<a href="${edit_url}">Edit this instance</a>
+				<a href="${edit_url}">Edit this type</a>
+			</li>
+		`;
+	}
+
+	private getListLinkHtml(): string {
+		const list_url = this.getListUrl();
+		const node_id = this.getNodeId();
+
+		return `
+			<li>
+				<a href="${list_url}">View list of ${node_id} instances</a>
+			</li>
+		`;
+	}
+
+	private getNewLinkHtml(): string {
+		const new_url = this.getNewUrl();
+		const node_id = this.getNodeId();
+
+		return `
+			<li>
+				<a href="${new_url}">Create new ${node_id} instance</a>
 			</li>
 		`;
 	}
@@ -99,6 +128,18 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 		const node_url = this.getNodeUrl();
 
 		return `${node_url}/edit`;
+	}
+
+	private getListUrl(): string {
+		const node_id = this.getNodeId();
+
+		return this.buildUrl(node_id, 'list');
+	}
+
+	private getNewUrl(): string {
+		const node_id = this.getNodeId();
+
+		return this.buildUrl(node_id, 'new');
 	}
 
 	private getNodeUrl(): string {
@@ -174,6 +215,12 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 
 		return input.node;
 	}
+
+	private getTypeNodes(): Node[] {
+		const input = this.getInput();
+
+		return input.type_nodes;
+	}
 }
 
-export default InstanceDetailsTemplate;
+export default TypeDetailsTemplate;

@@ -106,7 +106,7 @@ class TypeFormTemplate extends PageTemplate<Input> {
 	}
 
 	private serializeDraftField(draft_field: DraftField, index: number): string {
-		const {key, value} = draft_field;
+		const { key, value } = draft_field;
 		const display_index = index + 1;
 
 		return `
