@@ -38,13 +38,13 @@ class MemoryAdapter implements Adapter {
 	public async setField(
 		node_key: string,
 		field_key: string,
-		value: FieldValue
+		field_value: FieldValue
 	): Promise<Node> {
 		const node = await this.fetchNodeUnsafe(node_key);
 
 		const updated_node = {
 			...node,
-			[field_key]: value
+			[field_key]: field_value
 		};
 
 		return this.storeNode(node_key, updated_node);
