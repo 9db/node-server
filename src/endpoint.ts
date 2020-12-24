@@ -13,6 +13,7 @@ import ServerError from 'http/error/server-error';
 import UrlParameters from 'http/type/url-parameters';
 import JsonBodyParser from 'server/body-parser/json';
 import BadRequestError from 'http/error/bad-request';
+import parseQuerystring from 'http/utility/parse-querystring';
 import UrlEncodedBodyParser from 'server/body-parser/url-encoded';
 import getSuccessfulStatusCode from 'http/utility/get-successful-status-code';
 import LoadAccountForRequestOperation from 'operation/load-account-for-request';
@@ -24,6 +25,7 @@ abstract class Endpoint<Input, Output extends AllowedOutputs> {
 	private request: HTTP.IncomingMessage;
 	private response: HTTP.ServerResponse;
 	private url_parameters: UrlParameters;
+	private query_parameters: Record<string, unknown> | undefined;
 	private repository: Repository;
 	private status_code: StatusCode;
 	private response_headers: HeaderMap;
@@ -82,6 +84,12 @@ abstract class Endpoint<Input, Output extends AllowedOutputs> {
 		return value;
 	}
 
+	protected getQueryParameter(parameter: string): any {
+		const query_parameters = this.getQueryParameters();
+
+		return query_parameters[parameter];
+	}
+
 	protected setStatusCode(status_code: StatusCode): void {
 		this.status_code = status_code;
 	}
@@ -91,6 +99,10 @@ abstract class Endpoint<Input, Output extends AllowedOutputs> {
 	}
 
 	protected getRequestBody(): Input {
+		if (this.hasUnparsableMethod()) {
+			return {} as Input;
+		}
+
 		if (this.request_body === undefined) {
 			throw new Error('Tried to read request body, but it was not set');
 		}
@@ -233,6 +245,28 @@ abstract class Endpoint<Input, Output extends AllowedOutputs> {
 
 	private getUrlParameters(): UrlParameters {
 		return this.url_parameters;
+	}
+
+	private getQueryParameters(): Record<string, unknown> {
+		if (this.query_parameters === undefined) {
+			this.query_parameters = this.parseQueryParameters();
+		}
+
+		return this.query_parameters;
+	}
+
+	private parseQueryParameters(): Record<string, unknown> {
+		const url = this.getRequestUrl();
+		const query_index = url.indexOf('?');
+
+		if (query_index === -1) {
+			return {};
+		}
+
+		const suffix = url.slice(query_index + 1);
+		const result = parseQuerystring(suffix);
+
+		return result as Record<string, unknown>;
 	}
 
 	private getBodyParser(): BodyParser {

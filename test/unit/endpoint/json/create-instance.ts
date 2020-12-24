@@ -8,9 +8,9 @@ import StatusCode from 'http/enum/status-code';
 import ContentType from 'http/enum/content-type';
 import closeServer from 'http/utility/close-server';
 import MemoryAdapter from 'adapter/memory';
-import JsonCreateNodeEndpoint from 'endpoint/json/create-node';
+import JsonCreateInstanceEndpoint from 'endpoint/json/create-instance';
 
-describe('JsonCreateNodeEndpoint', () => {
+describe('JsonCreateInstanceEndpoint', () => {
 	const port = 4482;
 	const hostname = 'https://9db.org';
 	const current_timestamp = Date.now();
@@ -30,7 +30,7 @@ describe('JsonCreateNodeEndpoint', () => {
 		repository = new Repository(hostname, adapter);
 
 		server = HTTP.createServer((request, response) => {
-			const endpoint = new JsonCreateNodeEndpoint(
+			const endpoint = new JsonCreateInstanceEndpoint(
 				request,
 				response,
 				{

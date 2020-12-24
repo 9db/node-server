@@ -9,9 +9,9 @@ import closeServer from 'http/utility/close-server';
 import ChangeStatus from 'enum/change-status';
 import KeyGenerator from 'utility/key-generator';
 import MemoryAdapter from 'adapter/memory';
-import JsonUpdateNodeEndpoint from 'endpoint/json/update-node';
+import JsonUpdateInstanceEndpoint from 'endpoint/json/update-instance';
 
-describe('JsonUpdateNodeEndpoint', () => {
+describe('JsonUpdateInstanceEndpoint', () => {
 	const hostname = 'https://9db.org';
 	const port = 4428;
 	const current_timestamp = Date.now();
@@ -29,7 +29,7 @@ describe('JsonUpdateNodeEndpoint', () => {
 		repository = new Repository(hostname, adapter);
 
 		server = HTTP.createServer((request, response) => {
-			const endpoint = new JsonUpdateNodeEndpoint(
+			const endpoint = new JsonUpdateInstanceEndpoint(
 				request,
 				response,
 				{

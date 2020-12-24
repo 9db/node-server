@@ -1,32 +1,25 @@
 import Node from 'type/node';
 import JsonEndpoint from 'endpoint/json';
-import UpdateNodeOperation, { ChangeInput } from 'operation/update-node';
+import FetchInstanceOperation from 'operation/fetch-node';
 
-interface Input {
-	readonly changes: ChangeInput[];
-}
-
-class JsonUpdateNodeEndpoint extends JsonEndpoint<Input> {
+class JsonFetchInstanceEndpoint extends JsonEndpoint<Record<string, never>> {
 	protected async process(): Promise<Node> {
 		const id = this.getUrlParameter('id');
 		const type_id = this.getUrlParameter('type_id');
-		const body = this.getRequestBody();
-		const changes = body.changes;
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
 		const input = {
 			id,
 			type_id,
-			changes,
 			repository,
 			account
 		};
 
-		const operation = new UpdateNodeOperation(input);
+		const operation = new FetchInstanceOperation(input);
 
 		return operation.perform();
 	}
 }
 
-export default JsonUpdateNodeEndpoint;
+export default JsonFetchInstanceEndpoint;

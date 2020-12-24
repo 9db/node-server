@@ -80,6 +80,18 @@ describe('Route', () => {
 					expect(route.accepts(request)).toBe(true);
 				});
 			});
+
+			describe('when given a matching request with a supplemental querystring', () => {
+				const request = buildMockRequest(
+					'/foo?bar=123&baz[][wat]=bam',
+					HttpMethod.GET,
+					ContentType.TEXT
+				);
+
+				it('returns true', () => {
+					expect(route.accepts(request)).toBe(true);
+				});
+			});
 		});
 
 		describe('when using a complex parameterized path', () => {

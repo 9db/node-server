@@ -1,30 +1,32 @@
 import Node from 'type/node';
 import JsonEndpoint from 'endpoint/json';
-import CreateNodeOperation from 'operation/create-node';
+import UpdateInstanceOperation, { ChangeInput } from 'operation/update-node';
 
-class JsonCreateNodeEndpoint extends JsonEndpoint<Node> {
+interface Input {
+	readonly changes: ChangeInput[];
+}
+
+class JsonUpdateInstanceEndpoint extends JsonEndpoint<Input> {
 	protected async process(): Promise<Node> {
 		const id = this.getUrlParameter('id');
 		const type_id = this.getUrlParameter('type_id');
 		const body = this.getRequestBody();
-
-		const node = {
-			...body,
-			id,
-			type_id
-		};
-
+		const changes = body.changes;
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
-		const operation = new CreateNodeOperation({
-			node,
+		const input = {
+			id,
+			type_id,
+			changes,
 			repository,
 			account
-		});
+		};
+
+		const operation = new UpdateInstanceOperation(input);
 
 		return operation.perform();
 	}
 }
 
-export default JsonCreateNodeEndpoint;
+export default JsonUpdateInstanceEndpoint;

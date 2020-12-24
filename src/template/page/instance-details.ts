@@ -7,7 +7,7 @@ interface Input extends PageTemplateInput {
 	readonly type_nodes: Node[];
 }
 
-class NodeDetailsTemplate extends PageTemplate<Input> {
+class InstanceDetailsTemplate extends PageTemplate<Input> {
 	protected getBreadcrumbs(): Breadcrumb[] {
 		const type_id = this.getTypeId();
 		const type_url = this.getTypeUrl();
@@ -68,7 +68,7 @@ class NodeDetailsTemplate extends PageTemplate<Input> {
 		/*
 		const node = this.getNode();
 		const type_nodes = this.getTypeNodes();
-		const serializer = new NodeDetailsFieldTableSerializer(node, type_nodes);
+		const serializer = new InstanceDetailsFieldTableSerializer(node, type_nodes);
 
 		return serializer.serialize();
 		*/
@@ -242,4 +242,4 @@ class NodeDetailsTemplate extends PageTemplate<Input> {
 	}
 }
 
-export default NodeDetailsTemplate;
+export default InstanceDetailsTemplate;

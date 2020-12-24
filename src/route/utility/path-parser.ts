@@ -27,7 +27,9 @@ class PathParser {
 			return '([^\\/]+)';
 		});
 
-		const regex_string = '^/' + regex_parts.join('/') + '$';
+		const querystring = '(\\?[^\/]+)?';
+
+		const regex_string = '^/' + regex_parts.join('/') + querystring + '$';
 		const regex = new RegExp(regex_string);
 
 		return {

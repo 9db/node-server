@@ -1,9 +1,9 @@
 import Node from 'type/node';
 import HtmlEndpoint from 'endpoint/html';
 import FetchNodeOperation from 'operation/fetch-node';
-import NodeDetailsTemplate from 'template/page/node-details';
+import InstanceDetailsTemplate from 'template/page/instance-details';
 
-class HtmlNodeDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
+class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 	protected async process(): Promise<string> {
 		const node = await this.fetchNode();
 
@@ -31,7 +31,7 @@ class HtmlNodeDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 	private renderNode(node: Node): string {
 		const account = this.getAccount();
 
-		const template = new NodeDetailsTemplate({
+		const template = new InstanceDetailsTemplate({
 			node,
 			type_nodes: [],
 			account
@@ -41,4 +41,4 @@ class HtmlNodeDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 	}
 }
 
-export default HtmlNodeDetailsEndpoint;
+export default HtmlInstanceDetailsEndpoint;

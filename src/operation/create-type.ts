@@ -1,18 +1,14 @@
 import Node from 'type/node';
-import FieldValue from 'type/field-value';
+import SystemId from 'system/enum/id';
+import DraftField from 'type/draft-field';
 import Operation, { OperationInput } from 'operation';
 
-interface NodeInput {
-	readonly id: string;
-	readonly type_id: string;
-	readonly [key: string]: FieldValue;
-}
-
 interface Input extends OperationInput {
-	readonly node: NodeInput;
+	readonly id: string;
+	readonly fields: DraftField[];
 }
 
-class CreateNodeOperation extends Operation<Input, Node> {
+class CreateTypeOperation extends Operation<Input, Node> {
 	protected async performInternal(): Promise<Node> {
 		const node = await this.buildNode();
 		const repository = this.getRepository();
@@ -21,24 +17,44 @@ class CreateNodeOperation extends Operation<Input, Node> {
 	}
 
 	private async buildNode(): Promise<Node> {
-		const node_input = this.getNodeInput();
+		const id = this.getId();
+		const type_id = SystemId.GENERIC_TYPE;
+		const draft_fields = this.getDraftFields();
 		const creator = this.getAccountUrl();
 		const created_at = Date.now();
 		const updated_at = created_at;
 
-		return {
-			...node_input,
+		let node: Node = {
+			id,
+			type_id,
 			creator,
 			created_at,
 			updated_at,
 			changes: []
 		};
+
+		draft_fields.forEach((draft_field) => {
+			const {key, value} = draft_field;
+
+			node = {
+				...node,
+				[key]: value
+			};
+		});
+
+		return node;
 	}
 
-	private getNodeInput(): NodeInput {
+	private getId(): string {
 		const input = this.getInput();
 
-		return input.node;
+		return input.id;
+	}
+
+	private getDraftFields(): DraftField[] {
+		const input = this.getInput();
+
+		return input.fields;
 	}
 
 	private getAccountUrl(): string {
@@ -49,4 +65,4 @@ class CreateNodeOperation extends Operation<Input, Node> {
 	}
 }
 
-export default CreateNodeOperation;
+export default CreateTypeOperation;

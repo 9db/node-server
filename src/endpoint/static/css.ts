@@ -16,6 +16,31 @@ class StaticCssEndpoint extends StaticEndpoint {
 			hr {
 				clear: both;
 			}
+
+			fieldset {
+				border: none;
+				border-bottom: 1px solid #CCC;
+				margin-bottom: 16px;
+			}
+
+			table {
+				caption-side: bottom;
+			}
+
+			caption {
+				text-align: left;
+				margin-top: 8px;
+			}
+
+			th {
+				text-align: left;
+			}
+
+			label {
+				display: block;
+				font-weight: bold;
+				margin-bottom: 4px;
+			}
 		`);
 
 		return Promise.resolve(result);

@@ -1,11 +1,11 @@
 import HttpMethod from 'http/enum/method';
 import ContentType from 'http/enum/content-type';
 import buildMockRequest from 'test/utility/build-mock-request';
-import JsonFetchNodeRoute from 'route/json/fetch-node';
+import JsonFetchInstanceRoute from 'route/json/fetch-instance';
 
-describe('JsonFetchNodeRoute', () => {
+describe('JsonFetchInstanceRoute', () => {
 	describe('accepts()', () => {
-		const route = new JsonFetchNodeRoute();
+		const route = new JsonFetchInstanceRoute();
 
 		describe('when given a request whose URL does not match', () => {
 			const request = buildMockRequest(

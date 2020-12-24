@@ -1,8 +1,8 @@
 import Repository from 'repository';
 import MemoryAdapter from 'adapter/memory';
-import CreateNodeOperation from 'operation/create-node';
+import CreateInstanceOperation from 'operation/create-instance';
 
-describe('CreateNodeOperation', () => {
+describe('CreateInstanceOperation', () => {
 	const hostname = 'https://9db.org';
 	const current_timestamp = Date.now();
 
@@ -28,17 +28,23 @@ describe('CreateNodeOperation', () => {
 			const account = await repository.fetchAnonymousAccount();
 
 			const input = {
-				node: {
-					id: 'gandalf',
-					type_id: 'wizard',
-					color: 'grey',
-					weapon: 'glamdring'
-				},
+				id: 'gandalf',
+				type_id: 'wizard',
+				fields: [
+					{
+						key: 'color',
+						value: 'grey'
+					},
+					{
+						key: 'weapon',
+						value: 'glamdring'
+					}
+				],
 				repository,
 				account
 			};
 
-			const operation = new CreateNodeOperation(input);
+			const operation = new CreateInstanceOperation(input);
 			const result = await operation.perform();
 
 			expect(result).toStrictEqual({
@@ -57,17 +63,23 @@ describe('CreateNodeOperation', () => {
 			const account = await repository.fetchAnonymousAccount();
 
 			const input = {
-				node: {
-					id: 'gandalf',
-					type_id: 'wizard',
-					color: 'grey',
-					weapon: 'glamdring'
-				},
+				id: 'gandalf',
+				type_id: 'wizard',
+				fields: [
+					{
+						key: 'color',
+						value: 'grey'
+					},
+					{
+						key: 'weapon',
+						value: 'glamdring'
+					}
+				],
 				repository,
 				account
 			};
 
-			const operation = new CreateNodeOperation(input);
+			const operation = new CreateInstanceOperation(input);
 
 			await operation.perform();
 

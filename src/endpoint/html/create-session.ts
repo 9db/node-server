@@ -5,8 +5,8 @@ import buildCookie from 'http/utility/build-cookie';
 import HtmlEndpoint from 'endpoint/html';
 import TimeInterval from 'enum/time-interval';
 import KeyGenerator from 'utility/key-generator';
-import CreateNodeOperation from 'operation/create-node';
 import FetchAccountOperation from 'operation/fetch-account';
+import CreateInstanceOperation from 'operation/create-instance';
 
 interface Input {
 	readonly username: string;
@@ -48,19 +48,20 @@ class HtmlCreateSessionEndpoint extends HtmlEndpoint<Input> {
 		const system_account = await repository.fetchSystemAccount();
 		const account_url = repository.buildNodeUrl(account);
 
-		const node = {
+		const input = {
 			id,
 			type_id: SystemId.SESSION_TYPE,
-			account: account_url
-		};
-
-		const input = {
-			node,
+			fields: [
+				{
+					key: 'account',
+					value: account_url
+				}
+			],
 			repository,
 			account: system_account
 		};
 
-		const operation = new CreateNodeOperation(input);
+		const operation = new CreateInstanceOperation(input);
 
 		return operation.perform();
 	}

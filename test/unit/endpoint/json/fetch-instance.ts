@@ -8,9 +8,9 @@ import NodeFactory from 'factory/node';
 import ContentType from 'http/enum/content-type';
 import closeServer from 'http/utility/close-server';
 import MemoryAdapter from 'adapter/memory';
-import JsonFetchNodeEndpoint from 'endpoint/json/fetch-node';
+import JsonFetchInstanceEndpoint from 'endpoint/json/fetch-instance';
 
-describe('JsonFetchNodeEndpoint', () => {
+describe('JsonFetchInstanceEndpoint', () => {
 	describe('process()', () => {
 		const port = 4482;
 		const hostname = 'https://9db.org';
@@ -24,7 +24,7 @@ describe('JsonFetchNodeEndpoint', () => {
 			repository = new Repository(hostname, adapter);
 
 			server = HTTP.createServer((request, response) => {
-				const endpoint = new JsonFetchNodeEndpoint(
+				const endpoint = new JsonFetchInstanceEndpoint(
 					request,
 					response,
 					{
