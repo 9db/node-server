@@ -12,3 +12,4 @@
 - [ ] Switch to using full urls for types and namespaces
 - [ ] Make node key a composite
 - [ ] Replace `utf8` string literals
+- [ ] Allow passing messages to HTTP error constructors

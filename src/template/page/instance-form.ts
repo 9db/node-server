@@ -1,13 +1,12 @@
 import Node from 'type/node';
+import FieldInput from 'template/page/instance-form/type/field-input';
 import FieldTableTemplate from 'template/page/instance-form/field-table';
 import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
 interface Input extends PageTemplateInput {
 	readonly type_node: Node;
-	readonly field_type_nodes: Record<string, Node>;
-	readonly field_instance_lists: Record<string, Node[]>;
 	readonly draft_id: string;
-	readonly draft_field_values: Record<string, string>;
+	readonly fields: FieldInput[];
 }
 
 class InstanceFormTemplate extends PageTemplate<Input> {
@@ -61,16 +60,10 @@ class InstanceFormTemplate extends PageTemplate<Input> {
 	}
 
 	private getFieldTableHtml(): string {
-		const type_node = this.getTypeNode();
-		const draft_field_values = this.getDraftFieldValues();
-		const field_type_nodes = this.getFieldTypeNodes();
-		const field_instance_lists = this.getFieldInstanceLists();
+		const fields = this.getFields();
 
 		const input = {
-			type_node,
-			draft_field_values,
-			field_type_nodes,
-			field_instance_lists
+			fields
 		};
 
 		const template = new FieldTableTemplate(input);
@@ -90,22 +83,10 @@ class InstanceFormTemplate extends PageTemplate<Input> {
 		return input.draft_id;
 	}
 
-	private getDraftFieldValues(): Record<string, string> {
+	private getFields(): FieldInput[] {
 		const input = this.getInput();
 
-		return input.draft_field_values;
-	}
-
-	private getFieldTypeNodes(): Record<string, Node> {
-		const input = this.getInput();
-
-		return input.field_type_nodes;
-	}
-
-	private getFieldInstanceLists(): Record<string, Node[]> {
-		const input = this.getInput();
-
-		return input.field_instance_lists;
+		return input.fields;
 	}
 
 	private getTypeUrl(): string {

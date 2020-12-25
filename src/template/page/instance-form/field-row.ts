@@ -1,11 +1,9 @@
 import Node from 'type/node';
 import Template from 'template';
+import FieldInput from 'template/page/instance-form/type/field-input';
 
-interface Input {
-	readonly field_key: string;
-	readonly field_index: number;
-	readonly field_type_node: Node;
-	readonly field_instance_list: Node[] | undefined;
+interface Input extends FieldInput {
+	readonly index: number;
 }
 
 class FieldRowTemplate extends Template<Input> {
@@ -45,8 +43,8 @@ class FieldRowTemplate extends Template<Input> {
 
 	private getTypeHtml(): string {
 		const index = this.getIndex();
-		const type_url = this.getFieldTypeUrl();
-		const type_label = this.getFieldTypeLabel();
+		const type_url = this.getTypeUrl();
+		const type_label = this.getTypeLabel();
 
 		return `
 			<input name="fields[${index}][type_url]" type="hidden" value="${type_url}" />
@@ -55,7 +53,7 @@ class FieldRowTemplate extends Template<Input> {
 	}
 
 	private getInstanceListHtml(): string {
-		if (!this.hasFieldInstanceList()) {
+		if (!this.hasInstanceList()) {
 			return '<em>N/A</em>';
 		}
 
@@ -70,7 +68,7 @@ class FieldRowTemplate extends Template<Input> {
 	}
 
 	private getInstanceOptionsHtml(): string {
-		const field_instance_list = this.getFieldInstanceList();
+		const field_instance_list = this.getInstanceList();
 
 		const serialized_options: string[] = [
 			`
@@ -103,17 +101,17 @@ class FieldRowTemplate extends Template<Input> {
 	private getFieldKey(): string {
 		const input = this.getInput();
 
-		return input.field_key;
+		return input.key;
 	}
 
-	private getFieldTypeUrl(): string {
-		const type_node = this.getFieldTypeNode();
+	private getTypeUrl(): string {
+		const type_node = this.getTypeNode();
 
 		return `/${type_node.id}`;
 	}
 
-	private getFieldTypeLabel(): string {
-		const type_node = this.getFieldTypeNode();
+	private getTypeLabel(): string {
+		const type_node = this.getTypeNode();
 
 		return type_node.id;
 	}
@@ -121,29 +119,29 @@ class FieldRowTemplate extends Template<Input> {
 	private getIndex(): number {
 		const input = this.getInput();
 
-		return input.field_index;
+		return input.index;
 	}
 
-	private getFieldTypeNode(): Node {
+	private getTypeNode(): Node {
 		const input = this.getInput();
 
-		return input.field_type_node;
+		return input.type_node;
 	}
 
-	private hasFieldInstanceList(): boolean {
+	private hasInstanceList(): boolean {
 		const input = this.getInput();
 
-		return input.field_instance_list !== undefined;
+		return input.instance_list !== undefined;
 	}
 
-	private getFieldInstanceList(): Node[] {
+	private getInstanceList(): Node[] {
 		const input = this.getInput();
 
-		if (input.field_instance_list === undefined) {
+		if (input.instance_list === undefined) {
 			throw new Error('Tried to read instance list, but it was not set');
 		}
 
-		return input.field_instance_list;
+		return input.instance_list;
 	}
 }
 

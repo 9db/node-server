@@ -1,4 +1,5 @@
 import Node from 'type/node';
+import StringTypeGenerator from 'system/node-generator/type/string';
 import GenericTypeGenerator from 'system/node-generator/type/generic';
 import AccountTypeGenerator from 'system/node-generator/type/account';
 import SystemAccountGenerator from 'system/node-generator/account/system';
@@ -6,6 +7,7 @@ import { GeneratorConstructor } from 'system/node-generator';
 import AnonymousAccountGenerator from 'system/node-generator/account/anonymous';
 
 const GENERATORS: GeneratorConstructor[] = [
+	StringTypeGenerator,
 	GenericTypeGenerator,
 	AccountTypeGenerator,
 	SystemAccountGenerator,
