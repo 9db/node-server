@@ -13,6 +13,7 @@ import PlaintextVersionRoute from 'route/plaintext/version';
 import HtmlCreateSessionRoute from 'route/html/create-session';
 import JsonFetchInstanceRoute from 'route/json/fetch-instance';
 import PlaintextNotFoundRoute from 'route/plaintext/not-found';
+import HtmlCreateInstanceRoute from 'route/html/create-instance';
 import JsonCreateInstanceRoute from 'route/json/create-instance';
 import HtmlUpdateTypeFormRoute from 'route/html/update-type-form';
 import HtmlInstanceDetailsRoute from 'route/html/instance-details';
@@ -36,6 +37,7 @@ function buildRoutes(): Route[] {
 		new HtmlTypeDetailsRoute(),
 		new HtmlInstanceFormRoute(),
 		new HtmlCreateSessionRoute(),
+		new HtmlCreateInstanceRoute(),
 		new HtmlUpdateTypeFormRoute(),
 		new HtmlInstanceDetailsRoute(),
 

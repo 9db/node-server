@@ -106,7 +106,15 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 		return operation.perform();
 	}
 
-	private fetchInstanceListForTypeNode(type_node: Node): Promise<Node[]> {
+	private fetchInstanceListForTypeNode(type_node: Node): Promise<Node[] | undefined> {
+		// TODO: better system for this.
+		switch (type_node.id) {
+			case 'string':
+			case 'number':
+			case 'boolean':
+				return Promise.resolve(undefined);
+		}
+
 		return Promise.resolve([]);
 	}
 
