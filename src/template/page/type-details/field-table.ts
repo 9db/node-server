@@ -1,7 +1,7 @@
 import Node from 'type/node';
 import Template from 'template';
 import FieldValue from 'type/field-value';
-import SystemFieldKey from 'system/enum/field-key';
+import isSystemFieldKey from 'system/utility/is-system-field-key';
 
 interface Input {
 	readonly node: Node;
@@ -47,7 +47,7 @@ class FieldTableTemplate extends Template<Input> {
 		const serialized_fields: string[] = [];
 
 		field_keys.forEach((field_key) => {
-			if (this.isSystemFieldKey(field_key)) {
+			if (isSystemFieldKey(field_key)) {
 				return;
 			}
 
@@ -76,14 +76,8 @@ class FieldTableTemplate extends Template<Input> {
 		const field_keys = Object.keys(node);
 
 		return field_keys.some((field_key) => {
-			return !this.isSystemFieldKey(field_key);
+			return !isSystemFieldKey(field_key);
 		});
-	}
-
-	private isSystemFieldKey(field_key: string): boolean {
-		const field_keys = Object.values(SystemFieldKey) as string[];
-
-		return field_keys.includes(field_key);
 	}
 
 	private getNode(): Node {
