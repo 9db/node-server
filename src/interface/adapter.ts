@@ -14,40 +14,34 @@ interface Adapter {
 
 	addValueToSet(
 		node_key: string,
-		field_key: string,
 		value: PrimitiveValue
-	): Promise<Node>;
+	): Promise<void>;
 
 	removeValueFromSet(
 		node_key: string,
-		field_key: string,
 		value: PrimitiveValue
-	): Promise<Node>;
+	): Promise<void>;
 
 	fetchValuesFromSet(
 		node_key: string,
-		field_key: string,
 		offset: number,
 		limit: number
 	): Promise<PrimitiveValue[]>;
 
 	addValueToList(
 		node_key: string,
-		field_key: string,
 		value: PrimitiveValue,
 		position?: number
-	): Promise<Node>;
+	): Promise<void>;
 
 	removeValueFromList(
 		node_key: string,
-		field_key: string,
 		value: PrimitiveValue,
 		position?: number
-	): Promise<Node>;
+	): Promise<void>;
 
 	fetchValuesFromList(
 		node_key: string,
-		field_key: string,
 		offset: number,
 		limit: number
 	): Promise<PrimitiveValue[]>;

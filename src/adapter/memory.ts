@@ -7,28 +7,40 @@ interface NodeCache {
 	[key: string]: Node;
 }
 
+interface SetCache {
+	[key: string]: PrimitiveValue[];
+}
+
+interface ListCache {
+	[key: string]: PrimitiveValue[];
+}
+
 interface AccountIds {
 	[key: string]: string;
 }
 
 class MemoryAdapter implements Adapter {
-	private cache: NodeCache;
+	private node_cache: NodeCache;
+	private set_cache: SetCache;
+	private list_cache: ListCache;
 	private account_ids: AccountIds;
 
 	public constructor() {
-		this.cache = {};
+		this.node_cache = {};
+		this.set_cache = {};
+		this.list_cache = {};
 		this.account_ids = {};
 	}
 
 	public async fetchNode(node_key: string): Promise<Node | undefined> {
-		const cache = this.getCache();
+		const cache = this.getNodeCache();
 		const node = cache[node_key];
 
 		return Promise.resolve(node);
 	}
 
 	public storeNode(node_key: string, node: Node): Promise<Node> {
-		const cache = this.getCache();
+		const cache = this.getNodeCache();
 
 		cache[node_key] = node;
 
@@ -52,53 +64,38 @@ class MemoryAdapter implements Adapter {
 
 	public async addValueToSet(
 		node_key: string,
-		field_key: string,
 		value: PrimitiveValue
-	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(node_key);
-		const set_field = this.getArrayField(node, field_key);
+	): Promise<void> {
+		const set_values = await this.fetchSetValues(node_key);
 
-		if (set_field.includes(value)) {
-			return Promise.resolve(node);
+		if (set_values.includes(value)) {
+			return;
 		}
 
-		const updated_set = [...set_field, value];
+		const updated_values = [...set_values, value];
 
-		const updated_node = {
-			...node,
-			[field_key]: updated_set
-		};
-
-		return this.storeNode(node_key, updated_node);
+		await this.storeSetValues(node_key, updated_values);
 	}
 
 	public async removeValueFromSet(
 		node_key: string,
-		field_key: string,
 		value: PrimitiveValue
-	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(node_key);
-		const set_field = this.getArrayField(node, field_key);
+	): Promise<void> {
+		const set_values = await this.fetchSetValues(node_key);
 
-		if (!set_field.includes(value)) {
-			return Promise.resolve(node);
+		if (!set_values.includes(value)) {
+			return;
 		}
 
-		const updated_set = set_field.filter((existing_value) => {
+		const updated_values = set_values.filter((existing_value) => {
 			return existing_value !== value;
 		});
 
-		const updated_node = {
-			...node,
-			[field_key]: updated_set
-		};
-
-		return this.storeNode(node_key, updated_node);
+		await this.storeSetValues(node_key, updated_values);
 	}
 
 	public async fetchValuesFromSet(
 		_node_key: string,
-		_field_key: string,
 		_offset: number,
 		_limit: number
 	): Promise<PrimitiveValue[]> {
@@ -107,64 +104,55 @@ class MemoryAdapter implements Adapter {
 
 	public async addValueToList(
 		node_key: string,
-		field_key: string,
 		value: PrimitiveValue,
 		position?: number
-	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(node_key);
-		const list_field = this.getArrayField(node, field_key);
+	): Promise<void> {
+		const list_values = await this.fetchListValues(node_key);
 
 		if (position === undefined) {
-			position = list_field.length;
+			position = list_values.length;
 		}
 
-		const updated_list = [];
-		const max_index = Math.max(position + 1, list_field.length);
+		const updated_values = [];
+		const max_index = Math.max(position + 1, list_values.length);
 
 		let index = 0;
 
 		while (index < max_index) {
 			if (index === position) {
-				updated_list.push(value);
+				updated_values.push(value);
 			}
 
-			const current_value = list_field[index];
+			const current_value = list_values[index];
 
 			if (current_value !== undefined) {
-				updated_list.push(current_value);
+				updated_values.push(current_value);
 			} else if (index !== position) {
-				updated_list.push(null);
+				updated_values.push(null);
 			}
 
 			index++;
 		}
 
-		const updated_node = {
-			...node,
-			[field_key]: updated_list
-		};
-
-		return this.storeNode(node_key, updated_node);
+		await this.storeListValues(node_key, updated_values);
 	}
 
 	public async removeValueFromList(
 		node_key: string,
-		field_key: string,
 		value: PrimitiveValue,
 		position?: number
-	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(node_key);
-		const list_field = this.getArrayField(node, field_key);
+	): Promise<void> {
+		const list_values = await this.fetchListValues(node_key);
 
 		if (position === undefined) {
-			position = list_field.lastIndexOf(value);
+			position = list_values.lastIndexOf(value);
 		}
 
 		if (position === -1) {
-			return Promise.resolve(node);
+			return;
 		}
 
-		const target_value = list_field[position];
+		const target_value = list_values[position];
 
 		if (target_value !== value) {
 			throw new Error(
@@ -172,22 +160,16 @@ class MemoryAdapter implements Adapter {
 			);
 		}
 
-		const updated_list = [
-			...list_field.slice(0, position),
-			...list_field.slice(position + 1)
+		const updated_values = [
+			...list_values.slice(0, position),
+			...list_values.slice(position + 1)
 		];
 
-		const updated_node = {
-			...node,
-			[field_key]: updated_list
-		};
-
-		return this.storeNode(node_key, updated_node);
+		await this.storeListValues(node_key, updated_values);
 	}
 
 	public async fetchValuesFromList(
 		_node_key: string,
-		_field_key: string,
 		_offset: number,
 		_limit: number
 	): Promise<PrimitiveValue[]> {
@@ -228,22 +210,56 @@ class MemoryAdapter implements Adapter {
 		return node;
 	}
 
-	private getArrayField(node: Node, field_key: string): PrimitiveValue[] {
-		const field = node[field_key];
+	private fetchSetValues(node_key: string): Promise<PrimitiveValue[]> {
+		const set_cache = this.getSetCache();
 
-		if (field === undefined) {
-			throw new Error(`Unable to find field for key: ${field_key}`);
+		if (set_cache[node_key] === undefined) {
+			set_cache[node_key] = [];
 		}
 
-		if (!Array.isArray(field)) {
-			throw new Error(`Field key ${field_key} did not point to an array`);
-		}
+		const set_values = set_cache[node_key];
 
-		return field as PrimitiveValue[];
+		return Promise.resolve(set_values);
 	}
 
-	private getCache(): NodeCache {
-		return this.cache;
+	private storeSetValues(node_key: string, set_values: PrimitiveValue[]): Promise<void> {
+		const set_cache = this.getSetCache();
+
+		set_cache[node_key] = set_values;
+
+		return Promise.resolve();
+	}
+
+	private fetchListValues(node_key: string): Promise<PrimitiveValue[]> {
+		const list_cache = this.getListCache();
+
+		if (list_cache[node_key] === undefined) {
+			list_cache[node_key] = [];
+		}
+
+		const list_values = list_cache[node_key];
+
+		return Promise.resolve(list_values);
+	}
+
+	private storeListValues(node_key: string, list_values: PrimitiveValue[]): Promise<void> {
+		const list_cache = this.getListCache();
+
+		list_cache[node_key] = list_values;
+
+		return Promise.resolve();
+	}
+
+	private getNodeCache(): NodeCache {
+		return this.node_cache;
+	}
+
+	private getSetCache(): SetCache {
+		return this.set_cache;
+	}
+
+	private getListCache(): ListCache {
+		return this.list_cache;
 	}
 
 	private getAccountIds(): AccountIds {

@@ -74,53 +74,38 @@ class FilesystemAdapter implements Adapter {
 
 	public async addValueToSet(
 		node_key: string,
-		field_key: string,
 		value: PrimitiveValue
-	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(node_key);
-		const set_field = this.getArrayField(node, field_key);
+	): Promise<void> {
+		const set_values = await this.fetchSetValues(node_key);
 
-		if (set_field.includes(value)) {
-			return Promise.resolve(node);
+		if (set_values.includes(value)) {
+			return;
 		}
 
-		const updated_set = [...set_field, value];
+		const updated_set_values = [...set_values, value];
 
-		const updated_node = {
-			...node,
-			[field_key]: updated_set
-		};
-
-		return this.storeNode(node_key, updated_node);
+		this.storeSetValues(node_key, set_values);
 	}
 
 	public async removeValueFromSet(
 		node_key: string,
-		field_key: string,
 		value: PrimitiveValue
-	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(node_key);
-		const set_field = this.getArrayField(node, field_key);
+	): Promise<void> {
+		const set_values = await this.fetchSetValues(node_key);
 
-		if (!set_field.includes(value)) {
-			return Promise.resolve(node);
+		if (!set_values.includes(value)) {
+			return;
 		}
 
-		const updated_set = set_field.filter((existing_value) => {
+		const updated_values = set_values.filter((existing_value) => {
 			return existing_value !== value;
 		});
 
-		const updated_node = {
-			...node,
-			[field_key]: updated_set
-		};
-
-		return this.storeNode(node_key, updated_node);
+		this.storeSetValues(node_key, set_values);
 	}
 
 	public async fetchValuesFromSet(
 		_node_key: string,
-		_field_key: string,
 		_offset: number,
 		_limit: number
 	): Promise<PrimitiveValue[]> {
@@ -129,64 +114,55 @@ class FilesystemAdapter implements Adapter {
 
 	public async addValueToList(
 		node_key: string,
-		field_key: string,
 		value: PrimitiveValue,
 		position?: number
-	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(node_key);
-		const list_field = this.getArrayField(node, field_key);
+	): Promise<void> {
+		const list_values = await this.fetchListValues(node_key);
 
 		if (position === undefined) {
 			position = list_field.length;
 		}
 
-		const updated_list = [];
+		const updated_values = [];
 		const max_index = Math.max(position + 1, list_field.length);
 
 		let index = 0;
 
 		while (index < max_index) {
 			if (index === position) {
-				updated_list.push(value);
+				updated_values.push(value);
 			}
 
 			const current_value = list_field[index];
 
 			if (current_value !== undefined) {
-				updated_list.push(current_value);
+				updated_values.push(current_value);
 			} else if (index !== position) {
-				updated_list.push(null);
+				updated_values.push(null);
 			}
 
 			index++;
 		}
 
-		const updated_node = {
-			...node,
-			[field_key]: updated_list
-		};
-
-		return this.storeNode(node_key, updated_node);
+		this.storeListValues(node_key, updated_values);
 	}
 
 	public async removeValueFromList(
 		node_key: string,
-		field_key: string,
 		value: PrimitiveValue,
 		position?: number
 	): Promise<Node> {
-		const node = await this.fetchNodeUnsafe(node_key);
-		const list_field = this.getArrayField(node, field_key);
+		const list_values = await this.fetchListValues(node_key);
 
 		if (position === undefined) {
 			position = list_field.lastIndexOf(value);
 		}
 
 		if (position === -1) {
-			return Promise.resolve(node);
+			return;
 		}
 
-		const target_value = list_field[position];
+		const target_value = list_values[position];
 
 		if (target_value !== value) {
 			throw new Error(
@@ -194,22 +170,16 @@ class FilesystemAdapter implements Adapter {
 			);
 		}
 
-		const updated_list = [
+		const updated_values = [
 			...list_field.slice(0, position),
 			...list_field.slice(position + 1)
 		];
 
-		const updated_node = {
-			...node,
-			[field_key]: updated_list
-		};
-
-		return this.storeNode(node_key, updated_node);
+		this.storeListValues(node_key, updated_values);
 	}
 
 	public async fetchValuesFromList(
 		_node_key: string,
-		_field_key: string,
 		_offset: number,
 		_limit: number
 	): Promise<PrimitiveValue[]> {
@@ -257,18 +227,58 @@ class FilesystemAdapter implements Adapter {
 		return node;
 	}
 
-	private getArrayField(node: Node, field_key: string): PrimitiveValue[] {
-		const field = node[field_key];
+	private fetchSetValues(node_key: string): Promise<PrimitiveValue[]> {
+		const set_filepath = this.buildNodeFilepath(node_key);
+		const set_exists = await exists(set_filepath);
 
-		if (field === undefined) {
-			throw new Error(`Unable to find field for key: ${field_key}`);
+		if (set_exists === false) {
+			return Promise.resolve([]);
 		}
 
-		if (!Array.isArray(field)) {
-			throw new Error(`Field key ${field_key} did not point to an array`);
+		const set_string = await readFile(set_filepath, 'utf8');
+		const set_data = JSON.parse(set_string);
+
+		if (!Array.isArray(set_data)) {
+			throw new Error(`Invalid set data for key ${node_key}: ${set_string}`);
 		}
 
-		return field as PrimitiveValue[];
+		return set_data as PrimitiveValue[];
+	}
+
+	private storeSetValues(node_key: string, set_values: PrimitiveValue[]): Promise<void> {
+		await this.ensureTypeDirectoryExists(node_key);
+
+		const set_filepath = this.buildNodeFilepath(node_key);
+		const set_data = JSON.stringify(set_values, null, 2);
+
+		await writeFile(set_filepath, set_data, 'utf8');
+	}
+
+	private fetchListValues(node_key: string): Promise<PrimitiveValue[]> {
+		const list_filepath = this.buildNodeFilepath(node_key);
+		const list_exists = await exists(list_filepath);
+
+		if (list_exists === false) {
+			return Promise.resolve([]);
+		}
+
+		const list_string = await readFile(list_filepath, 'utf8');
+		const list_data = JSON.parse(list_string);
+
+		if (!Array.isArray(list_data)) {
+			throw new Error(`Invalid list data for key ${node_key}: ${list_string}`);
+		}
+
+		return list_data as PrimitiveValue[];
+	}
+
+	private storeListValues(node_key: string, list_values: PrimitiveValue[]): Promise<void> {
+		await this.ensureTypeDirectoryExists(node_key);
+
+		const list_filepath = this.buildNodeFilepath(node_key);
+		const list_data = JSON.stringify(list_values, null, 2);
+
+		await writeFile(list_filepath, list_data, 'utf8');
 	}
 
 	private ensureTypeDirectoryExists(node_key: string): Promise<void> {
