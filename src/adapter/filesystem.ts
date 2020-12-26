@@ -118,6 +118,15 @@ class FilesystemAdapter implements Adapter {
 		return this.storeNode(node_key, updated_node);
 	}
 
+	public async fetchValuesFromSet(
+		node_key: string,
+		field_key: string,
+		offset: number,
+		limit: number
+	): Promise<PrimitiveValue[]> {
+		return Promise.resolve([]);
+	}
+
 	public async addValueToList(
 		node_key: string,
 		field_key: string,
@@ -196,6 +205,15 @@ class FilesystemAdapter implements Adapter {
 		};
 
 		return this.storeNode(node_key, updated_node);
+	}
+
+	public async fetchValuesFromList(
+		node_key: string,
+		field_key: string,
+		offset: number,
+		limit: number
+	): Promise<PrimitiveValue[]> {
+		return Promise.resolve([]);
 	}
 
 	public async fetchAccountId(

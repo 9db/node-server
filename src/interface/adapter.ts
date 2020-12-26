@@ -24,6 +24,13 @@ interface Adapter {
 		value: PrimitiveValue
 	): Promise<Node>;
 
+	fetchValuesFromSet(
+		node_key: string,
+		field_key: string,
+		offset: number,
+		limit: number
+	): Promise<PrimitiveValue[]>;
+
 	addValueToList(
 		node_key: string,
 		field_key: string,
@@ -37,6 +44,13 @@ interface Adapter {
 		value: PrimitiveValue,
 		position?: number
 	): Promise<Node>;
+
+	fetchValuesFromList(
+		node_key: string,
+		field_key: string,
+		offset: number,
+		limit: number
+	): Promise<PrimitiveValue[]>;
 
 	fetchAccountId(
 		username: string,

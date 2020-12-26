@@ -113,6 +113,28 @@ class Repository {
 		return this.unstandardizeNode(node);
 	}
 
+	public async fetchValuesFromSet(
+		type_id: string,
+		node_id: string,
+		field_key: string,
+		offset: number,
+		limit: number
+	): Promise<PrimitiveValue[]> {
+		const node_key = `${type_id}/${node_id}`;
+		const adapter = this.getAdapter();
+
+		const values = await adapter.fetchValuesFromSet(
+			node_key,
+			field_key,
+			offset,
+			limit
+		);
+
+		return values.map((value) => {
+			return this.standardizePrimitiveValue(value);
+		});
+	}
+
 	public async addValueToList(
 		type_id: string,
 		node_id: string,
@@ -153,6 +175,28 @@ class Repository {
 		);
 
 		return this.unstandardizeNode(node);
+	}
+
+	public async fetchValuesFromList(
+		type_id: string,
+		node_id: string,
+		field_key: string,
+		offset: number,
+		limit: number
+	): Promise<PrimitiveValue[]> {
+		const node_key = `${type_id}/${node_id}`;
+		const adapter = this.getAdapter();
+
+		const values = await adapter.fetchValuesFromList(
+			node_key,
+			field_key,
+			offset,
+			limit
+		);
+
+		return values.map((value) => {
+			return this.standardizePrimitiveValue(value);
+		});
 	}
 
 	public buildNodeUrl(node: Node): string {

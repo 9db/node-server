@@ -1,7 +1,6 @@
 import Node from 'type/node';
 import Template from 'template';
-import FieldValue from 'type/field-value';
-import isSystemFieldKey from 'system/utility/is-system-field-key';
+import getFieldKeys from 'utility/get-field-keys';
 
 interface Input {
 	readonly node: Node;
@@ -10,7 +9,7 @@ interface Input {
 
 class FieldTableTemplate extends Template<Input> {
 	protected getHtml(): string {
-		if (!this.hasNonSystemFields()) {
+		if (!this.hasFields()) {
 			return this.getEmptyHtml();
 		}
 
@@ -42,19 +41,10 @@ class FieldTableTemplate extends Template<Input> {
 	}
 
 	private getRowsHtml(): string {
-		const node = this.getNode();
-		const field_keys = Object.keys(node);
-		const serialized_fields: string[] = [];
+		const field_keys = this.getFieldKeys();
 
-		field_keys.forEach((field_key) => {
-			if (isSystemFieldKey(field_key)) {
-				return;
-			}
-
-			const field_value = node[field_key];
-			const serialized_field = this.serializeField(field_key, field_value);
-
-			serialized_fields.push(serialized_field);
+		const serialized_fields = field_keys.map((field_key) => {
+			return this.serializeField(field_key);
 		});
 
 		const result = serialized_fields.join('\n');
@@ -62,7 +52,10 @@ class FieldTableTemplate extends Template<Input> {
 		return result;
 	}
 
-	private serializeField(field_key: string, field_value: FieldValue): string {
+	private serializeField(field_key: string): string {
+		const node = this.getNode();
+		const field_value = node[field_key];
+
 		return `
 			<tr>
 				<td>${field_key}</td>
@@ -71,13 +64,16 @@ class FieldTableTemplate extends Template<Input> {
 		`;
 	}
 
-	private hasNonSystemFields(): boolean {
-		const node = this.getNode();
-		const field_keys = Object.keys(node);
+	private hasFields(): boolean {
+		const field_keys = this.getFieldKeys();
 
-		return field_keys.some((field_key) => {
-			return !isSystemFieldKey(field_key);
-		});
+		return field_keys.length > 0;
+	}
+
+	private getFieldKeys(): string[] {
+		const node = this.getNode();
+
+		return getFieldKeys(node);
 	}
 
 	private getNode(): Node {

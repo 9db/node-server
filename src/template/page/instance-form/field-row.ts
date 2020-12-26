@@ -131,7 +131,11 @@ class FieldRowTemplate extends Template<Input> {
 	private hasInstanceList(): boolean {
 		const input = this.getInput();
 
-		return input.instance_list !== undefined;
+		if (input.instance_list === undefined) {
+			return false;
+		}
+
+		return input.instance_list.length > 0;
 	}
 
 	private getInstanceList(): Node[] {

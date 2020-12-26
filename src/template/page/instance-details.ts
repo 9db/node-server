@@ -1,9 +1,11 @@
 import Node from 'type/node';
+import FieldInput from 'template/page/instance-details/type/field-input';
+import FieldTableTemplate from 'template/page/instance-details/field-table';
 import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
 interface Input extends PageTemplateInput {
 	readonly node: Node;
-	readonly type_nodes: Node[];
+	readonly fields: FieldInput[];
 }
 
 class InstanceDetailsTemplate extends PageTemplate<Input> {
@@ -64,15 +66,15 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 	}
 
 	private getFieldTableHtml(): string {
-		/*
-		const node = this.getNode();
-		const type_nodes = this.getTypeNodes();
-		const serializer = new InstanceDetailsFieldTableSerializer(node, type_nodes);
+		const fields = this.getFields();
 
-		return serializer.serialize();
-		*/
+		const input = {
+			fields
+		};
 
-		return 'field table';
+		const template = new FieldTableTemplate(input);
+
+		return template.render();
 	}
 
 	private getLinksHtml(): string {
@@ -161,6 +163,12 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 		const node = this.getNode();
 
 		return node.updated_at;
+	}
+
+	private getFields(): FieldInput[] {
+		const input = this.getInput();
+
+		return input.fields;
 	}
 
 	private getNodeId(): string {
