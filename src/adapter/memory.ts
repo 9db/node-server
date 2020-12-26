@@ -97,10 +97,10 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public async fetchValuesFromSet(
-		node_key: string,
-		field_key: string,
-		offset: number,
-		limit: number
+		_node_key: string,
+		_field_key: string,
+		_offset: number,
+		_limit: number
 	): Promise<PrimitiveValue[]> {
 		return Promise.resolve([]);
 	}
@@ -186,10 +186,10 @@ class MemoryAdapter implements Adapter {
 	}
 
 	public async fetchValuesFromList(
-		node_key: string,
-		field_key: string,
-		offset: number,
-		limit: number
+		_node_key: string,
+		_field_key: string,
+		_offset: number,
+		_limit: number
 	): Promise<PrimitiveValue[]> {
 		return Promise.resolve([]);
 	}

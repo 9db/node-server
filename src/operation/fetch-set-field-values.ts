@@ -1,6 +1,6 @@
 import Node from 'type/node';
 import { PrimitiveValue } from 'type/field-value';
-import Operation, {OperationInput} from 'operation';
+import Operation, { OperationInput } from 'operation';
 
 const DEFAULT_OFFSET = 0;
 const DEFAULT_LIMIT = 50;

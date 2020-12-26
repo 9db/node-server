@@ -1,12 +1,12 @@
 import OS from 'os';
 import FS from 'fs';
 import Util from 'util';
-import {readFile, writeFile, mkdir} from 'fs/promises';
+import { readFile, writeFile, mkdir } from 'fs/promises';
 
 import Node from 'type/node';
 import Adapter from 'interface/adapter';
 import NotFoundError from 'http/error/not-found';
-import FieldValue, {PrimitiveValue} from 'type/field-value';
+import FieldValue, { PrimitiveValue } from 'type/field-value';
 
 const exists = Util.promisify(FS.exists);
 
@@ -119,10 +119,10 @@ class FilesystemAdapter implements Adapter {
 	}
 
 	public async fetchValuesFromSet(
-		node_key: string,
-		field_key: string,
-		offset: number,
-		limit: number
+		_node_key: string,
+		_field_key: string,
+		_offset: number,
+		_limit: number
 	): Promise<PrimitiveValue[]> {
 		return Promise.resolve([]);
 	}
@@ -208,10 +208,10 @@ class FilesystemAdapter implements Adapter {
 	}
 
 	public async fetchValuesFromList(
-		node_key: string,
-		field_key: string,
-		offset: number,
-		limit: number
+		_node_key: string,
+		_field_key: string,
+		_offset: number,
+		_limit: number
 	): Promise<PrimitiveValue[]> {
 		return Promise.resolve([]);
 	}
@@ -273,12 +273,14 @@ class FilesystemAdapter implements Adapter {
 
 	private ensureTypeDirectoryExists(node_key: string): Promise<void> {
 		const parts = node_key.split('/');
-		const type_id = parts[0] as string;
+		const type_id = parts[0];
 
 		return this.ensureSubdirectoryExists(type_id);
 	}
 
-	private async ensureSubdirectoryExists(subdirectory_name: string): Promise<void> {
+	private async ensureSubdirectoryExists(
+		subdirectory_name: string
+	): Promise<void> {
 		const filepath = this.getFilepath();
 		const subdirectory = `${filepath}/${subdirectory_name}`;
 		const subdirectory_exists = await exists(subdirectory);

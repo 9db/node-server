@@ -73,7 +73,11 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		return Promise.all(promises);
 	}
 
-	private async buildFieldInputForKey(field_key: string, node: Node, type_node: Node): Promise<FieldInput> {
+	private async buildFieldInputForKey(
+		field_key: string,
+		node: Node,
+		type_node: Node
+	): Promise<FieldInput> {
 		const value = node[field_key];
 		const type_url = type_node[field_key] as string;
 

@@ -115,7 +115,9 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 		return operation.perform();
 	}
 
-	private async fetchInstanceListForTypeNode(type_node: Node): Promise<Node[] | undefined> {
+	private async fetchInstanceListForTypeNode(
+		type_node: Node
+	): Promise<Node[] | undefined> {
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
@@ -127,7 +129,7 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 		};
 
 		const operation = new FetchSetFieldValuesOperation(input);
-		const instance_urls = await operation.perform() as string[];
+		const instance_urls = (await operation.perform()) as string[];
 
 		const promises = instance_urls.map((instance_url) => {
 			return this.fetchNodeForUrl(instance_url);

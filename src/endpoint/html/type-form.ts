@@ -105,7 +105,7 @@ class HtmlTypeFormEndpoint extends HtmlEndpoint<Input> {
 			throw new BadRequestError();
 		}
 
-		return draft_fields.filter((field, index) => {
+		return draft_fields.filter((_field, index) => {
 			return index !== removal_index;
 		});
 	}
