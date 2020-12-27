@@ -14,11 +14,21 @@ interface ServerConfig {
 	readonly hostname: string;
 }
 
-function buildDefaultConfig(): ServerConfig {
+function buildConfig(partial_config?: Partial<ServerConfig>): ServerConfig {
+	let port = 9999;
+
+	if (partial_config !== undefined && partial_config.port !== undefined) {
+		port = partial_config.port;
+	}
+
+	const hostname = `http://localhost:${port}`
+	const adapter = new MemoryAdapter();
+
 	return {
-		port: 9999,
-		adapter: new MemoryAdapter(),
-		hostname: 'http://localhost:9999'
+		port,
+		adapter,
+		hostname,
+		...partial_config
 	};
 }
 
@@ -31,10 +41,7 @@ class Server {
 	private routes: Route[];
 
 	public constructor(partial_config?: Partial<ServerConfig>) {
-		const config: ServerConfig = {
-			...buildDefaultConfig(),
-			...partial_config
-		};
+		const config = buildConfig(partial_config);
 
 		this.port = config.port;
 		this.hostname = config.hostname;
