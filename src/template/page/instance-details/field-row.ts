@@ -62,7 +62,7 @@ class FieldRowTemplate extends Template<FieldInput> {
 
 	private getTypeId(): string {
 		const type_node = this.getTypeNode();
-		const parameters = getNodeParameters(type_node);
+		const parameters = getNodeParameters(type_node.url);
 
 		return parameters.id;
 	}

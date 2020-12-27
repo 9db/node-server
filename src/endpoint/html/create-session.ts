@@ -67,7 +67,7 @@ class HtmlCreateSessionEndpoint extends HtmlEndpoint<Input> {
 	}
 
 	private setCookieFromSession(session: Node): void {
-		const session_parameters = getNodeParameters(session);
+		const session_parameters = getNodeParameters(session.url);
 		const cookie = buildCookie(session_parameters.id, TimeInterval.ONE_DAY);
 
 		this.setHeaderValue(HttpHeader.SET_COOKIE, cookie);

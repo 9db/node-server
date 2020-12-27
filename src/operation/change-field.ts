@@ -6,7 +6,6 @@ import ChangeStatus from 'enum/change-status';
 import KeyGenerator from 'utility/key-generator';
 import BadRequestError from 'http/error/bad-request';
 import getNodeParameters from 'utility/get-node-parameters';
-import getNodeParametersForUrl from 'utility/get-node-parameters-for-url';
 import Operation, { OperationInput } from 'operation';
 
 interface Input extends OperationInput {
@@ -80,7 +79,7 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 	private performSetFieldValueOperation(): Promise<Node> {
 		const input = this.getInput();
 		const node = input.node;
-		const parameters = getNodeParameters(node);
+		const parameters = getNodeParameters(node.url);
 		const repository = this.getRepository();
 
 		return repository.setField(
@@ -99,7 +98,7 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 			throw new Error(`No set url specified for field ${input.field}`);
 		}
 
-		const parameters = getNodeParametersForUrl(set_url);
+		const parameters = getNodeParameters(set_url);
 		const repository = this.getRepository();
 
 		await repository.addValueToSet(parameters, input.value);
@@ -116,7 +115,7 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 			throw new Error(`No set url specified for field ${input.field}`);
 		}
 
-		const parameters = getNodeParametersForUrl(set_url);
+		const parameters = getNodeParameters(set_url);
 		const repository = this.getRepository();
 
 		await repository.removeValueFromSet(parameters, input.value);
@@ -133,7 +132,7 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 			throw new Error(`No list url specified for field ${input.field}`);
 		}
 
-		const parameters = getNodeParametersForUrl(list_url);
+		const parameters = getNodeParameters(list_url);
 		const repository = this.getRepository();
 
 		await repository.addValueToList(parameters, input.value);
@@ -150,7 +149,7 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 			throw new Error(`No list url specified for field ${input.field}`);
 		}
 
-		const parameters = getNodeParametersForUrl(list_url);
+		const parameters = getNodeParameters(list_url);
 		const repository = this.getRepository();
 
 		await repository.removeValueFromList(parameters, input.value);

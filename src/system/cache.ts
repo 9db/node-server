@@ -50,7 +50,7 @@ class SystemCache {
 	}
 
 	private addNode(node: Node): void {
-		const parameters = getNodeParameters(node);
+		const parameters = getNodeParameters(node.url);
 		const cache_key = this.buildCacheKey(parameters);
 
 		const nodes = this.getNodes();

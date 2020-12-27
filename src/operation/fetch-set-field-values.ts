@@ -1,6 +1,6 @@
 import Node from 'type/node';
 import FieldValue from 'type/field-value';
-import getNodeParametersForUrl from 'utility/get-node-parameters-for-url';
+import getNodeParameters from 'utility/get-node-parameters';
 import Operation, { OperationInput } from 'operation';
 
 const DEFAULT_OFFSET = 0;
@@ -17,7 +17,7 @@ class FetchSetFieldValuesOperation extends Operation<Input, FieldValue[]> {
 	protected performInternal(): Promise<FieldValue[]> {
 		const repository = this.getRepository();
 		const set_url = this.getSetUrl();
-		const parameters = getNodeParametersForUrl(set_url);
+		const parameters = getNodeParameters(set_url);
 		const offset = this.getOffset();
 		const limit = this.getLimit();
 

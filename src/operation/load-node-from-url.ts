@@ -1,7 +1,7 @@
 import Node from 'type/node';
 import Operation, { OperationInput } from 'operation';
 import NotFoundError from 'http/error/not-found';
-import getNodeParametersForUrl from 'utility/get-node-parameters-for-url';
+import getNodeParameters from 'utility/get-node-parameters';
 
 interface Input extends OperationInput {
 	readonly url: string;
@@ -19,7 +19,7 @@ class LoadNodeFromUrlOperation extends Operation<Input, Node> {
 	private async loadLocalNode(): Promise<Node> {
 		const repository = this.getRepository();
 		const url = this.getUrl();
-		const node_parameters = getNodeParametersForUrl(url);
+		const node_parameters = getNodeParameters(url);
 		const node = await repository.fetchNode(node_parameters);
 
 		if (node === undefined) {

@@ -43,7 +43,7 @@ class Repository {
 	}
 
 	public async storeNode(node: Node): Promise<Node> {
-		const parameters = getNodeParameters(node);
+		const parameters = getNodeParameters(node.url);
 		const node_key = this.getNodeKey(parameters);
 		const adapter = this.getAdapter();
 		const standardized_node = this.standardizeNode(node);

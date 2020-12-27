@@ -47,7 +47,7 @@ class AccountMenuTemplate extends Template<Input> {
 
 	private getAccountId(): string {
 		const account = this.getAccount();
-		const parameters = getNodeParameters(account);
+		const parameters = getNodeParameters(account.url);
 
 		return parameters.id;
 	}

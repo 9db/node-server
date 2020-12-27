@@ -157,7 +157,7 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 
 	private getTypeId(): string {
 		const node = this.getNode();
-		const parameters = getNodeParameters(node);
+		const parameters = getNodeParameters(node.url);
 
 		return parameters.type_id;
 	}
@@ -207,7 +207,7 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 
 	private getNodeId(): string {
 		const node = this.getNode();
-		const parameters = getNodeParameters(node);
+		const parameters = getNodeParameters(node.url);
 
 		return parameters.id;
 	}

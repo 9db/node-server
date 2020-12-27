@@ -4,9 +4,9 @@ import FieldInput from 'template/page/instance-form/type/field-input';
 import HtmlEndpoint from 'endpoint/html';
 import getFieldKeys from 'utility/get-field-keys';
 import BadRequestError from 'http/error/bad-request';
+import getNodeParameters from 'utility/get-node-parameters';
 import FetchNodeOperation from 'operation/fetch-node';
 import InstanceFormTemplate from 'template/page/instance-form';
-import getNodeParametersForUrl from 'utility/get-node-parameters-for-url';
 import FetchSetFieldValuesOperation from 'operation/fetch-set-field-values';
 
 interface Input {
@@ -89,7 +89,7 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 	}
 
 	private fetchNodeForUrl(url: string): Promise<Node> {
-		const node_parameters = getNodeParametersForUrl(url);
+		const node_parameters = getNodeParameters(url);
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
