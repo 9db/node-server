@@ -189,20 +189,24 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 	}
 
 	private buildChangeNode(): Node {
+		const repository = this.getRepository();
+		const hostname = repository.getHostname();
 		const id = KeyGenerator.id();
 		const type_id = SystemId.CHANGE_TYPE;
+		const url = `${hostname}/${type_id}/${id}`;
 		const status = ChangeStatus.APPROVED;
 		const change_type = this.getInputChangeType();
 		const field = this.getInputField();
 		const value = this.getInputValue();
 		const previous_value = this.getInputPreviousValue();
-		const creator = 'https://9db.org/account/anonymous';
-		const approver = 'https://9db.org/account/system';
-		const changes = 'https://9db.org/changes/non';
+		const creator = `${hostname}/account/anonymous`;
+		const approver = `${hostname}/account/system`;
+		const changes = `${hostname}/change-list/non`;
 		const created_at = Date.now();
 		const updated_at = created_at;
 
 		return {
+			url,
 			id,
 			type_id,
 			status,

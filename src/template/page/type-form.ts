@@ -148,7 +148,7 @@ class TypeFormTemplate extends PageTemplate<Input> {
 	private getTypeUrl(): string {
 		const node = this.getNode();
 
-		return `/${node.id}`;
+		return node.url;
 	}
 
 	private getTypeLabel(): string {

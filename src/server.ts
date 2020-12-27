@@ -18,7 +18,7 @@ function buildDefaultConfig(): ServerConfig {
 	return {
 		port: 9999,
 		adapter: new MemoryAdapter(),
-		hostname: 'http://localhost'
+		hostname: 'http://localhost:9999'
 	};
 }
 

@@ -19,6 +19,7 @@ class CreateInstanceOperation extends Operation<Input, Node> {
 	}
 
 	private async buildNode(): Promise<Node> {
+		const url = this.getUrl();
 		const id = this.getId();
 		const type_id = this.getTypeId();
 		const draft_fields = this.getDraftFields();
@@ -28,6 +29,7 @@ class CreateInstanceOperation extends Operation<Input, Node> {
 		const updated_at = created_at;
 
 		let node: Node = {
+			url,
 			id,
 			type_id,
 			creator,
@@ -46,6 +48,15 @@ class CreateInstanceOperation extends Operation<Input, Node> {
 		});
 
 		return node;
+	}
+
+	private getUrl(): string {
+		const repository = this.getRepository();
+		const hostname = repository.getHostname();
+		const id =  this.getId();
+		const type_id = this.getTypeId();
+
+		return `${hostname}/${type_id}/${id}`;
 	}
 
 	private getId(): string {

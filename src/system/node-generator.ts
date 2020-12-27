@@ -12,6 +12,7 @@ abstract class SystemNodeGenerator {
 
 	public generate(): Node {
 		return {
+			url: this.getNodeUrl(),
 			id: this.getNodeId(),
 			type_id: this.getTypeId(),
 			creator: this.getCreator(),
@@ -45,6 +46,18 @@ abstract class SystemNodeGenerator {
 
 	private getHostname(): string {
 		return this.hostname;
+	}
+
+	private getNodeUrl(): string {
+		const hostname = this.getHostname();
+		const type_id = this.getTypeId();
+		const node_id = this.getNodeId();
+
+		if (type_id === SystemId.GENERIC_TYPE) {
+			return `${hostname}/${node_id}`;
+		} else {
+			return `${hostname}/${type_id}/${node_id}`;
+		}
 	}
 
 	protected abstract getTypeId(): string;

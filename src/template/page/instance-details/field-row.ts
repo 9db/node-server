@@ -56,7 +56,7 @@ class FieldRowTemplate extends Template<FieldInput> {
 	private getTypeUrl(): string {
 		const type_node = this.getTypeNode();
 
-		return `/${type_node.id}`;
+		return type_node.url;
 	}
 
 	private getTypeId(): string {
