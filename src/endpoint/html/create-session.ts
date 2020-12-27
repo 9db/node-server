@@ -45,18 +45,26 @@ class HtmlCreateSessionEndpoint extends HtmlEndpoint<Input> {
 
 	private async createSession(account: Node): Promise<Node> {
 		const id = KeyGenerator.id();
+		const type_id = SystemId.SESSION_TYPE;
+
+		const node_parameters = {
+			type_id,
+			id
+		};
+
+		const fields = [
+			{
+				key: 'account',
+				value: account.url
+			}
+		];
+
 		const repository = this.getRepository();
 		const system_account = await repository.fetchSystemAccount();
 
 		const input = {
-			id,
-			type_id: SystemId.SESSION_TYPE,
-			fields: [
-				{
-					key: 'account',
-					value: account.url
-				}
-			],
+			node_parameters,
+			fields,
 			repository,
 			account: system_account
 		};

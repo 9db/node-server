@@ -2,6 +2,7 @@ import Node from 'type/node';
 import SystemId from 'system/enum/id';
 import DraftField from 'type/draft-field';
 import KeyGenerator from 'utility/key-generator';
+import buildNodeUrl from 'utility/build-node-url';
 import Operation, { OperationInput } from 'operation';
 
 interface Input extends OperationInput {
@@ -19,8 +20,7 @@ class CreateTypeOperation extends Operation<Input, Node> {
 
 	private async buildNode(): Promise<Node> {
 		const url = this.getUrl();
-		const id = this.getId();
-		const type_id = SystemId.GENERIC_TYPE;
+		const type_url = this.getTypeUrl();
 		const draft_fields = this.getDraftFields();
 		const creator = this.getAccountUrl();
 		const changes = this.getChangesUrl();
@@ -29,8 +29,7 @@ class CreateTypeOperation extends Operation<Input, Node> {
 
 		let node: Node = {
 			url,
-			id,
-			type_id,
+			type: type_url,
 			creator,
 			created_at,
 			updated_at,
@@ -54,7 +53,20 @@ class CreateTypeOperation extends Operation<Input, Node> {
 		const hostname = repository.getHostname();
 		const id = this.getId();
 
-		return `${hostname}/${id}`;
+		return buildNodeUrl(hostname, {
+			type_id: SystemId.GENERIC_TYPE,
+			id
+		});
+	}
+
+	private getTypeUrl(): string {
+		const repository = this.getRepository();
+		const hostname = repository.getHostname();
+
+		return buildNodeUrl(hostname, {
+			type_id: SystemId.GENERIC_TYPE,
+			id: SystemId.GENERIC_TYPE
+		});
 	}
 
 	private getId(): string {

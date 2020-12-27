@@ -28,8 +28,10 @@ describe('CreateInstanceOperation', () => {
 			const account = await repository.fetchAnonymousAccount();
 
 			const input = {
-				id: 'gandalf',
-				type_id: 'wizard',
+				node_parameters: {
+					type_id: 'wizard',
+					id: 'gandalf'
+				},
 				fields: [
 					{
 						key: 'color',
@@ -62,8 +64,10 @@ describe('CreateInstanceOperation', () => {
 			const account = await repository.fetchAnonymousAccount();
 
 			const input = {
-				id: 'gandalf',
-				type_id: 'wizard',
+				node_parameters: {
+					type_id: 'wizard',
+					id: 'gandalf'
+				},
 				fields: [
 					{
 						key: 'color',

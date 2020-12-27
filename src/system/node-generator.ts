@@ -2,6 +2,7 @@ import Node from 'type/node';
 import SystemId from 'system/enum/id';
 import KeyGenerator from 'utility/key-generator';
 import buildNodeUrl from 'utility/build-node-url';
+import NodeParameters from 'type/node-parameters';
 
 abstract class SystemNodeGenerator {
 	private hostname: string;
@@ -13,32 +14,40 @@ abstract class SystemNodeGenerator {
 	public generate(): Node {
 		return {
 			url: this.getNodeUrl(),
-			creator: this.getCreator(),
+			type: this.getTypeUrl(),
+			creator: this.getCreatorUrl(),
 			created_at: 0,
 			updated_at: 0,
 			changes: this.getChangesUrl()
 		};
 	}
 
-	protected getCreator(): string {
-		const hostname = this.getHostname();
-		const id = SystemId.SYSTEM_ACCOUNT;
-		const type_id = SystemId.ACCOUNT_TYPE;
+	protected getCreatorUrl(): string {
+		return this.buildNodeUrl({
+			type_id: SystemId.ACCOUNT_TYPE,
+			id: SystemId.SYSTEM_ACCOUNT
+		});
+	}
 
-		return buildNodeUrl(hostname, {
-			id,
-			type_id
+	private getNodeUrl(): string {
+		const parameters = this.getNodeParameters();
+
+		return this.buildNodeUrl(parameters);
+	}
+
+	private getTypeUrl(): string {
+		const parameters = this.getNodeParameters();
+
+		return this.buildNodeUrl({
+			type_id: SystemId.GENERIC_TYPE,
+			id: parameters.type_id
 		});
 	}
 
 	private getChangesUrl(): string {
-		const hostname = this.getHostname();
-		const id = KeyGenerator.id();
-		const type_id = SystemId.CHANGE_LIST_TYPE;
-
-		return buildNodeUrl(hostname, {
-			id,
-			type_id
+		return this.buildNodeUrl({
+			type_id: SystemId.CHANGE_LIST_TYPE,
+			id: KeyGenerator.id()
 		});
 	}
 
@@ -46,20 +55,13 @@ abstract class SystemNodeGenerator {
 		return this.hostname;
 	}
 
-	private getNodeUrl(): string {
+	private buildNodeUrl(parameters: NodeParameters): string {
 		const hostname = this.getHostname();
-		const type_id = this.getTypeId();
-		const node_id = this.getNodeId();
 
-		if (type_id === SystemId.GENERIC_TYPE) {
-			return `${hostname}/${node_id}`;
-		} else {
-			return `${hostname}/${type_id}/${node_id}`;
-		}
+		return buildNodeUrl(hostname, parameters);
 	}
 
-	protected abstract getTypeId(): string;
-	protected abstract getNodeId(): string;
+	protected abstract getNodeParameters(): NodeParameters;
 }
 
 export interface GeneratorConstructor {

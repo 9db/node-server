@@ -1,6 +1,7 @@
 import Node from 'type/node';
 import DraftField from 'type/draft-field';
 import JsonEndpoint from 'endpoint/json';
+import NodeParameters from 'type/node-parameters';
 import CreateInstanceOperation from 'operation/create-instance';
 
 interface Input {
@@ -9,21 +10,29 @@ interface Input {
 
 class JsonCreateInstanceEndpoint extends JsonEndpoint<Input> {
 	protected async process(): Promise<Node> {
-		const id = this.getUrlParameter('id');
-		const type_id = this.getUrlParameter('type_id');
+		const node_parameters = this.getNodeParameters();
 		const fields = this.getDraftFields();
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
 		const operation = new CreateInstanceOperation({
-			id,
-			type_id,
+			node_parameters,
 			fields,
 			repository,
 			account
 		});
 
 		return operation.perform();
+	}
+
+	private getNodeParameters(): NodeParameters {
+		const type_id = this.getUrlParameter('type_id');
+		const id = this.getUrlParameter('id');
+
+		return {
+			type_id,
+			id
+		};
 	}
 
 	private getDraftFields(): DraftField[] {

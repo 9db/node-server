@@ -4,6 +4,7 @@ import FieldValue from 'type/field-value';
 import ChangeType from 'enum/change-type';
 import ChangeStatus from 'enum/change-status';
 import KeyGenerator from 'utility/key-generator';
+import buildNodeUrl from 'utility/build-node-url';
 import BadRequestError from 'http/error/bad-request';
 import getNodeParameters from 'utility/get-node-parameters';
 import Operation, { OperationInput } from 'operation';
@@ -158,11 +159,9 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 	}
 
 	private buildChangeNode(): Node {
-		const repository = this.getRepository();
-		const hostname = repository.getHostname();
-		const id = KeyGenerator.id();
-		const type_id = SystemId.CHANGE_TYPE;
-		const url = `${hostname}/${type_id}/${id}`;
+		const url = this.getChangeUrl();
+		const type_url = this.getChangeTypeUrl();
+		const hostname = this.getHostname();
 		const status = ChangeStatus.APPROVED;
 		const change_type = this.getInputChangeType();
 		const field = this.getInputField();
@@ -176,8 +175,7 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 
 		return {
 			url,
-			id,
-			type_id,
+			type: type_url,
 			status,
 			change_type,
 			field,
@@ -189,6 +187,34 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 			updated_at,
 			changes
 		};
+	}
+
+	private getChangeUrl(): string {
+		const hostname = this.getHostname();
+		const type_id = SystemId.CHANGE_TYPE;
+		const id = KeyGenerator.id();
+
+		return buildNodeUrl(hostname, {
+			type_id,
+			id
+		});
+	}
+
+	private getChangeTypeUrl(): string {
+		const hostname = this.getHostname();
+		const type_id = SystemId.GENERIC_TYPE;
+		const id = SystemId.CHANGE_TYPE;
+
+		return buildNodeUrl(hostname, {
+			type_id,
+			id
+		});
+	}
+
+	private getHostname(): string {
+		const repository = this.getRepository();
+
+		return repository.getHostname();
 	}
 
 	private getInputField(): string {

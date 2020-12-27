@@ -1,13 +1,13 @@
+import NodeParameters from 'type/node-parameters';
 import SystemNodeGenerator from 'system/node-generator';
 
 describe('NodeGenerator', () => {
 	class MockGenerator extends SystemNodeGenerator {
-		protected getTypeId(): string {
-			return 'foo';
-		}
-
-		protected getNodeId(): string {
-			return 'bar';
+		protected getNodeParameters(): NodeParameters {
+			return {
+				type_id: 'foo',
+				id: 'bar'
+			};
 		}
 	}
 
@@ -29,10 +29,10 @@ describe('NodeGenerator', () => {
 		});
 	});
 
-	describe('getCreator()', () => {
+	describe('getCreatorUrl()', () => {
 		class ThrowawayGenerator extends MockGenerator {
 			public privilegedGetCreator(): string {
-				return this.getCreator();
+				return this.getCreatorUrl();
 			}
 		}
 

@@ -2,11 +2,12 @@ import Node from 'type/node';
 import SystemId from 'system/enum/id';
 import DraftField from 'type/draft-field';
 import KeyGenerator from 'utility/key-generator';
+import buildNodeUrl from 'utility/build-node-url';
+import NodeParameters from 'type/node-parameters';
 import Operation, { OperationInput } from 'operation';
 
 interface Input extends OperationInput {
-	readonly id: string;
-	readonly type_id: string;
+	readonly node_parameters: NodeParameters;
 	readonly fields: DraftField[];
 }
 
@@ -20,8 +21,7 @@ class CreateInstanceOperation extends Operation<Input, Node> {
 
 	private async buildNode(): Promise<Node> {
 		const url = this.getUrl();
-		const id = this.getId();
-		const type_id = this.getTypeId();
+		const type_url = this.getTypeUrl();
 		const draft_fields = this.getDraftFields();
 		const creator = this.getAccountUrl();
 		const changes = this.getChangesUrl();
@@ -30,8 +30,7 @@ class CreateInstanceOperation extends Operation<Input, Node> {
 
 		let node: Node = {
 			url,
-			id,
-			type_id,
+			type: type_url,
 			creator,
 			created_at,
 			updated_at,
@@ -53,22 +52,26 @@ class CreateInstanceOperation extends Operation<Input, Node> {
 	private getUrl(): string {
 		const repository = this.getRepository();
 		const hostname = repository.getHostname();
-		const id =  this.getId();
-		const type_id = this.getTypeId();
+		const parameters = this.getNodeParameters();
 
-		return `${hostname}/${type_id}/${id}`;
+		return buildNodeUrl(hostname, parameters);
 	}
 
-	private getId(): string {
-		const input = this.getInput();
+	private getTypeUrl(): string {
+		const repository = this.getRepository();
+		const hostname = repository.getHostname();
+		const parameters = this.getNodeParameters();
 
-		return input.id;
+		return buildNodeUrl(hostname, {
+			type_id: SystemId.GENERIC_TYPE,
+			id: parameters.type_id
+		});
 	}
 
-	private getTypeId(): string {
+	private getNodeParameters(): NodeParameters {
 		const input = this.getInput();
 
-		return input.type_id;
+		return input.node_parameters;
 	}
 
 	private getDraftFields(): DraftField[] {

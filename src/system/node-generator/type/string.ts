@@ -1,13 +1,13 @@
 import SystemId from 'system/enum/id';
+import NodeParameters from 'type/node-parameters';
 import SystemNodeGenerator from 'system/node-generator';
 
 class StringTypeGenerator extends SystemNodeGenerator {
-	protected getTypeId(): string {
-		return SystemId.GENERIC_TYPE;
-	}
-
-	protected getNodeId(): string {
-		return SystemId.STRING_TYPE;
+	protected getNodeParameters(): NodeParameters {
+		return {
+			type_id: SystemId.GENERIC_TYPE,
+			id: SystemId.STRING_TYPE
+		};
 	}
 }
 
