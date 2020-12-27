@@ -1,4 +1,5 @@
 enum SystemFieldKey {
+	URL = 'url',
 	ID = 'id',
 	TYPE_ID = 'type_id',
 	CREATOR = 'creator',
