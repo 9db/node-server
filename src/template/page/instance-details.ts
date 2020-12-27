@@ -111,11 +111,9 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 	}
 
 	private getTypeUrl(): string {
-		const type_id = this.getTypeId();
+		const node = this.getNode();
 
-		// TODO: Use an actual type url here (from the node)
-
-		return `/${type_id}`;
+		return node.type;
 	}
 
 	private getTypeId(): string {

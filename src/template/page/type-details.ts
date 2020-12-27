@@ -150,9 +150,9 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 	}
 
 	private getTypeUrl(): string {
-		const type_id = this.getTypeId();
+		const node = this.getNode();
 
-		return `/${type_id}`;
+		return node.type;
 	}
 
 	private getTypeId(): string {
