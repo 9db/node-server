@@ -1,6 +1,7 @@
-import Node from 'type/node';
 import SystemId from 'system/enum/id';
 import HttpHeader from 'http/enum/header';
+import AccountNode from 'type/node/account';
+import SessionNode from 'type/node/session';
 import buildCookie from 'http/utility/build-cookie';
 import HtmlEndpoint from 'endpoint/html';
 import TimeInterval from 'enum/time-interval';
@@ -23,7 +24,7 @@ class HtmlCreateSessionEndpoint extends HtmlEndpoint<Input> {
 		this.redirectToUrl('/');
 	}
 
-	private async fetchAccount(): Promise<Node> {
+	private async fetchAccount(): Promise<AccountNode> {
 		const repository = this.getRepository();
 		const account = await repository.fetchSystemAccount();
 
@@ -43,7 +44,7 @@ class HtmlCreateSessionEndpoint extends HtmlEndpoint<Input> {
 		return operation.perform();
 	}
 
-	private async createSession(account: Node): Promise<Node> {
+	private async createSession(account: AccountNode): Promise<SessionNode> {
 		const id = KeyGenerator.id();
 		const type_id = SystemId.SESSION_TYPE;
 
@@ -70,11 +71,12 @@ class HtmlCreateSessionEndpoint extends HtmlEndpoint<Input> {
 		};
 
 		const operation = new CreateInstanceOperation(input);
+		const node = await operation.perform();
 
-		return operation.perform();
+		return node as SessionNode;
 	}
 
-	private setCookieFromSession(session: Node): void {
+	private setCookieFromSession(session: SessionNode): void {
 		const session_parameters = getNodeParameters(session.url);
 		const cookie = buildCookie(session_parameters.id, TimeInterval.ONE_DAY);
 

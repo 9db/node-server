@@ -1,6 +1,5 @@
 import HTTP from 'http';
 
-import Node from 'type/node';
 import HttpError from 'http/error';
 import HeaderMap from 'http/type/header-map';
 import Repository from 'repository';
@@ -8,6 +7,7 @@ import HttpHeader from 'http/enum/header';
 import HttpMethod from 'http/enum/method';
 import BodyParser from 'server/body-parser';
 import StatusCode from 'http/enum/status-code';
+import AccountNode from 'type/node/account';
 import ContentType from 'http/enum/content-type';
 import ServerError from 'http/error/server-error';
 import UrlParameters from 'http/type/url-parameters';
@@ -30,7 +30,7 @@ abstract class Endpoint<Input, Output extends AllowedOutputs> {
 	private status_code: StatusCode;
 	private response_headers: HeaderMap;
 	private request_body: Input | undefined;
-	private account: Node | undefined;
+	private account: AccountNode | undefined;
 
 	public constructor(
 		request: HTTP.IncomingMessage,
@@ -110,7 +110,7 @@ abstract class Endpoint<Input, Output extends AllowedOutputs> {
 		return this.request_body;
 	}
 
-	protected getAccount(): Node {
+	protected getAccount(): AccountNode {
 		if (this.account === undefined) {
 			throw new Error('Tried to read account, but it was not set');
 		}

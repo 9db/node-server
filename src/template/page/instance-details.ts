@@ -1,11 +1,11 @@
-import Node from 'type/node';
 import FieldInput from 'template/page/instance-details/type/field-input';
+import InstanceNode from 'type/instance-node';
 import getNodeParameters from 'utility/get-node-parameters';
 import FieldTableTemplate from 'template/page/instance-details/field-table';
 import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
 interface Input extends PageTemplateInput {
-	readonly node: Node;
+	readonly node: InstanceNode;
 	readonly fields: FieldInput[];
 }
 
@@ -179,7 +179,7 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 		return parameters.id;
 	}
 
-	private getNode(): Node {
+	private getNode(): InstanceNode {
 		const input = this.getInput();
 
 		return input.node;

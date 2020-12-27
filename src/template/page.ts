@@ -1,5 +1,5 @@
-import Node from 'type/node';
 import Template from 'template';
+import AccountNode from 'type/node/account';
 import getManifest from 'utility/get-manifest';
 import AccountMenuTemplate from 'template/partial/account-menu';
 
@@ -9,7 +9,7 @@ export interface Breadcrumb {
 }
 
 export interface PageTemplateInput {
-	readonly account: Node;
+	readonly account: AccountNode;
 }
 
 abstract class PageTemplate<T extends PageTemplateInput> extends Template<T> {
@@ -57,7 +57,7 @@ abstract class PageTemplate<T extends PageTemplateInput> extends Template<T> {
 		return this.getContentTitle();
 	}
 
-	protected getAccount(): Node {
+	protected getAccount(): AccountNode {
 		const input = this.getInput();
 
 		return input.account;

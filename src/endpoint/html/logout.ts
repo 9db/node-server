@@ -1,5 +1,5 @@
-import Node from 'type/node';
 import HttpHeader from 'http/enum/header';
+import AccountNode from 'type/node/account';
 import buildCookie from 'http/utility/build-cookie';
 import HtmlEndpoint from 'endpoint/html';
 import LogoutPageTemplate from 'template/page/logout';
@@ -25,7 +25,7 @@ class HtmlLogoutEndpoint extends HtmlEndpoint<Record<string, never>> {
 		this.setHeaderValue(HttpHeader.SET_COOKIE, cookie);
 	}
 
-	private loadAnonymousAccount(): Promise<Node> {
+	private loadAnonymousAccount(): Promise<AccountNode> {
 		const repository = this.getRepository();
 
 		return repository.fetchAnonymousAccount();

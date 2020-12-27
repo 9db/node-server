@@ -1,5 +1,6 @@
 import Node from 'type/node';
 import SystemId from 'system/enum/id';
+import ChangeNode from 'type/node/change';
 import FieldValue from 'type/field-value';
 import ChangeType from 'enum/change-type';
 import ChangeStatus from 'enum/change-status';
@@ -158,7 +159,7 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		return node;
 	}
 
-	private buildChangeNode(): Node {
+	private buildChangeNode(): ChangeNode {
 		const url = this.getChangeUrl();
 		const type_url = this.getChangeTypeUrl();
 		const hostname = this.getHostname();
@@ -209,12 +210,6 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 			type_id,
 			id
 		});
-	}
-
-	private getHostname(): string {
-		const repository = this.getRepository();
-
-		return repository.getHostname();
 	}
 
 	private getInputField(): string {

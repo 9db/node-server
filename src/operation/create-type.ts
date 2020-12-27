@@ -1,4 +1,4 @@
-import Node from 'type/node';
+import TypeNode from 'type/type-node';
 import SystemId from 'system/enum/id';
 import DraftField from 'type/draft-field';
 import KeyGenerator from 'utility/key-generator';
@@ -10,31 +10,19 @@ interface Input extends OperationInput {
 	readonly fields: DraftField[];
 }
 
-class CreateTypeOperation extends Operation<Input, Node> {
-	protected async performInternal(): Promise<Node> {
+class CreateTypeOperation extends Operation<Input, TypeNode> {
+	protected async performInternal(): Promise<TypeNode> {
 		const node = await this.buildNode();
 		const repository = this.getRepository();
+		const persisted_node = await repository.storeNode(node);
 
-		return repository.storeNode(node);
+		return persisted_node as TypeNode;
 	}
 
-	private async buildNode(): Promise<Node> {
-		const url = this.getUrl();
-		const type_url = this.getTypeUrl();
-		const draft_fields = this.getDraftFields();
-		const creator = this.getAccountUrl();
-		const changes = this.getChangesUrl();
-		const created_at = Date.now();
-		const updated_at = created_at;
+	private async buildNode(): Promise<TypeNode> {
+		let node = this.getTypeNode();
 
-		let node: Node = {
-			url,
-			type: type_url,
-			creator,
-			created_at,
-			updated_at,
-			changes
-		};
+		const draft_fields = this.getDraftFields();
 
 		draft_fields.forEach((draft_field) => {
 			const { key, value } = draft_field;
@@ -48,9 +36,32 @@ class CreateTypeOperation extends Operation<Input, Node> {
 		return node;
 	}
 
+	private getTypeNode(): TypeNode {
+		const url = this.getUrl();
+		const type_url = this.getTypeUrl();
+		const creator = this.getAccountUrl();
+		const changes = this.getChangesUrl();
+		const instances = this.getInstancesUrl();
+		const child_types = this.getChildTypesUrl();
+		const parent_type = this.getParentTypeUrl();
+		const created_at = Date.now();
+		const updated_at = created_at;
+
+		return {
+			url,
+			type: type_url,
+			creator,
+			created_at,
+			updated_at,
+			changes,
+			instances,
+			child_types,
+			parent_type
+		};
+	}
+
 	private getUrl(): string {
-		const repository = this.getRepository();
-		const hostname = repository.getHostname();
+		const hostname = this.getHostname();
 		const id = this.getId();
 
 		return buildNodeUrl(hostname, {
@@ -60,8 +71,7 @@ class CreateTypeOperation extends Operation<Input, Node> {
 	}
 
 	private getTypeUrl(): string {
-		const repository = this.getRepository();
-		const hostname = repository.getHostname();
+		const hostname = this.getHostname();
 
 		return buildNodeUrl(hostname, {
 			type_id: SystemId.GENERIC_TYPE,
@@ -88,12 +98,39 @@ class CreateTypeOperation extends Operation<Input, Node> {
 	}
 
 	private getChangesUrl(): string {
-		const repository = this.getRepository();
-		const hostname = repository.getHostname();
-		const type_id = SystemId.CHANGE_LIST_TYPE;
-		const id = KeyGenerator.id();
+		const hostname = this.getHostname();
 
-		return `${hostname}/${type_id}/${id}`;
+		return buildNodeUrl(hostname, {
+			type_id: SystemId.CHANGE_LIST_TYPE,
+			id: KeyGenerator.id()
+		});
+	}
+
+	private getInstancesUrl(): string {
+		const hostname = this.getHostname();
+
+		return buildNodeUrl(hostname, {
+			type_id: SystemId.INSTANCE_LIST_TYPE,
+			id: KeyGenerator.id()
+		});
+	}
+
+	private getChildTypesUrl(): string {
+		const hostname = this.getHostname();
+
+		return buildNodeUrl(hostname, {
+			type_id: SystemId.TYPE_LIST_TYPE,
+			id: KeyGenerator.id()
+		});
+	}
+
+	private getParentTypeUrl(): string {
+		const hostname = this.getHostname();
+
+		return buildNodeUrl(hostname, {
+			type_id: SystemId.GENERIC_TYPE,
+			id: SystemId.GENERIC_TYPE
+		});
 	}
 }
 

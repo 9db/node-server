@@ -1,7 +1,8 @@
-import Node from 'type/node';
 import SystemId from 'system/enum/id';
+import TypeNode from 'type/type-node';
 import FieldInput from 'template/page/instance-details/type/field-input';
 import HtmlEndpoint from 'endpoint/html';
+import InstanceNode from 'type/instance-node';
 import getFieldKeys from 'utility/get-field-keys';
 import FetchNodeOperation from 'operation/fetch-node';
 import InstanceDetailsTemplate from 'template/page/instance-details';
@@ -14,7 +15,7 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		return this.renderNode(node, type_node);
 	}
 
-	private fetchNode(): Promise<Node> {
+	private async fetchNode(): Promise<InstanceNode> {
 		const id = this.getUrlParameter('id');
 		const type_id = this.getUrlParameter('type_id');
 		const repository = this.getRepository();
@@ -28,11 +29,12 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		};
 
 		const operation = new FetchNodeOperation(input);
+		const node = await operation.perform();
 
-		return operation.perform();
+		return node as InstanceNode;
 	}
 
-	private fetchTypeNode(): Promise<Node> {
+	private async fetchTypeNode(): Promise<TypeNode> {
 		const id = this.getUrlParameter('type_id');
 		const type_id = SystemId.GENERIC_TYPE;
 		const repository = this.getRepository();
@@ -46,11 +48,12 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		};
 
 		const operation = new FetchNodeOperation(input);
+		const node = await operation.perform();
 
-		return operation.perform();
+		return node as TypeNode;
 	}
 
-	private async renderNode(node: Node, type_node: Node): Promise<string> {
+	private async renderNode(node: InstanceNode, type_node: TypeNode): Promise<string> {
 		const account = this.getAccount();
 		const fields = await this.buildFieldInputs(node, type_node);
 
@@ -63,7 +66,7 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		return template.render();
 	}
 
-	private buildFieldInputs(node: Node, type_node: Node): Promise<FieldInput[]> {
+	private buildFieldInputs(node: InstanceNode, type_node: TypeNode): Promise<FieldInput[]> {
 		const field_keys = getFieldKeys(node);
 
 		const promises = field_keys.map((field_key) => {
@@ -75,8 +78,8 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 
 	private async buildFieldInputForKey(
 		field_key: string,
-		node: Node,
-		type_node: Node
+		node: InstanceNode,
+		type_node: TypeNode
 	): Promise<FieldInput> {
 		const value = node[field_key];
 		const type_url = type_node[field_key] as string;
@@ -99,7 +102,8 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		};
 
 		const operation = new FetchNodeOperation(input);
-		const field_type_node = await operation.perform();
+		const result = await operation.perform();
+		const field_type_node = result as TypeNode;
 
 		return {
 			key: field_key,

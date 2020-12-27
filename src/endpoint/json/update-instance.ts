@@ -1,5 +1,5 @@
-import Node from 'type/node';
 import JsonEndpoint from 'endpoint/json';
+import InstanceNode from 'type/instance-node';
 import UpdateInstanceOperation, { ChangeInput } from 'operation/update-node';
 
 interface Input {
@@ -7,7 +7,7 @@ interface Input {
 }
 
 class JsonUpdateInstanceEndpoint extends JsonEndpoint<Input> {
-	protected async process(): Promise<Node> {
+	protected async process(): Promise<InstanceNode> {
 		const id = this.getUrlParameter('id');
 		const type_id = this.getUrlParameter('type_id');
 		const body = this.getRequestBody();

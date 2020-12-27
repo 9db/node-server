@@ -1,5 +1,5 @@
-import Node from 'type/node';
 import SystemId from 'system/enum/id';
+import AccountNode from 'type/node/account';
 import UnauthorizedError from 'http/error/unauthorized';
 import BasicAuthCredentials from 'http/type/basic-auth-credentials';
 import Operation, { OperationInput } from 'operation';
@@ -8,14 +8,14 @@ interface Input extends OperationInput {
 	readonly credentials: BasicAuthCredentials;
 }
 
-class FetchAccountOperation extends Operation<Input, Node> {
-	protected async performInternal(): Promise<Node> {
+class FetchAccountOperation extends Operation<Input, AccountNode> {
+	protected async performInternal(): Promise<AccountNode> {
 		const account_key = await this.fetchAccountId();
 
 		return this.fetchAccount(account_key);
 	}
 
-	private async fetchAccount(account_id: string): Promise<Node> {
+	private async fetchAccount(account_id: string): Promise<AccountNode> {
 		const repository = this.getRepository();
 
 		const account = await repository.fetchNode({
@@ -27,7 +27,7 @@ class FetchAccountOperation extends Operation<Input, Node> {
 			throw new UnauthorizedError();
 		}
 
-		return account;
+		return account as AccountNode;
 	}
 
 	private async fetchAccountId(): Promise<string> {

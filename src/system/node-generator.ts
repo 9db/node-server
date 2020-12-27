@@ -12,7 +12,7 @@ abstract class SystemNodeGenerator {
 	}
 
 	public generate(): Node {
-		return {
+		let node: Node = {
 			url: this.getNodeUrl(),
 			type: this.getTypeUrl(),
 			creator: this.getCreatorUrl(),
@@ -20,6 +20,17 @@ abstract class SystemNodeGenerator {
 			updated_at: 0,
 			changes: this.getChangesUrl()
 		};
+
+		if (this.isTypeNode()) {
+			node = {
+				...node,
+				instances: this.getInstancesUrl(),
+				child_types: this.getChildTypesUrl(),
+				parent_type: this.getParentTypeUrl()
+			};
+		}
+
+		return node;
 	}
 
 	protected getCreatorUrl(): string {
@@ -49,6 +60,34 @@ abstract class SystemNodeGenerator {
 			type_id: SystemId.CHANGE_LIST_TYPE,
 			id: KeyGenerator.id()
 		});
+	}
+
+	private getInstancesUrl(): string {
+		return this.buildNodeUrl({
+			type_id: SystemId.INSTANCE_LIST_TYPE,
+			id: KeyGenerator.id()
+		});
+	}
+
+	private getChildTypesUrl(): string {
+		return this.buildNodeUrl({
+			type_id: SystemId.TYPE_LIST_TYPE,
+			id: KeyGenerator.id()
+		});
+	}
+
+	private getParentTypeUrl(): string {
+		return this.buildNodeUrl({
+			type_id: SystemId.GENERIC_TYPE,
+			id: SystemId.GENERIC_TYPE
+		});
+	}
+
+	private isTypeNode(): boolean {
+		const parameters = this.getNodeParameters();
+		const type_id = parameters.type_id;
+
+		return type_id === SystemId.GENERIC_TYPE;
 	}
 
 	private getHostname(): string {

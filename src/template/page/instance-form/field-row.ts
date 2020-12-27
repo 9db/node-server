@@ -1,6 +1,7 @@
-import Node from 'type/node';
 import Template from 'template';
+import TypeNode from 'type/type-node';
 import FieldInput from 'template/page/instance-form/type/field-input';
+import InstanceNode from 'type/instance-node';
 import getNodeParameters from 'utility/get-node-parameters';
 
 interface Input extends FieldInput {
@@ -124,7 +125,7 @@ class FieldRowTemplate extends Template<Input> {
 		return input.index;
 	}
 
-	private getTypeNode(): Node {
+	private getTypeNode(): TypeNode {
 		const input = this.getInput();
 
 		return input.type_node;
@@ -140,7 +141,7 @@ class FieldRowTemplate extends Template<Input> {
 		return input.instance_list.length > 0;
 	}
 
-	private getInstanceList(): Node[] {
+	private getInstanceList(): InstanceNode[] {
 		const input = this.getInput();
 
 		if (input.instance_list === undefined) {

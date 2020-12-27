@@ -1,6 +1,6 @@
-import Node from 'type/node';
 import DraftField from 'type/draft-field';
 import JsonEndpoint from 'endpoint/json';
+import InstanceNode from 'type/instance-node';
 import NodeParameters from 'type/node-parameters';
 import CreateInstanceOperation from 'operation/create-instance';
 
@@ -9,7 +9,7 @@ interface Input {
 }
 
 class JsonCreateInstanceEndpoint extends JsonEndpoint<Input> {
-	protected async process(): Promise<Node> {
+	protected async process(): Promise<InstanceNode> {
 		const node_parameters = this.getNodeParameters();
 		const fields = this.getDraftFields();
 		const repository = this.getRepository();

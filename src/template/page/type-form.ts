@@ -1,10 +1,10 @@
-import Node from 'type/node';
+import TypeNode from 'type/type-node';
 import DraftField from 'type/draft-field';
 import getNodeParameters from 'utility/get-node-parameters';
 import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
 interface Input extends PageTemplateInput {
-	readonly node: Node;
+	readonly node: TypeNode;
 	readonly draft_id: string;
 	readonly draft_fields: DraftField[];
 }
@@ -159,7 +159,7 @@ class TypeFormTemplate extends PageTemplate<Input> {
 		return parameters.id;
 	}
 
-	private getNode(): Node {
+	private getNode(): TypeNode {
 		const input = this.getInput();
 
 		return input.node;

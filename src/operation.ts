@@ -1,9 +1,9 @@
-import Node from 'type/node';
 import Repository from 'repository';
+import AccountNode from 'type/node/account';
 
 export interface OperationInput {
 	readonly repository: Repository;
-	readonly account: Node;
+	readonly account: AccountNode;
 }
 
 abstract class Operation<Input extends OperationInput, Output> {
@@ -31,10 +31,16 @@ abstract class Operation<Input extends OperationInput, Output> {
 		return input.repository;
 	}
 
-	protected getAccount(): Node {
+	protected getAccount(): AccountNode {
 		const input = this.getInput();
 
 		return input.account;
+	}
+
+	protected getHostname(): string {
+		const repository = this.getRepository();
+
+		return repository.getHostname();
 	}
 
 	protected getInput(): Input {

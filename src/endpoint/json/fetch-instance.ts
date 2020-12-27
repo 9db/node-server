@@ -1,9 +1,9 @@
-import Node from 'type/node';
+import InstanceNode from 'type/instance-node';
 import JsonEndpoint from 'endpoint/json';
-import FetchInstanceOperation from 'operation/fetch-node';
+import FetchNodeOperation from 'operation/fetch-node';
 
 class JsonFetchInstanceEndpoint extends JsonEndpoint<Record<string, never>> {
-	protected async process(): Promise<Node> {
+	protected async process(): Promise<InstanceNode> {
 		const id = this.getUrlParameter('id');
 		const type_id = this.getUrlParameter('type_id');
 		const repository = this.getRepository();
@@ -16,9 +16,10 @@ class JsonFetchInstanceEndpoint extends JsonEndpoint<Record<string, never>> {
 			account
 		};
 
-		const operation = new FetchInstanceOperation(input);
+		const operation = new FetchNodeOperation(input);
+		const node = await operation.perform();
 
-		return operation.perform();
+		return node as InstanceNode;
 	}
 }
 

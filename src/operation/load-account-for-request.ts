@@ -1,8 +1,9 @@
 import HTTP from 'http';
 
-import Node from 'type/node';
 import SystemId from 'system/enum/id';
 import HttpHeader from 'http/enum/header';
+import AccountNode from 'type/node/account';
+import SessionNode from 'type/node/session';
 import parseCookie from 'http/utility/parse-cookie';
 import getHeaderValue from 'http/utility/get-header-value';
 import CookieAttribute from 'http/enum/cookie-attribute';
@@ -15,8 +16,8 @@ interface Input extends OperationInput {
 	readonly request: HTTP.IncomingMessage;
 }
 
-class LoadAccountForRequestOperation extends Operation<Input, Node> {
-	protected async performInternal(): Promise<Node> {
+class LoadAccountForRequestOperation extends Operation<Input, AccountNode> {
+	protected async performInternal(): Promise<AccountNode> {
 		const session_id = this.getSessionId();
 
 		if (session_id !== undefined) {
@@ -54,20 +55,22 @@ class LoadAccountForRequestOperation extends Operation<Input, Node> {
 		return undefined;
 	}
 
-	private async loadFromSessionId(session_id: string): Promise<Node> {
+	private async loadFromSessionId(session_id: string): Promise<AccountNode> {
 		const repository = this.getRepository();
 
-		const session = await repository.fetchNode({
+		const node = await repository.fetchNode({
 			type_id: SystemId.SESSION_TYPE,
 			id: session_id
 		});
+
+		const session = node as SessionNode;
 
 		if (session === undefined) {
 			return this.loadAnonymousAccount();
 		}
 
-		const url = session.account as string;
 		const account = this.getAccount();
+		const url = session.account;
 
 		const operation = new LoadNodeFromUrlOperation({
 			repository,
@@ -75,12 +78,14 @@ class LoadAccountForRequestOperation extends Operation<Input, Node> {
 			url
 		});
 
-		return operation.perform();
+		const result = await operation.perform();
+
+		return result as AccountNode;
 	}
 
 	private loadFromBasicAuthCredentials(
 		credentials: BasicAuthCredentials
-	): Promise<Node> {
+	): Promise<AccountNode> {
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
@@ -93,7 +98,7 @@ class LoadAccountForRequestOperation extends Operation<Input, Node> {
 		return operation.perform();
 	}
 
-	private async loadAnonymousAccount(): Promise<Node> {
+	private async loadAnonymousAccount(): Promise<AccountNode> {
 		const repository = this.getRepository();
 
 		const node = await repository.fetchNode({
@@ -101,7 +106,7 @@ class LoadAccountForRequestOperation extends Operation<Input, Node> {
 			id: SystemId.ANONYMOUS_ACCOUNT
 		});
 
-		return node as Node;
+		return node as AccountNode;
 	}
 
 	private getRequest(): HTTP.IncomingMessage {

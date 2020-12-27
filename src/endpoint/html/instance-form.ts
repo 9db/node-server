@@ -1,7 +1,9 @@
 import Node from 'type/node';
 import SystemId from 'system/enum/id';
+import TypeNode from 'type/type-node';
 import FieldInput from 'template/page/instance-form/type/field-input';
 import HtmlEndpoint from 'endpoint/html';
+import InstanceNode from 'type/instance-node';
 import getFieldKeys from 'utility/get-field-keys';
 import BadRequestError from 'http/error/bad-request';
 import getNodeParameters from 'utility/get-node-parameters';
@@ -21,7 +23,7 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 		return this.renderFormForTypeNode(type_node);
 	}
 
-	private fetchTypeNode(): Promise<Node> {
+	private async fetchTypeNode(): Promise<TypeNode> {
 		const id = this.getUrlParameter('type_id');
 		const type_id = SystemId.GENERIC_TYPE;
 		const repository = this.getRepository();
@@ -35,11 +37,12 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 		};
 
 		const operation = new FetchNodeOperation(input);
+		const node = await operation.perform();
 
-		return operation.perform();
+		return node as TypeNode;
 	}
 
-	private async renderFormForTypeNode(type_node: Node): Promise<string> {
+	private async renderFormForTypeNode(type_node: TypeNode): Promise<string> {
 		const draft_id = this.getDraftId();
 		const fields = await this.prepareFieldInputs(type_node);
 		const account = this.getAccount();
@@ -56,7 +59,7 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 		return template.render();
 	}
 
-	private prepareFieldInputs(type_node: Node): Promise<FieldInput[]> {
+	private prepareFieldInputs(type_node: TypeNode): Promise<FieldInput[]> {
 		const field_keys = getFieldKeys(type_node);
 
 		const promises = field_keys.map((field_key) => {
@@ -76,7 +79,8 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 		key: string,
 		type_url: string
 	): Promise<FieldInput> {
-		const type_node = await this.fetchNodeForUrl(type_url);
+		const node = await this.fetchNodeForUrl(type_url);
+		const type_node = node as TypeNode;
 		const instance_list = await this.fetchInstanceListForTypeNode(type_node);
 		const draft_value = this.getDraftValueForFieldKey(key);
 
@@ -105,8 +109,8 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 	}
 
 	private async fetchInstanceListForTypeNode(
-		type_node: Node
-	): Promise<Node[] | undefined> {
+		type_node: TypeNode
+	): Promise<InstanceNode[] | undefined> {
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
@@ -118,13 +122,16 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 		};
 
 		const operation = new FetchSetFieldValuesOperation(input);
-		const instance_urls = (await operation.perform()) as string[];
+		const result = await operation.perform();
+		const instance_urls = result as string[];
 
 		const promises = instance_urls.map((instance_url) => {
 			return this.fetchNodeForUrl(instance_url);
 		});
 
-		return Promise.all(promises);
+		const nodes = await Promise.all(promises);
+
+		return nodes as InstanceNode[];
 	}
 
 	private getDraftValueForFieldKey(field_key: string): string {

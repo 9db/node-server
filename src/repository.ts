@@ -3,6 +3,7 @@ import Adapter from 'interface/adapter';
 import SystemId from 'system/enum/id';
 import FieldValue from 'type/field-value';
 import SystemCache from 'system/cache';
+import AccountNode from 'type/node/account';
 import NotFoundError from 'http/error/not-found';
 import transformNode from 'repository/utility/transform-node';
 import NodeParameters from 'type/node-parameters';
@@ -162,7 +163,7 @@ class Repository {
 		return adapter.fetchAccountId(username, password);
 	}
 
-	public async fetchAnonymousAccount(): Promise<Node> {
+	public async fetchAnonymousAccount(): Promise<AccountNode> {
 		const node = await this.fetchNode({
 			type_id: SystemId.ACCOUNT_TYPE,
 			id: SystemId.ANONYMOUS_ACCOUNT
@@ -172,10 +173,10 @@ class Repository {
 			throw new NotFoundError();
 		}
 
-		return node;
+		return node as AccountNode;
 	}
 
-	public async fetchSystemAccount(): Promise<Node> {
+	public async fetchSystemAccount(): Promise<AccountNode> {
 		const node = await this.fetchNode({
 			type_id: SystemId.ACCOUNT_TYPE,
 			id: SystemId.SYSTEM_ACCOUNT
@@ -185,7 +186,7 @@ class Repository {
 			throw new NotFoundError();
 		}
 
-		return node;
+		return node as AccountNode;
 	}
 
 	// TODO: Make this private again.

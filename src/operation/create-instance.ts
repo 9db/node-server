@@ -1,6 +1,6 @@
-import Node from 'type/node';
 import SystemId from 'system/enum/id';
 import DraftField from 'type/draft-field';
+import InstanceNode from 'type/instance-node';
 import KeyGenerator from 'utility/key-generator';
 import buildNodeUrl from 'utility/build-node-url';
 import NodeParameters from 'type/node-parameters';
@@ -11,15 +11,15 @@ interface Input extends OperationInput {
 	readonly fields: DraftField[];
 }
 
-class CreateInstanceOperation extends Operation<Input, Node> {
-	protected async performInternal(): Promise<Node> {
+class CreateInstanceOperation extends Operation<Input, InstanceNode> {
+	protected async performInternal(): Promise<InstanceNode> {
 		const node = await this.buildNode();
 		const repository = this.getRepository();
 
 		return repository.storeNode(node);
 	}
 
-	private async buildNode(): Promise<Node> {
+	private async buildNode(): Promise<InstanceNode> {
 		const url = this.getUrl();
 		const type_url = this.getTypeUrl();
 		const draft_fields = this.getDraftFields();
@@ -28,7 +28,7 @@ class CreateInstanceOperation extends Operation<Input, Node> {
 		const created_at = Date.now();
 		const updated_at = created_at;
 
-		let node: Node = {
+		let node: InstanceNode = {
 			url,
 			type: type_url,
 			creator,
@@ -50,16 +50,14 @@ class CreateInstanceOperation extends Operation<Input, Node> {
 	}
 
 	private getUrl(): string {
-		const repository = this.getRepository();
-		const hostname = repository.getHostname();
+		const hostname = this.getHostname();
 		const parameters = this.getNodeParameters();
 
 		return buildNodeUrl(hostname, parameters);
 	}
 
 	private getTypeUrl(): string {
-		const repository = this.getRepository();
-		const hostname = repository.getHostname();
+		const hostname = this.getHostname();
 		const parameters = this.getNodeParameters();
 
 		return buildNodeUrl(hostname, {
@@ -87,12 +85,12 @@ class CreateInstanceOperation extends Operation<Input, Node> {
 	}
 
 	private getChangesUrl(): string {
-		const repository = this.getRepository();
-		const hostname = repository.getHostname();
-		const type_id = SystemId.CHANGE_LIST_TYPE;
-		const id = KeyGenerator.id();
+		const hostname = this.getHostname();
 
-		return `${hostname}/${type_id}/${id}`;
+		return buildNodeUrl(hostname, {
+			type_id: SystemId.CHANGE_LIST_TYPE,
+			id: KeyGenerator.id()
+		});
 	}
 }
 

@@ -1,10 +1,10 @@
-import Node from 'type/node';
 import Template from 'template';
 import SystemId from 'system/enum/id';
+import AccountNode from 'type/node/account';
 import getNodeParameters from 'utility/get-node-parameters';
 
 interface Input {
-	readonly account: Node;
+	readonly account: AccountNode;
 }
 
 class AccountMenuTemplate extends Template<Input> {
@@ -58,7 +58,7 @@ class AccountMenuTemplate extends Template<Input> {
 		return account.url;
 	}
 
-	private getAccount(): Node {
+	private getAccount(): AccountNode {
 		const input = this.getInput();
 
 		return input.account;

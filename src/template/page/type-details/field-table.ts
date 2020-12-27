@@ -1,10 +1,10 @@
-import Node from 'type/node';
+import TypeNode from 'type/type-node';
 import Template from 'template';
 import getFieldKeys from 'utility/get-field-keys';
 
 interface Input {
-	readonly node: Node;
-	readonly type_nodes: Node[];
+	readonly node: TypeNode;
+	readonly type_nodes: TypeNode[];
 }
 
 class FieldTableTemplate extends Template<Input> {
@@ -76,7 +76,7 @@ class FieldTableTemplate extends Template<Input> {
 		return getFieldKeys(node);
 	}
 
-	private getNode(): Node {
+	private getNode(): TypeNode {
 		const input = this.getInput();
 
 		return input.node;

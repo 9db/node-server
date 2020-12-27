@@ -1,4 +1,4 @@
-import Node from 'type/node';
+import TypeNode from 'type/type-node';
 import SystemId from 'system/enum/id';
 import HtmlEndpoint from 'endpoint/html';
 import FetchNodeOperation from 'operation/fetch-node';
@@ -11,7 +11,7 @@ class HtmlTypeDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		return this.renderNode(node);
 	}
 
-	private fetchNode(): Promise<Node> {
+	private async fetchNode(): Promise<TypeNode> {
 		const id = this.getUrlParameter('type_id');
 		const type_id = SystemId.GENERIC_TYPE;
 		const repository = this.getRepository();
@@ -25,11 +25,12 @@ class HtmlTypeDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		};
 
 		const operation = new FetchNodeOperation(input);
+		const node = await operation.perform();
 
-		return operation.perform();
+		return node as TypeNode;
 	}
 
-	private renderNode(node: Node): string {
+	private renderNode(node: TypeNode): string {
 		const account = this.getAccount();
 
 		const template = new TypeDetailsTemplate({

@@ -1,4 +1,4 @@
-import Node from 'type/node';
+import TypeNode from 'type/type-node';
 import SystemId from 'system/enum/id';
 import DraftField from 'type/draft-field';
 import HtmlEndpoint from 'endpoint/html';
@@ -18,7 +18,7 @@ class HtmlTypeFormEndpoint extends HtmlEndpoint<Input> {
 		return this.renderFormForTypeNode(type_node);
 	}
 
-	private fetchTypeNode(): Promise<Node> {
+	private async fetchTypeNode(): Promise<TypeNode> {
 		const id = SystemId.GENERIC_TYPE;
 		const type_id = SystemId.GENERIC_TYPE;
 		const repository = this.getRepository();
@@ -32,11 +32,12 @@ class HtmlTypeFormEndpoint extends HtmlEndpoint<Input> {
 		};
 
 		const operation = new FetchNodeOperation(input);
+		const node = await operation.perform();
 
-		return operation.perform();
+		return node as TypeNode;
 	}
 
-	private renderFormForTypeNode(node: Node): string {
+	private renderFormForTypeNode(node: TypeNode): string {
 		const account = this.getAccount();
 		const draft_id = this.getDraftId();
 		const draft_fields = this.getDraftFields();
