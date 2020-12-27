@@ -1,7 +1,7 @@
 import Node from 'type/node';
 import Template from 'template';
-import getNodeId from 'utility/get-node-id';
 import FieldInput from 'template/page/instance-form/type/field-input';
+import getNodeParameters from 'utility/get-node-parameters';
 
 interface Input extends FieldInput {
 	readonly index: number;
@@ -113,8 +113,9 @@ class FieldRowTemplate extends Template<Input> {
 
 	private getTypeLabel(): string {
 		const type_node = this.getTypeNode();
+		const parameters = getNodeParameters(type_node);
 
-		return getNodeId(type_node);
+		return parameters.id;
 	}
 
 	private getIndex(): number {

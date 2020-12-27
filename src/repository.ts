@@ -1,8 +1,6 @@
 import Node from 'type/node';
 import Adapter from 'interface/adapter';
 import SystemId from 'system/enum/id';
-import getNodeId from 'utility/get-node-id';
-import getTypeId from 'utility/get-type-id';
 import FieldValue from 'type/field-value';
 import SystemCache from 'system/cache';
 import NotFoundError from 'http/error/not-found';
@@ -10,6 +8,7 @@ import transformNode from 'repository/utility/transform-node';
 import NodeParameters from 'type/node-parameters';
 import standardizeUrl from 'repository/utility/standardize-url';
 import unstandardizeUrl from 'repository/utility/unstandardize-url';
+import getNodeParameters from 'utility/get-node-parameters';
 
 class Repository {
 	private hostname: string;
@@ -47,9 +46,8 @@ class Repository {
 	}
 
 	public async storeNode(node: Node): Promise<Node> {
-		const node_id = getNodeId(node);
-		const type_id = getTypeId(node);
-		const node_key = `${type_id}/${node_id}`;
+		const parameters = getNodeParameters(node);
+		const node_key = `${parameters.type_id}/${parameters.id}`;
 		const adapter = this.getAdapter();
 		const standardized_node = this.standardizeNode(node);
 

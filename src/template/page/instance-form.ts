@@ -1,6 +1,6 @@
 import Node from 'type/node';
-import getNodeId from 'utility/get-node-id';
 import FieldInput from 'template/page/instance-form/type/field-input';
+import getNodeParameters from 'utility/get-node-parameters';
 import FieldTableTemplate from 'template/page/instance-form/field-table';
 import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
@@ -98,8 +98,9 @@ class InstanceFormTemplate extends PageTemplate<Input> {
 
 	private getTypeLabel(): string {
 		const type_node = this.getTypeNode();
+		const parameters = getNodeParameters(type_node);
 
-		return getNodeId(type_node);
+		return parameters.id;
 	}
 
 	private getTypeNode(): Node {

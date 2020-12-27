@@ -1,12 +1,11 @@
 import Node from 'type/node';
 import SystemId from 'system/enum/id';
-import getNodeId from 'utility/get-node-id';
-import getTypeId from 'utility/get-type-id';
 import FieldValue from 'type/field-value';
 import ChangeType from 'enum/change-type';
 import ChangeStatus from 'enum/change-status';
 import KeyGenerator from 'utility/key-generator';
 import BadRequestError from 'http/error/bad-request';
+import getNodeParameters from 'utility/get-node-parameters';
 import Operation, { OperationInput } from 'operation';
 
 interface Input extends OperationInput {
@@ -79,11 +78,15 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 	private performSetFieldValueOperation(): Promise<Node> {
 		const input = this.getInput();
 		const node = input.node;
-		const node_id = getNodeId(node);
-		const type_id = getTypeId(node);
+		const parameters = getNodeParameters(node);
 		const repository = this.getRepository();
 
-		return repository.setField(type_id, node_id, input.field, input.value);
+		return repository.setField(
+			parameters.type_id,
+			parameters.id,
+			input.field,
+			input.value
+		);
 	}
 
 	private async performAddSetValueOperation(): Promise<Node> {

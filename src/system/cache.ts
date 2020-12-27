@@ -1,6 +1,6 @@
 import Node from 'type/node';
-import getNodeId from 'utility/get-node-id';
-import getTypeId from 'utility/get-type-id';
+import NodeParameters from 'type/node-parameters';
+import getNodeParameters from 'utility/get-node-parameters';
 import StringTypeGenerator from 'system/node-generator/type/string';
 import GenericTypeGenerator from 'system/node-generator/type/generic';
 import AccountTypeGenerator from 'system/node-generator/type/account';
@@ -30,8 +30,12 @@ class SystemCache {
 		this.generateNodes();
 	}
 
-	public fetchNode(type_id: string, node_id: string): Node | undefined {
-		const cache_key = this.buildCacheKey(type_id, node_id);
+	public fetchNode(type_id: string, id: string): Node | undefined {
+		const cache_key = this.buildCacheKey({
+			type_id,
+			id
+		});
+
 		const nodes = this.getNodes();
 
 		return nodes[cache_key];
@@ -49,17 +53,16 @@ class SystemCache {
 	}
 
 	private addNode(node: Node): void {
-		const node_id = getNodeId(node);
-		const type_id = getTypeId(node);
-		const cache_key = this.buildCacheKey(type_id, node_id);
+		const parameters = getNodeParameters(node);
+		const cache_key = this.buildCacheKey(parameters);
 
 		const nodes = this.getNodes();
 
 		nodes[cache_key] = node;
 	}
 
-	private buildCacheKey(type_id: string, node_id: string): string {
-		return `${type_id}/${node_id}`;
+	private buildCacheKey(node_parameters: NodeParameters): string {
+		return `${node_parameters.type_id}/${node_parameters.id}`;
 	}
 
 	private getHostname(): string {

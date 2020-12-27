@@ -1,6 +1,6 @@
 import Node from 'type/node';
-import getNodeId from 'utility/get-node-id';
 import DraftField from 'type/draft-field';
+import getNodeParameters from 'utility/get-node-parameters';
 import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
 interface Input extends PageTemplateInput {
@@ -154,8 +154,9 @@ class TypeFormTemplate extends PageTemplate<Input> {
 
 	private getTypeLabel(): string {
 		const node = this.getNode();
+		const parameters = getNodeParameters(node);
 
-		return getNodeId(node);
+		return parameters.id;
 	}
 
 	private getNode(): Node {

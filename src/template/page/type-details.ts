@@ -1,6 +1,5 @@
 import Node from 'type/node';
-import getNodeId from 'utility/get-node-id';
-import getTypeId from 'utility/get-type-id';
+import getNodeParameters from 'utility/get-node-parameters';
 import FieldTableTemplate from 'template/page/type-details/field-table';
 import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
@@ -158,8 +157,9 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 
 	private getTypeId(): string {
 		const node = this.getNode();
+		const parameters = getNodeParameters(node);
 
-		return getTypeId(node);
+		return parameters.type_id;
 	}
 
 	private getCreatorId(): string {
@@ -207,8 +207,9 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 
 	private getNodeId(): string {
 		const node = this.getNode();
+		const parameters = getNodeParameters(node);
 
-		return getNodeId(node);
+		return parameters.id;
 	}
 
 	private getNode(): Node {
