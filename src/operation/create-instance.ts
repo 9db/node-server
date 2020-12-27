@@ -1,5 +1,7 @@
 import Node from 'type/node';
+import SystemId from 'system/enum/id';
 import DraftField from 'type/draft-field';
+import KeyGenerator from 'utility/key-generator';
 import Operation, { OperationInput } from 'operation';
 
 interface Input extends OperationInput {
@@ -21,6 +23,7 @@ class CreateInstanceOperation extends Operation<Input, Node> {
 		const type_id = this.getTypeId();
 		const draft_fields = this.getDraftFields();
 		const creator = this.getAccountUrl();
+		const changes = this.getChangesUrl();
 		const created_at = Date.now();
 		const updated_at = created_at;
 
@@ -30,7 +33,7 @@ class CreateInstanceOperation extends Operation<Input, Node> {
 			creator,
 			created_at,
 			updated_at,
-			changes: []
+			changes
 		};
 
 		draft_fields.forEach((draft_field) => {
@@ -68,6 +71,15 @@ class CreateInstanceOperation extends Operation<Input, Node> {
 		const repository = this.getRepository();
 
 		return repository.buildNodeUrl(account);
+	}
+
+	private getChangesUrl(): string {
+		const repository = this.getRepository();
+		const hostname = repository.getHostname();
+		const type_id = SystemId.CHANGE_LIST_TYPE;
+		const id = KeyGenerator.id();
+
+		return `${hostname}/${type_id}/${id}`;
 	}
 }
 

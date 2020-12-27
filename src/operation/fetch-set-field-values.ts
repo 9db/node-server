@@ -15,31 +15,28 @@ interface Input extends OperationInput {
 class FetchSetFieldValuesOperation extends Operation<Input, PrimitiveValue[]> {
 	protected performInternal(): Promise<PrimitiveValue[]> {
 		const repository = this.getRepository();
-		const type_id = this.getTypeId();
-		const node_id = this.getNodeId();
-		const field_key = this.getFieldKey();
+		const set_url = this.getSetUrl();
+		const parts = set_url.split('/');
+		const set_id = parts.pop() as string;
+		const set_type_id = parts.pop() as string;
 		const offset = this.getOffset();
 		const limit = this.getLimit();
 
-		return repository.fetchValuesFromSet(
-			type_id,
-			node_id,
-			field_key,
-			offset,
-			limit
-		);
+		return repository.fetchValuesFromSet(set_type_id, set_id, offset, limit);
 	}
 
-	private getTypeId(): string {
+	private getSetUrl(): string {
 		const node = this.getNode();
+		const field_key = this.getFieldKey();
+		const set_url = node[field_key];
 
-		return node.type_id;
-	}
+		if (typeof set_url !== 'string') {
+			throw new Error(
+				`Invalid value for set url field: ${field_key}: ${typeof set_url}`
+			);
+		}
 
-	private getNodeId(): string {
-		const node = this.getNode();
-
-		return node.id;
+		return set_url;
 	}
 
 	private getFieldKey(): string {

@@ -4,7 +4,8 @@ enum SystemFieldKey {
 	CREATOR = 'creator',
 	CREATED_AT = 'created_at',
 	UPDATED_AT = 'updated_at',
-	CHANGES = 'changes'
+	CHANGES = 'changes',
+	INSTANCES = 'instances'
 }
 
 export default SystemFieldKey;

@@ -2,6 +2,7 @@ import Node from 'type/node';
 import ChangeType from 'enum/change-type';
 import BadRequestError from 'http/error/bad-request';
 import { PrimitiveValue } from 'type/field-value';
+import FetchNodeOperation from 'operation/fetch-node';
 import ChangeFieldOperation from 'operation/change-field';
 import Operation, { OperationInput } from 'operation';
 
@@ -23,12 +24,12 @@ class UpdateNodeOperation extends Operation<Input, Node> {
 		const changes = this.getChanges();
 
 		let index = 0;
-		let node: Node | undefined;
+		let node = await this.fetchNode();
 
 		while (index < changes.length) {
 			const change = changes[index];
 
-			node = await this.applyChange(change);
+			node = await this.applyChange(node, change);
 
 			index++;
 		}
@@ -40,7 +41,23 @@ class UpdateNodeOperation extends Operation<Input, Node> {
 		return node;
 	}
 
-	private applyChange(change: ChangeInput): Promise<Node> {
+	private applyChange(node: Node, change: ChangeInput): Promise<Node> {
+		const repository = this.getRepository();
+		const account = this.getAccount();
+
+		const input = {
+			...change,
+			node,
+			repository,
+			account
+		};
+
+		const service = new ChangeFieldOperation(input);
+
+		return service.perform();
+	}
+
+	private fetchNode(): Promise<Node> {
 		const id = this.getNodeId();
 		const type_id = this.getTypeId();
 		const repository = this.getRepository();
@@ -49,14 +66,13 @@ class UpdateNodeOperation extends Operation<Input, Node> {
 		const input = {
 			id,
 			type_id,
-			...change,
 			repository,
 			account
 		};
 
-		const service = new ChangeFieldOperation(input);
+		const operation = new FetchNodeOperation(input);
 
-		return service.perform();
+		return operation.perform();
 	}
 
 	private getChanges(): ChangeInput[] {

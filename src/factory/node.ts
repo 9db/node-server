@@ -1,24 +1,27 @@
 import Node from 'type/node';
+import KeyGenerator from 'utility/key-generator';
 
-function randomId(): string {
-	return Math.random().toString(16).slice(2);
+function randomCreatorUrl(): string {
+	const id = KeyGenerator.id();
+
+	return `https://9db.org/account/${id}`;
 }
 
-function randomCreator(): string {
-	const key = randomId();
+function randomChangesUrl(): string {
+	const id = KeyGenerator.id();
 
-	return `https://9db.org/account/${key}`;
+	return `https://9db.org/change-list/${id}`;
 }
 
 class NodeFactory {
 	public static create(node?: Partial<Node>): Node {
 		return {
-			id: randomId(),
-			type_id: randomId(),
-			creator: randomCreator(),
+			id: KeyGenerator.id(),
+			type_id: KeyGenerator.id(),
+			creator: randomCreatorUrl(),
 			created_at: Date.now(),
 			updated_at: Date.now(),
-			changes: [],
+			changes: randomChangesUrl(),
 			...node
 		};
 	}

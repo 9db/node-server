@@ -79,11 +79,11 @@ class FieldRowTemplate extends Template<Input> {
 		];
 
 		field_instance_list.forEach((instance) => {
-			const url = instance.url;
-			const label = instance.label;
+			const id = instance.id;
+			const url = `/${instance.type_id}/${id}`;
 
 			serialized_options.push(`
-				<option value="${url}">${label}</option>
+				<option value="${url}">${id}</option>
 			`);
 		});
 

@@ -1,5 +1,6 @@
 import Node from 'type/node';
 import SystemId from 'system/enum/id';
+import KeyGenerator from 'utility/key-generator';
 import buildNodeUrl from 'utility/build-node-url';
 
 abstract class SystemNodeGenerator {
@@ -16,7 +17,7 @@ abstract class SystemNodeGenerator {
 			creator: this.getCreator(),
 			created_at: 0,
 			updated_at: 0,
-			changes: []
+			changes: this.getChangesUrl()
 		};
 	}
 
@@ -24,6 +25,17 @@ abstract class SystemNodeGenerator {
 		const hostname = this.getHostname();
 		const id = SystemId.SYSTEM_ACCOUNT;
 		const type_id = SystemId.ACCOUNT_TYPE;
+
+		return buildNodeUrl(hostname, {
+			id,
+			type_id
+		});
+	}
+
+	private getChangesUrl(): string {
+		const hostname = this.getHostname();
+		const id = KeyGenerator.id();
+		const type_id = SystemId.CHANGE_LIST_TYPE;
 
 		return buildNodeUrl(hostname, {
 			id,

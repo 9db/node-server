@@ -15,6 +15,7 @@ class FetchNodeOperation extends Operation<Input, Node> {
 		const node = await repository.fetchNode(input.type_id, input.id);
 
 		if (node === undefined) {
+			console.log(`Unable to find node: ${input.type_id}/${input.id}`);
 			throw new NotFoundError();
 		}
 

@@ -8,8 +8,7 @@ import { PrimitiveValue } from 'type/field-value';
 import Operation, { OperationInput } from 'operation';
 
 interface Input extends OperationInput {
-	readonly id: string;
-	readonly type_id: string;
+	readonly node: Node;
 	readonly change_type: ChangeType;
 	readonly field: string;
 	readonly value: PrimitiveValue;
@@ -24,7 +23,7 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 	}
 
 	private async addChangeNode(): Promise<void> {
-		const input = this.getInput();
+		const changes_id = this.getChangesId();
 		const change_node = this.buildChangeNode();
 		const repository = this.getRepository();
 
@@ -33,11 +32,29 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const change_url = repository.buildNodeUrl(change_node);
 
 		await repository.addValueToList(
-			input.type_id,
-			input.id,
-			'changes',
+			SystemId.CHANGE_LIST_TYPE,
+			changes_id,
 			change_url
 		);
+	}
+
+	private getChangesId(): string {
+		const input = this.getInput();
+		const node = input.node;
+		const changes_url = node.changes;
+
+		if (typeof changes_url !== 'string') {
+			throw new Error(`Invalid change list url for node: ${changes_url}`);
+		}
+
+		const parts = changes_url.split('/');
+		const changes_id = parts.pop() as string;
+
+		if (typeof changes_id !== 'string') {
+			throw new Error(`Invalid changes id: ${changes_id}`);
+		}
+
+		return changes_id;
 	}
 
 	private performFieldChange(): Promise<Node> {
@@ -61,62 +78,114 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 
 	private performSetFieldValueOperation(): Promise<Node> {
 		const input = this.getInput();
+		const node = input.node;
 		const repository = this.getRepository();
 
-		return repository.setField(
-			input.type_id,
-			input.id,
-			input.field,
-			input.value
-		);
+		return repository.setField(node.type_id, node.id, input.field, input.value);
 	}
 
-	private performAddListValueOperation(): Promise<Node> {
+	private async performAddSetValueOperation(): Promise<Node> {
 		const input = this.getInput();
+		const node = input.node;
+		const set_url = node[input.field];
+
+		if (typeof set_url !== 'string') {
+			throw new Error(`No set url specified for field ${input.field}`);
+		}
+
+		const parts = set_url.split('/');
+		const set_id = parts.pop() as string;
+		const set_type_id = parts.pop() as string;
+
+		if (set_type_id.endsWith('-set') === false) {
+			throw new Error(
+				`Invalid set type for field ${input.field}: ${set_type_id}`
+			);
+		}
+
 		const repository = this.getRepository();
 
-		return repository.addValueToList(
-			input.type_id,
-			input.id,
-			input.field,
-			input.value
-		);
+		await repository.addValueToSet(set_type_id, set_id, input.value);
+
+		return node;
 	}
 
-	private performRemoveListValueOperation(): Promise<Node> {
+	private async performRemoveSetValueOperation(): Promise<Node> {
 		const input = this.getInput();
+		const node = input.node;
+		const set_url = node[input.field];
+
+		if (typeof set_url !== 'string') {
+			throw new Error(`No set url specified for field ${input.field}`);
+		}
+
+		const parts = set_url.split('/');
+		const set_id = parts.pop() as string;
+		const set_type_id = parts.pop() as string;
+
+		if (set_type_id.endsWith('-set') === false) {
+			throw new Error(
+				`Invalid set type for field ${input.field}: ${set_type_id}`
+			);
+		}
+
 		const repository = this.getRepository();
 
-		return repository.removeValueFromList(
-			input.type_id,
-			input.id,
-			input.field,
-			input.value
-		);
+		await repository.removeValueFromSet(set_type_id, set_id, input.value);
+
+		return node;
 	}
 
-	private performAddSetValueOperation(): Promise<Node> {
+	private async performAddListValueOperation(): Promise<Node> {
 		const input = this.getInput();
+		const node = input.node;
+		const list_url = node[input.field];
+
+		if (typeof list_url !== 'string') {
+			throw new Error(`No list url specified for field ${input.field}`);
+		}
+
+		const parts = list_url.split('/');
+		const list_id = parts.pop() as string;
+		const list_type_id = parts.pop() as string;
+
+		if (list_type_id.endsWith('-list') === false) {
+			throw new Error(
+				`Invalid list type for field ${input.field}: ${list_type_id}`
+			);
+		}
+
 		const repository = this.getRepository();
 
-		return repository.addValueToSet(
-			input.type_id,
-			input.id,
-			input.field,
-			input.value
-		);
+		await repository.addValueToList(list_type_id, list_id, input.value);
+
+		return node;
 	}
 
-	private performRemoveSetValueOperation(): Promise<Node> {
+	private async performRemoveListValueOperation(): Promise<Node> {
 		const input = this.getInput();
+		const node = input.node;
+		const list_url = node[input.field];
+
+		if (typeof list_url !== 'string') {
+			throw new Error(`No list url specified for field ${input.field}`);
+		}
+
+		const parts = list_url.split('/');
+		const list_id = parts.pop() as string;
+		const list_type_id = parts.pop() as string;
+
+		if (list_type_id.endsWith('-list') === false) {
+			throw new Error(
+				`Invalid list type for field ${input.field}: ${list_type_id}`
+			);
+		}
+
 		const repository = this.getRepository();
 
-		return repository.removeValueFromSet(
-			input.type_id,
-			input.id,
-			input.field,
-			input.value
-		);
+		await repository.removeValueFromList(list_type_id, list_id, input.value);
+
+		return node;
 	}
 
 	private buildChangeNode(): Node {
@@ -129,6 +198,7 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const previous_value = this.getInputPreviousValue();
 		const creator = 'https://9db.org/account/anonymous';
 		const approver = 'https://9db.org/account/system';
+		const changes = 'https://9db.org/changes/non';
 		const created_at = Date.now();
 		const updated_at = created_at;
 
@@ -144,7 +214,7 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 			creator,
 			created_at,
 			updated_at,
-			changes: []
+			changes
 		};
 	}
 

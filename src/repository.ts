@@ -78,124 +78,82 @@ class Repository {
 	public async addValueToSet(
 		type_id: string,
 		node_id: string,
-		field_key: string,
 		value: PrimitiveValue
-	): Promise<Node> {
+	): Promise<void> {
 		const node_key = `${type_id}/${node_id}`;
 		const standardized_value = this.standardizePrimitiveValue(value);
 		const adapter = this.getAdapter();
 
-		const node = await adapter.addValueToSet(
-			node_key,
-			field_key,
-			standardized_value
-		);
-
-		return this.unstandardizeNode(node);
+		await adapter.addValueToSet(node_key, standardized_value);
 	}
 
 	public async removeValueFromSet(
 		type_id: string,
 		node_id: string,
-		field_key: string,
 		value: PrimitiveValue
-	): Promise<Node> {
+	): Promise<void> {
 		const node_key = `${type_id}/${node_id}`;
 		const standardized_value = this.standardizePrimitiveValue(value);
 		const adapter = this.getAdapter();
 
-		const node = await adapter.removeValueFromSet(
-			node_key,
-			field_key,
-			standardized_value
-		);
-
-		return this.unstandardizeNode(node);
+		await adapter.removeValueFromSet(node_key, standardized_value);
 	}
 
 	public async fetchValuesFromSet(
 		type_id: string,
 		node_id: string,
-		field_key: string,
 		offset: number,
 		limit: number
 	): Promise<PrimitiveValue[]> {
 		const node_key = `${type_id}/${node_id}`;
 		const adapter = this.getAdapter();
 
-		const values = await adapter.fetchValuesFromSet(
-			node_key,
-			field_key,
-			offset,
-			limit
-		);
+		const values = await adapter.fetchValuesFromSet(node_key, offset, limit);
 
 		return values.map((value) => {
-			return this.standardizePrimitiveValue(value);
+			return this.unstandardizePrimitiveValue(value);
 		});
 	}
 
 	public async addValueToList(
 		type_id: string,
 		node_id: string,
-		field_key: string,
 		value: PrimitiveValue,
 		position?: number
-	): Promise<Node> {
+	): Promise<void> {
 		const node_key = `${type_id}/${node_id}`;
 		const standardized_value = this.standardizePrimitiveValue(value);
 		const adapter = this.getAdapter();
 
-		const node = await adapter.addValueToList(
-			node_key,
-			field_key,
-			standardized_value,
-			position
-		);
-
-		return this.unstandardizeNode(node);
+		await adapter.addValueToList(node_key, standardized_value, position);
 	}
 
 	public async removeValueFromList(
 		type_id: string,
 		node_id: string,
-		field_key: string,
 		value: PrimitiveValue,
 		position?: number
-	): Promise<Node> {
+	): Promise<void> {
 		const node_key = `${type_id}/${node_id}`;
 		const standardized_value = this.standardizePrimitiveValue(value);
 		const adapter = this.getAdapter();
 
-		const node = await adapter.removeValueFromList(
-			node_key,
-			field_key,
-			standardized_value,
-			position
-		);
-
-		return this.unstandardizeNode(node);
+		await adapter.removeValueFromList(node_key, standardized_value, position);
 	}
 
 	public async fetchValuesFromList(
 		type_id: string,
 		node_id: string,
-		field_key: string,
 		offset: number,
 		limit: number
 	): Promise<PrimitiveValue[]> {
 		const node_key = `${type_id}/${node_id}`;
 		const adapter = this.getAdapter();
 
-		const values = await adapter.fetchValuesFromList(
-			node_key,
-			field_key,
-			offset,
-			limit
-		);
+		const values = await adapter.fetchValuesFromList(node_key, offset, limit);
 
 		return values.map((value) => {
-			return this.standardizePrimitiveValue(value);
+			return this.unstandardizePrimitiveValue(value);
 		});
 	}
 
@@ -264,6 +222,11 @@ class Repository {
 		return node;
 	}
 
+	// TODO: Make this private again.
+	public getHostname(): string {
+		return this.hostname;
+	}
+
 	private fetchSystemNode(type_id: string, node_id: string): Node | undefined {
 		const system_cache = this.getSystemCache();
 
@@ -282,6 +245,12 @@ class Repository {
 		return transformNode(node, hostname, unstandardizeUrl);
 	}
 
+	private unstandardizePrimitiveValue(value: PrimitiveValue): PrimitiveValue {
+		const hostname = this.getHostname();
+
+		return unstandardizeUrl(value, hostname);
+	}
+
 	private standardizeValue(value: FieldValue): FieldValue {
 		const hostname = this.getHostname();
 
@@ -292,10 +261,6 @@ class Repository {
 		const hostname = this.getHostname();
 
 		return standardizeUrl(value, hostname);
-	}
-
-	private getHostname(): string {
-		return this.hostname;
 	}
 
 	private getAdapter(): Adapter {

@@ -222,7 +222,10 @@ class MemoryAdapter implements Adapter {
 		return Promise.resolve(set_values);
 	}
 
-	private storeSetValues(node_key: string, set_values: PrimitiveValue[]): Promise<void> {
+	private storeSetValues(
+		node_key: string,
+		set_values: PrimitiveValue[]
+	): Promise<void> {
 		const set_cache = this.getSetCache();
 
 		set_cache[node_key] = set_values;
@@ -242,7 +245,10 @@ class MemoryAdapter implements Adapter {
 		return Promise.resolve(list_values);
 	}
 
-	private storeListValues(node_key: string, list_values: PrimitiveValue[]): Promise<void> {
+	private storeListValues(
+		node_key: string,
+		list_values: PrimitiveValue[]
+	): Promise<void> {
 		const list_cache = this.getListCache();
 
 		list_cache[node_key] = list_values;

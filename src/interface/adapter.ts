@@ -12,15 +12,9 @@ interface Adapter {
 		field_value: FieldValue
 	): Promise<Node>;
 
-	addValueToSet(
-		node_key: string,
-		value: PrimitiveValue
-	): Promise<void>;
+	addValueToSet(node_key: string, value: PrimitiveValue): Promise<void>;
 
-	removeValueFromSet(
-		node_key: string,
-		value: PrimitiveValue
-	): Promise<void>;
+	removeValueFromSet(node_key: string, value: PrimitiveValue): Promise<void>;
 
 	fetchValuesFromSet(
 		node_key: string,

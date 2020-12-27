@@ -94,11 +94,9 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 
 		let type_id = parts.pop() as string;
 
-		if (/^[A-Za-z0-9]+$/.test(type_id) === false || type_id === 'localhost') {
+		if (/^[A-Za-z0-9-]+$/.test(type_id) === false || type_id === 'localhost') {
 			type_id = SystemId.GENERIC_TYPE;
 		}
-
-		console.log(type_id);
 
 		const repository = this.getRepository();
 		const account = this.getAccount();
