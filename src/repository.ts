@@ -1,15 +1,14 @@
 import Node from 'type/node';
 import Adapter from 'interface/adapter';
 import SystemId from 'system/enum/id';
+import FieldValue from 'type/field-value';
 import SystemCache from 'system/cache';
 import buildNodeUrl from 'utility/build-node-url';
 import NotFoundError from 'http/error/not-found';
 import transformNode from 'repository/utility/transform-node';
 import NodeParameters from 'type/node-parameters';
-import transformValue from 'repository/utility/transform-value';
 import standardizeUrl from 'repository/utility/standardize-url';
 import unstandardizeUrl from 'repository/utility/unstandardize-url';
-import FieldValue, { PrimitiveValue } from 'type/field-value';
 
 class Repository {
 	private hostname: string;
@@ -78,10 +77,10 @@ class Repository {
 	public async addValueToSet(
 		type_id: string,
 		node_id: string,
-		value: PrimitiveValue
+		value: FieldValue
 	): Promise<void> {
 		const node_key = `${type_id}/${node_id}`;
-		const standardized_value = this.standardizePrimitiveValue(value);
+		const standardized_value = this.standardizeValue(value);
 		const adapter = this.getAdapter();
 
 		await adapter.addValueToSet(node_key, standardized_value);
@@ -90,10 +89,10 @@ class Repository {
 	public async removeValueFromSet(
 		type_id: string,
 		node_id: string,
-		value: PrimitiveValue
+		value: FieldValue
 	): Promise<void> {
 		const node_key = `${type_id}/${node_id}`;
-		const standardized_value = this.standardizePrimitiveValue(value);
+		const standardized_value = this.standardizeValue(value);
 		const adapter = this.getAdapter();
 
 		await adapter.removeValueFromSet(node_key, standardized_value);
@@ -104,25 +103,25 @@ class Repository {
 		node_id: string,
 		offset: number,
 		limit: number
-	): Promise<PrimitiveValue[]> {
+	): Promise<FieldValue[]> {
 		const node_key = `${type_id}/${node_id}`;
 		const adapter = this.getAdapter();
 
 		const values = await adapter.fetchValuesFromSet(node_key, offset, limit);
 
 		return values.map((value) => {
-			return this.unstandardizePrimitiveValue(value);
+			return this.unstandardizeValue(value);
 		});
 	}
 
 	public async addValueToList(
 		type_id: string,
 		node_id: string,
-		value: PrimitiveValue,
+		value: FieldValue,
 		position?: number
 	): Promise<void> {
 		const node_key = `${type_id}/${node_id}`;
-		const standardized_value = this.standardizePrimitiveValue(value);
+		const standardized_value = this.standardizeValue(value);
 		const adapter = this.getAdapter();
 
 		await adapter.addValueToList(node_key, standardized_value, position);
@@ -131,11 +130,11 @@ class Repository {
 	public async removeValueFromList(
 		type_id: string,
 		node_id: string,
-		value: PrimitiveValue,
+		value: FieldValue,
 		position?: number
 	): Promise<void> {
 		const node_key = `${type_id}/${node_id}`;
-		const standardized_value = this.standardizePrimitiveValue(value);
+		const standardized_value = this.standardizeValue(value);
 		const adapter = this.getAdapter();
 
 		await adapter.removeValueFromList(node_key, standardized_value, position);
@@ -146,14 +145,14 @@ class Repository {
 		node_id: string,
 		offset: number,
 		limit: number
-	): Promise<PrimitiveValue[]> {
+	): Promise<FieldValue[]> {
 		const node_key = `${type_id}/${node_id}`;
 		const adapter = this.getAdapter();
 
 		const values = await adapter.fetchValuesFromList(node_key, offset, limit);
 
 		return values.map((value) => {
-			return this.unstandardizePrimitiveValue(value);
+			return this.unstandardizeValue(value);
 		});
 	}
 
@@ -245,22 +244,16 @@ class Repository {
 		return transformNode(node, hostname, unstandardizeUrl);
 	}
 
-	private unstandardizePrimitiveValue(value: PrimitiveValue): PrimitiveValue {
-		const hostname = this.getHostname();
-
-		return unstandardizeUrl(value, hostname);
-	}
-
 	private standardizeValue(value: FieldValue): FieldValue {
 		const hostname = this.getHostname();
 
-		return transformValue(value, hostname, standardizeUrl);
+		return standardizeUrl(value, hostname);
 	}
 
-	private standardizePrimitiveValue(value: PrimitiveValue): PrimitiveValue {
+	private unstandardizeValue(value: FieldValue): FieldValue {
 		const hostname = this.getHostname();
 
-		return standardizeUrl(value, hostname);
+		return unstandardizeUrl(value, hostname);
 	}
 
 	private getAdapter(): Adapter {

@@ -1,18 +1,18 @@
 import Node from 'type/node';
 import Adapter from 'interface/adapter';
+import FieldValue from 'type/field-value';
 import NotFoundError from 'http/error/not-found';
-import FieldValue, { PrimitiveValue } from 'type/field-value';
 
 interface NodeCache {
 	[key: string]: Node;
 }
 
 interface SetCache {
-	[key: string]: PrimitiveValue[];
+	[key: string]: FieldValue[];
 }
 
 interface ListCache {
-	[key: string]: PrimitiveValue[];
+	[key: string]: FieldValue[];
 }
 
 interface AccountIds {
@@ -64,7 +64,7 @@ class MemoryAdapter implements Adapter {
 
 	public async addValueToSet(
 		node_key: string,
-		value: PrimitiveValue
+		value: FieldValue
 	): Promise<void> {
 		const set_values = await this.fetchSetValues(node_key);
 
@@ -79,7 +79,7 @@ class MemoryAdapter implements Adapter {
 
 	public async removeValueFromSet(
 		node_key: string,
-		value: PrimitiveValue
+		value: FieldValue
 	): Promise<void> {
 		const set_values = await this.fetchSetValues(node_key);
 
@@ -98,13 +98,13 @@ class MemoryAdapter implements Adapter {
 		_node_key: string,
 		_offset: number,
 		_limit: number
-	): Promise<PrimitiveValue[]> {
+	): Promise<FieldValue[]> {
 		return Promise.resolve([]);
 	}
 
 	public async addValueToList(
 		node_key: string,
-		value: PrimitiveValue,
+		value: FieldValue,
 		position?: number
 	): Promise<void> {
 		const list_values = await this.fetchListValues(node_key);
@@ -139,7 +139,7 @@ class MemoryAdapter implements Adapter {
 
 	public async removeValueFromList(
 		node_key: string,
-		value: PrimitiveValue,
+		value: FieldValue,
 		position?: number
 	): Promise<void> {
 		const list_values = await this.fetchListValues(node_key);
@@ -172,7 +172,8 @@ class MemoryAdapter implements Adapter {
 		_node_key: string,
 		_offset: number,
 		_limit: number
-	): Promise<PrimitiveValue[]> {
+	): Promise<FieldValue[]> {
+		// TODO: implement
 		return Promise.resolve([]);
 	}
 
@@ -210,7 +211,7 @@ class MemoryAdapter implements Adapter {
 		return node;
 	}
 
-	private fetchSetValues(node_key: string): Promise<PrimitiveValue[]> {
+	private fetchSetValues(node_key: string): Promise<FieldValue[]> {
 		const set_cache = this.getSetCache();
 
 		if (set_cache[node_key] === undefined) {
@@ -224,7 +225,7 @@ class MemoryAdapter implements Adapter {
 
 	private storeSetValues(
 		node_key: string,
-		set_values: PrimitiveValue[]
+		set_values: FieldValue[]
 	): Promise<void> {
 		const set_cache = this.getSetCache();
 
@@ -233,7 +234,7 @@ class MemoryAdapter implements Adapter {
 		return Promise.resolve();
 	}
 
-	private fetchListValues(node_key: string): Promise<PrimitiveValue[]> {
+	private fetchListValues(node_key: string): Promise<FieldValue[]> {
 		const list_cache = this.getListCache();
 
 		if (list_cache[node_key] === undefined) {
@@ -247,7 +248,7 @@ class MemoryAdapter implements Adapter {
 
 	private storeListValues(
 		node_key: string,
-		list_values: PrimitiveValue[]
+		list_values: FieldValue[]
 	): Promise<void> {
 		const list_cache = this.getListCache();
 

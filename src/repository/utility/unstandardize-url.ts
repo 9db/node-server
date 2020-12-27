@@ -1,9 +1,9 @@
-import { PrimitiveValue } from 'type/field-value';
+import FieldValue from 'type/field-value';
 
 function unstandardizeUrl(
-	value: PrimitiveValue,
+	value: FieldValue,
 	hostname: string
-): PrimitiveValue {
+): FieldValue {
 	if (typeof value !== 'string') {
 		return value;
 	}

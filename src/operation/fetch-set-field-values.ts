@@ -1,5 +1,5 @@
 import Node from 'type/node';
-import { PrimitiveValue } from 'type/field-value';
+import FieldValue from 'type/field-value';
 import Operation, { OperationInput } from 'operation';
 
 const DEFAULT_OFFSET = 0;
@@ -12,8 +12,8 @@ interface Input extends OperationInput {
 	readonly limit?: number;
 }
 
-class FetchSetFieldValuesOperation extends Operation<Input, PrimitiveValue[]> {
-	protected performInternal(): Promise<PrimitiveValue[]> {
+class FetchSetFieldValuesOperation extends Operation<Input, FieldValue[]> {
+	protected performInternal(): Promise<FieldValue[]> {
 		const repository = this.getRepository();
 		const set_url = this.getSetUrl();
 		const parts = set_url.split('/');

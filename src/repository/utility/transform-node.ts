@@ -1,7 +1,6 @@
 import Node from 'type/node';
 import FieldValue from 'type/field-value';
-import transformValue from 'repository/utility/transform-value';
-import PrimitiveTransformer from 'repository/interface/primitive-transformer';
+import FieldValueTransformer from 'repository/interface/field-value-transformer';
 
 interface WritableNode {
 	[key: string]: FieldValue;
@@ -10,7 +9,7 @@ interface WritableNode {
 function transformNode(
 	node: Node,
 	hostname: string,
-	transformer: PrimitiveTransformer
+	transformer: FieldValueTransformer
 ): Node {
 	const result: WritableNode = {};
 
@@ -26,7 +25,7 @@ function transformNode(
 				return;
 		}
 
-		const transformed_value = transformValue(value, hostname, transformer);
+		const transformed_value = transformer(value, hostname);
 
 		result[key] = transformed_value;
 	});

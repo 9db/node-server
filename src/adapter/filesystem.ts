@@ -5,8 +5,8 @@ import { readFile, writeFile, mkdir } from 'fs/promises';
 
 import Node from 'type/node';
 import Adapter from 'interface/adapter';
+import FieldValue from 'type/field-value';
 import NotFoundError from 'http/error/not-found';
-import FieldValue, { PrimitiveValue } from 'type/field-value';
 
 const exists = Util.promisify(FS.exists);
 
@@ -74,7 +74,7 @@ class FilesystemAdapter implements Adapter {
 
 	public async addValueToSet(
 		node_key: string,
-		value: PrimitiveValue
+		value: FieldValue
 	): Promise<void> {
 		const set_values = await this.fetchSetValues(node_key);
 
@@ -89,7 +89,7 @@ class FilesystemAdapter implements Adapter {
 
 	public async removeValueFromSet(
 		node_key: string,
-		value: PrimitiveValue
+		value: FieldValue
 	): Promise<void> {
 		const set_values = await this.fetchSetValues(node_key);
 
@@ -108,7 +108,7 @@ class FilesystemAdapter implements Adapter {
 		node_key: string,
 		offset: number,
 		limit: number
-	): Promise<PrimitiveValue[]> {
+	): Promise<FieldValue[]> {
 		const set_values = await this.fetchSetValues(node_key);
 
 		return set_values.slice(offset, offset + limit);
@@ -116,7 +116,7 @@ class FilesystemAdapter implements Adapter {
 
 	public async addValueToList(
 		node_key: string,
-		value: PrimitiveValue,
+		value: FieldValue,
 		position?: number
 	): Promise<void> {
 		const list_values = await this.fetchListValues(node_key);
@@ -151,7 +151,7 @@ class FilesystemAdapter implements Adapter {
 
 	public async removeValueFromList(
 		node_key: string,
-		value: PrimitiveValue,
+		value: FieldValue,
 		position?: number
 	): Promise<void> {
 		const list_values = await this.fetchListValues(node_key);
@@ -184,7 +184,7 @@ class FilesystemAdapter implements Adapter {
 		node_key: string,
 		offset: number,
 		limit: number
-	): Promise<PrimitiveValue[]> {
+	): Promise<FieldValue[]> {
 		const list_values = await this.fetchListValues(node_key);
 
 		return list_values.slice(offset, offset + limit);
@@ -231,7 +231,7 @@ class FilesystemAdapter implements Adapter {
 		return node;
 	}
 
-	private async fetchSetValues(node_key: string): Promise<PrimitiveValue[]> {
+	private async fetchSetValues(node_key: string): Promise<FieldValue[]> {
 		const set_filepath = this.buildNodeFilepath(node_key);
 		const set_exists = await exists(set_filepath);
 
@@ -246,12 +246,12 @@ class FilesystemAdapter implements Adapter {
 			throw new Error(`Invalid set data for key ${node_key}: ${set_string}`);
 		}
 
-		return set_data as PrimitiveValue[];
+		return set_data as FieldValue[];
 	}
 
 	private async storeSetValues(
 		node_key: string,
-		set_values: PrimitiveValue[]
+		set_values: FieldValue[]
 	): Promise<void> {
 		await this.ensureTypeDirectoryExists(node_key);
 
@@ -261,7 +261,7 @@ class FilesystemAdapter implements Adapter {
 		await writeFile(set_filepath, set_data, 'utf8');
 	}
 
-	private async fetchListValues(node_key: string): Promise<PrimitiveValue[]> {
+	private async fetchListValues(node_key: string): Promise<FieldValue[]> {
 		const list_filepath = this.buildNodeFilepath(node_key);
 		const list_exists = await exists(list_filepath);
 
@@ -276,12 +276,12 @@ class FilesystemAdapter implements Adapter {
 			throw new Error(`Invalid list data for key ${node_key}: ${list_string}`);
 		}
 
-		return list_data as PrimitiveValue[];
+		return list_data as FieldValue[];
 	}
 
 	private async storeListValues(
 		node_key: string,
-		list_values: PrimitiveValue[]
+		list_values: FieldValue[]
 	): Promise<void> {
 		await this.ensureTypeDirectoryExists(node_key);
 

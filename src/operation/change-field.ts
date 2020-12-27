@@ -1,18 +1,18 @@
 import Node from 'type/node';
 import SystemId from 'system/enum/id';
+import FieldValue from 'type/field-value';
 import ChangeType from 'enum/change-type';
 import ChangeStatus from 'enum/change-status';
 import KeyGenerator from 'utility/key-generator';
 import BadRequestError from 'http/error/bad-request';
-import { PrimitiveValue } from 'type/field-value';
 import Operation, { OperationInput } from 'operation';
 
 interface Input extends OperationInput {
 	readonly node: Node;
 	readonly change_type: ChangeType;
 	readonly field: string;
-	readonly value: PrimitiveValue;
-	readonly previous_value?: PrimitiveValue;
+	readonly value: FieldValue;
+	readonly previous_value?: FieldValue;
 }
 
 class ChangeFieldOperation extends Operation<Input, Node> {
@@ -224,13 +224,13 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		return input.field;
 	}
 
-	private getInputValue(): PrimitiveValue {
+	private getInputValue(): FieldValue {
 		const input = this.getInput();
 
 		return input.value;
 	}
 
-	private getInputPreviousValue(): PrimitiveValue {
+	private getInputPreviousValue(): FieldValue {
 		const input = this.getInput();
 
 		if (input.previous_value === undefined) {

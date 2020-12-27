@@ -1,5 +1,5 @@
 import Node from 'type/node';
-import FieldValue, { PrimitiveValue } from 'type/field-value';
+import FieldValue from 'type/field-value';
 
 interface Adapter {
 	fetchNode(node_key: string): Promise<Node | undefined>;
@@ -12,25 +12,25 @@ interface Adapter {
 		field_value: FieldValue
 	): Promise<Node>;
 
-	addValueToSet(node_key: string, value: PrimitiveValue): Promise<void>;
+	addValueToSet(node_key: string, value: FieldValue): Promise<void>;
 
-	removeValueFromSet(node_key: string, value: PrimitiveValue): Promise<void>;
+	removeValueFromSet(node_key: string, value: FieldValue): Promise<void>;
 
 	fetchValuesFromSet(
 		node_key: string,
 		offset: number,
 		limit: number
-	): Promise<PrimitiveValue[]>;
+	): Promise<FieldValue[]>;
 
 	addValueToList(
 		node_key: string,
-		value: PrimitiveValue,
+		value: FieldValue,
 		position?: number
 	): Promise<void>;
 
 	removeValueFromList(
 		node_key: string,
-		value: PrimitiveValue,
+		value: FieldValue,
 		position?: number
 	): Promise<void>;
 
@@ -38,7 +38,7 @@ interface Adapter {
 		node_key: string,
 		offset: number,
 		limit: number
-	): Promise<PrimitiveValue[]>;
+	): Promise<FieldValue[]>;
 
 	fetchAccountId(
 		username: string,
