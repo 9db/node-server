@@ -82,7 +82,10 @@ describe('CreateInstanceOperation', () => {
 
 			await operation.perform();
 
-			const persisted_node = await repository.fetchNode('wizard', 'gandalf');
+			const persisted_node = await repository.fetchNode({
+				type_id: 'wizard',
+				id: 'gandalf'
+			});
 
 			expect(persisted_node).toStrictEqual({
 				url: `${hostname}/wizard/gandalf`,

@@ -22,11 +22,8 @@ class Repository {
 		this.system_cache = new SystemCache(hostname);
 	}
 
-	public async fetchNode(
-		type_id: string,
-		node_id: string
-	): Promise<Node | undefined> {
-		const system_node = this.fetchSystemNode(type_id, node_id);
+	public async fetchNode(parameters: NodeParameters): Promise<Node | undefined> {
+		const system_node = this.fetchSystemNode(parameters);
 
 		if (system_node !== undefined) {
 			// NOTE: No transformation happens on system nodes, for performance
@@ -35,7 +32,7 @@ class Repository {
 		}
 
 		const adapter = this.getAdapter();
-		const node_key = `${type_id}/${node_id}`;
+		const node_key = this.getNodeKey(parameters);
 		const node = await adapter.fetchNode(node_key);
 
 		if (node === undefined) {
@@ -47,7 +44,7 @@ class Repository {
 
 	public async storeNode(node: Node): Promise<Node> {
 		const parameters = getNodeParameters(node);
-		const node_key = `${parameters.type_id}/${parameters.id}`;
+		const node_key = this.getNodeKey(parameters);
 		const adapter = this.getAdapter();
 		const standardized_node = this.standardizeNode(node);
 
@@ -57,12 +54,11 @@ class Repository {
 	}
 
 	public async setField(
-		type_id: string,
-		node_id: string,
+		parameters: NodeParameters,
 		field_key: string,
 		field_value: FieldValue
 	): Promise<Node> {
-		const node_key = `${type_id}/${node_id}`;
+		const node_key = this.getNodeKey(parameters);
 		const standardized_value = this.standardizeValue(field_value);
 		const adapter = this.getAdapter();
 
@@ -76,11 +72,10 @@ class Repository {
 	}
 
 	public async addValueToSet(
-		type_id: string,
-		node_id: string,
+		parameters: NodeParameters,
 		value: FieldValue
 	): Promise<void> {
-		const node_key = `${type_id}/${node_id}`;
+		const node_key = this.getNodeKey(parameters);
 		const standardized_value = this.standardizeValue(value);
 		const adapter = this.getAdapter();
 
@@ -88,11 +83,10 @@ class Repository {
 	}
 
 	public async removeValueFromSet(
-		type_id: string,
-		node_id: string,
+		parameters: NodeParameters,
 		value: FieldValue
 	): Promise<void> {
-		const node_key = `${type_id}/${node_id}`;
+		const node_key = this.getNodeKey(parameters);
 		const standardized_value = this.standardizeValue(value);
 		const adapter = this.getAdapter();
 
@@ -100,12 +94,11 @@ class Repository {
 	}
 
 	public async fetchValuesFromSet(
-		type_id: string,
-		node_id: string,
+		parameters: NodeParameters,
 		offset: number,
 		limit: number
 	): Promise<FieldValue[]> {
-		const node_key = `${type_id}/${node_id}`;
+		const node_key = this.getNodeKey(parameters);
 		const adapter = this.getAdapter();
 
 		const values = await adapter.fetchValuesFromSet(node_key, offset, limit);
@@ -116,12 +109,11 @@ class Repository {
 	}
 
 	public async addValueToList(
-		type_id: string,
-		node_id: string,
+		parameters: NodeParameters,
 		value: FieldValue,
 		position?: number
 	): Promise<void> {
-		const node_key = `${type_id}/${node_id}`;
+		const node_key = this.getNodeKey(parameters);
 		const standardized_value = this.standardizeValue(value);
 		const adapter = this.getAdapter();
 
@@ -129,12 +121,11 @@ class Repository {
 	}
 
 	public async removeValueFromList(
-		type_id: string,
-		node_id: string,
+		parameters: NodeParameters,
 		value: FieldValue,
 		position?: number
 	): Promise<void> {
-		const node_key = `${type_id}/${node_id}`;
+		const node_key = this.getNodeKey(parameters);
 		const standardized_value = this.standardizeValue(value);
 		const adapter = this.getAdapter();
 
@@ -142,12 +133,11 @@ class Repository {
 	}
 
 	public async fetchValuesFromList(
-		type_id: string,
-		node_id: string,
+		parameters: NodeParameters,
 		offset: number,
 		limit: number
 	): Promise<FieldValue[]> {
-		const node_key = `${type_id}/${node_id}`;
+		const node_key = this.getNodeKey(parameters);
 		const adapter = this.getAdapter();
 
 		const values = await adapter.fetchValuesFromList(node_key, offset, limit);
@@ -163,24 +153,6 @@ class Repository {
 		return url.startsWith(hostname);
 	}
 
-	public getNodeParametersForUrl(url: string): NodeParameters | undefined {
-		const hostname = this.getHostname();
-		const suffix = url.replace(hostname, '');
-		const match = suffix.match(/^\/([^\/]+)\/([^\/]+)$/);
-
-		if (match === null) {
-			return undefined;
-		}
-
-		const type_id = match[1];
-		const id = match[2];
-
-		return {
-			id,
-			type_id
-		};
-	}
-
 	public async fetchAccountId(
 		username: string,
 		password: string
@@ -191,10 +163,10 @@ class Repository {
 	}
 
 	public async fetchAnonymousAccount(): Promise<Node> {
-		const node = await this.fetchNode(
-			SystemId.ACCOUNT_TYPE,
-			SystemId.ANONYMOUS_ACCOUNT
-		);
+		const node = await this.fetchNode({
+			type_id: SystemId.ACCOUNT_TYPE,
+			id: SystemId.ANONYMOUS_ACCOUNT
+		});
 
 		if (node === undefined) {
 			throw new NotFoundError();
@@ -204,10 +176,10 @@ class Repository {
 	}
 
 	public async fetchSystemAccount(): Promise<Node> {
-		const node = await this.fetchNode(
-			SystemId.ACCOUNT_TYPE,
-			SystemId.SYSTEM_ACCOUNT
-		);
+		const node = await this.fetchNode({
+			type_id: SystemId.ACCOUNT_TYPE,
+			id: SystemId.SYSTEM_ACCOUNT
+		});
 
 		if (node === undefined) {
 			throw new NotFoundError();
@@ -221,10 +193,14 @@ class Repository {
 		return this.hostname;
 	}
 
-	private fetchSystemNode(type_id: string, node_id: string): Node | undefined {
+	private getNodeKey(parameters: NodeParameters): string {
+		return `${parameters.type_id}/${parameters.id}`;
+	}
+
+	private fetchSystemNode(parameters: NodeParameters): Node | undefined {
 		const system_cache = this.getSystemCache();
 
-		return system_cache.fetchNode(type_id, node_id);
+		return system_cache.fetchNode(parameters);
 	}
 
 	private standardizeNode(node: Node): Node {

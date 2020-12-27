@@ -57,10 +57,10 @@ class LoadAccountForRequestOperation extends Operation<Input, Node> {
 	private async loadFromSessionId(session_id: string): Promise<Node> {
 		const repository = this.getRepository();
 
-		const session = await repository.fetchNode(
-			SystemId.SESSION_TYPE,
-			session_id
-		);
+		const session = await repository.fetchNode({
+			type_id: SystemId.SESSION_TYPE,
+			id: session_id
+		});
 
 		if (session === undefined) {
 			return this.loadAnonymousAccount();
@@ -96,10 +96,10 @@ class LoadAccountForRequestOperation extends Operation<Input, Node> {
 	private async loadAnonymousAccount(): Promise<Node> {
 		const repository = this.getRepository();
 
-		const node = await repository.fetchNode(
-			SystemId.ACCOUNT_TYPE,
-			SystemId.ANONYMOUS_ACCOUNT
-		);
+		const node = await repository.fetchNode({
+			type_id: SystemId.ACCOUNT_TYPE,
+			id: SystemId.ANONYMOUS_ACCOUNT
+		});
 
 		return node as Node;
 	}

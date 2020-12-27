@@ -1,5 +1,6 @@
 import HTTP from 'http';
 
+import SystemId from 'system/enum/id';
 import postJson from 'http/utility/post-json';
 import Repository from 'repository';
 import HttpHeader from 'http/enum/header';
@@ -96,7 +97,10 @@ describe('JsonCreateInstanceEndpoint', () => {
 
 			await postJson(url, data);
 
-			const persisted_node = await repository.fetchNode('type', 'wizard');
+			const persisted_node = await repository.fetchNode({
+				type_id: SystemId.GENERIC_TYPE,
+				id: 'wizard'
+			});
 
 			expect(persisted_node).toStrictEqual({
 				url: `${hostname}/wizard`,

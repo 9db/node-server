@@ -6,6 +6,7 @@ import ChangeStatus from 'enum/change-status';
 import KeyGenerator from 'utility/key-generator';
 import BadRequestError from 'http/error/bad-request';
 import getNodeParameters from 'utility/get-node-parameters';
+import getNodeParametersForUrl from 'utility/get-node-parameters-for-url';
 import Operation, { OperationInput } from 'operation';
 
 interface Input extends OperationInput {
@@ -30,11 +31,12 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 
 		await repository.storeNode(change_node);
 
-		await repository.addValueToList(
-			SystemId.CHANGE_LIST_TYPE,
-			changes_id,
-			change_node.url
-		);
+		const parameters = {
+			type_id: SystemId.CHANGE_LIST_TYPE,
+			id: changes_id
+		};
+
+		await repository.addValueToList(parameters, change_node.url);
 	}
 
 	private getChangesId(): string {
@@ -82,8 +84,7 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const repository = this.getRepository();
 
 		return repository.setField(
-			parameters.type_id,
-			parameters.id,
+			parameters,
 			input.field,
 			input.value
 		);
@@ -98,19 +99,10 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 			throw new Error(`No set url specified for field ${input.field}`);
 		}
 
-		const parts = set_url.split('/');
-		const set_id = parts.pop() as string;
-		const set_type_id = parts.pop() as string;
-
-		if (set_type_id.endsWith('-set') === false) {
-			throw new Error(
-				`Invalid set type for field ${input.field}: ${set_type_id}`
-			);
-		}
-
+		const parameters = getNodeParametersForUrl(set_url);
 		const repository = this.getRepository();
 
-		await repository.addValueToSet(set_type_id, set_id, input.value);
+		await repository.addValueToSet(parameters, input.value);
 
 		return node;
 	}
@@ -124,19 +116,10 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 			throw new Error(`No set url specified for field ${input.field}`);
 		}
 
-		const parts = set_url.split('/');
-		const set_id = parts.pop() as string;
-		const set_type_id = parts.pop() as string;
-
-		if (set_type_id.endsWith('-set') === false) {
-			throw new Error(
-				`Invalid set type for field ${input.field}: ${set_type_id}`
-			);
-		}
-
+		const parameters = getNodeParametersForUrl(set_url);
 		const repository = this.getRepository();
 
-		await repository.removeValueFromSet(set_type_id, set_id, input.value);
+		await repository.removeValueFromSet(parameters, input.value);
 
 		return node;
 	}
@@ -150,19 +133,10 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 			throw new Error(`No list url specified for field ${input.field}`);
 		}
 
-		const parts = list_url.split('/');
-		const list_id = parts.pop() as string;
-		const list_type_id = parts.pop() as string;
-
-		if (list_type_id.endsWith('-list') === false) {
-			throw new Error(
-				`Invalid list type for field ${input.field}: ${list_type_id}`
-			);
-		}
-
+		const parameters = getNodeParametersForUrl(list_url);
 		const repository = this.getRepository();
 
-		await repository.addValueToList(list_type_id, list_id, input.value);
+		await repository.addValueToList(parameters, input.value);
 
 		return node;
 	}
@@ -176,19 +150,10 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 			throw new Error(`No list url specified for field ${input.field}`);
 		}
 
-		const parts = list_url.split('/');
-		const list_id = parts.pop() as string;
-		const list_type_id = parts.pop() as string;
-
-		if (list_type_id.endsWith('-list') === false) {
-			throw new Error(
-				`Invalid list type for field ${input.field}: ${list_type_id}`
-			);
-		}
-
+		const parameters = getNodeParametersForUrl(list_url);
 		const repository = this.getRepository();
 
-		await repository.removeValueFromList(list_type_id, list_id, input.value);
+		await repository.removeValueFromList(parameters, input.value);
 
 		return node;
 	}

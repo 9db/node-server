@@ -18,10 +18,10 @@ class FetchAccountOperation extends Operation<Input, Node> {
 	private async fetchAccount(account_id: string): Promise<Node> {
 		const repository = this.getRepository();
 
-		const account = await repository.fetchNode(
-			SystemId.ACCOUNT_TYPE,
-			account_id
-		);
+		const account = await repository.fetchNode({
+			type_id: SystemId.ACCOUNT_TYPE,
+			id: account_id
+		});
 
 		if (account === undefined) {
 			throw new UnauthorizedError();

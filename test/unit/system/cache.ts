@@ -9,10 +9,10 @@ describe('SystemCache', () => {
 
 		describe('when fetching the generic type', () => {
 			it('returns expected node', () => {
-				const node = cache.fetchNode(
-					SystemId.GENERIC_TYPE,
-					SystemId.GENERIC_TYPE
-				);
+				const node = cache.fetchNode({
+					type_id: SystemId.GENERIC_TYPE,
+					id: SystemId.GENERIC_TYPE
+				});
 
 				expect(node).toStrictEqual({
 					id: SystemId.GENERIC_TYPE,
@@ -27,10 +27,10 @@ describe('SystemCache', () => {
 
 		describe('when fetching the account type', () => {
 			it('returns expected node', () => {
-				const node = cache.fetchNode(
-					SystemId.GENERIC_TYPE,
-					SystemId.ACCOUNT_TYPE
-				);
+				const node = cache.fetchNode({
+					type_id: SystemId.GENERIC_TYPE,
+					id: SystemId.ACCOUNT_TYPE
+				});
 
 				expect(node).toStrictEqual({
 					id: SystemId.ACCOUNT_TYPE,
@@ -45,10 +45,10 @@ describe('SystemCache', () => {
 
 		describe('when fetching the system account', () => {
 			it('returns expected node', () => {
-				const node = cache.fetchNode(
-					SystemId.ACCOUNT_TYPE,
-					SystemId.SYSTEM_ACCOUNT
-				);
+				const node = cache.fetchNode({
+					type_id: SystemId.ACCOUNT_TYPE,
+					id: SystemId.SYSTEM_ACCOUNT
+				});
 
 				expect(node).toStrictEqual({
 					id: SystemId.SYSTEM_ACCOUNT,
@@ -63,10 +63,10 @@ describe('SystemCache', () => {
 
 		describe('when fetching the anonymous account', () => {
 			it('returns expected node', () => {
-				const node = cache.fetchNode(
-					SystemId.ACCOUNT_TYPE,
-					SystemId.ANONYMOUS_ACCOUNT
-				);
+				const node = cache.fetchNode({
+					type_id: SystemId.ACCOUNT_TYPE,
+					id: SystemId.ANONYMOUS_ACCOUNT
+				});
 
 				expect(node).toStrictEqual({
 					id: SystemId.ANONYMOUS_ACCOUNT,
@@ -81,7 +81,10 @@ describe('SystemCache', () => {
 
 		describe('when fetching a node that does not exist', () => {
 			it('returns undefined', () => {
-				const node = cache.fetchNode(SystemId.ACCOUNT_TYPE, 'gandalf');
+				const node = cache.fetchNode({
+					type_id: SystemId.ACCOUNT_TYPE,
+					id: 'gandalf'
+				});
 
 				expect(node).toStrictEqual(undefined);
 			});

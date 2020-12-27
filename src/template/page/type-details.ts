@@ -132,15 +132,15 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 	}
 
 	private getListUrl(): string {
-		const node_id = this.getNodeId();
+		const node_url = this.getNodeUrl();
 
-		return this.buildUrl(node_id, 'list');
+		return `${node_url}/list`;
 	}
 
 	private getNewUrl(): string {
-		const node_id = this.getNodeId();
+		const node_url = this.getNodeUrl();
 
-		return this.buildUrl(node_id, 'new');
+		return `${node_url}/new`;
 	}
 
 	private getNodeUrl(): string {

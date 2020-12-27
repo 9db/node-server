@@ -30,11 +30,8 @@ class SystemCache {
 		this.generateNodes();
 	}
 
-	public fetchNode(type_id: string, id: string): Node | undefined {
-		const cache_key = this.buildCacheKey({
-			type_id,
-			id
-		});
+	public fetchNode(parameters: NodeParameters): Node | undefined {
+		const cache_key = this.buildCacheKey(parameters);
 
 		const nodes = this.getNodes();
 
