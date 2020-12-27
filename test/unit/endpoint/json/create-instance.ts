@@ -1,7 +1,6 @@
 import HTTP from 'http';
 
 import postJson from 'http/utility/post-json';
-import SystemId from 'system/enum/id';
 import Repository from 'repository';
 import HttpHeader from 'http/enum/header';
 import StatusCode from 'http/enum/status-code';
@@ -62,8 +61,7 @@ describe('JsonCreateInstanceEndpoint', () => {
 			const result = await postJson(url, data);
 
 			expect(result.body).toStrictEqual({
-				id: 'wizard',
-				type_id: SystemId.GENERIC_TYPE,
+				url: `${hostname}/wizard`,
 				creator: `${hostname}/account/anonymous`,
 				created_at: current_timestamp,
 				updated_at: current_timestamp,
@@ -101,8 +99,7 @@ describe('JsonCreateInstanceEndpoint', () => {
 			const persisted_node = await repository.fetchNode('type', 'wizard');
 
 			expect(persisted_node).toStrictEqual({
-				id: 'wizard',
-				type_id: SystemId.GENERIC_TYPE,
+				url: `${hostname}/wizard`,
 				creator: `${hostname}/account/anonymous`,
 				created_at: current_timestamp,
 				updated_at: current_timestamp,

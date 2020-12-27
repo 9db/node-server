@@ -13,8 +13,6 @@ abstract class SystemNodeGenerator {
 	public generate(): Node {
 		return {
 			url: this.getNodeUrl(),
-			id: this.getNodeId(),
-			type_id: this.getTypeId(),
 			creator: this.getCreator(),
 			created_at: 0,
 			updated_at: 0,

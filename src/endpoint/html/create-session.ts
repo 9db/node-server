@@ -1,5 +1,6 @@
 import Node from 'type/node';
 import SystemId from 'system/enum/id';
+import getNodeId from 'utility/get-node-id';
 import HttpHeader from 'http/enum/header';
 import buildCookie from 'http/utility/build-cookie';
 import HtmlEndpoint from 'endpoint/html';
@@ -66,7 +67,8 @@ class HtmlCreateSessionEndpoint extends HtmlEndpoint<Input> {
 	}
 
 	private setCookieFromSession(session: Node): void {
-		const cookie = buildCookie(session.id, TimeInterval.ONE_DAY);
+		const session_id = getNodeId(session);
+		const cookie = buildCookie(session_id, TimeInterval.ONE_DAY);
 
 		this.setHeaderValue(HttpHeader.SET_COOKIE, cookie);
 	}

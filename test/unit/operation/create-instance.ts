@@ -48,8 +48,7 @@ describe('CreateInstanceOperation', () => {
 			const result = await operation.perform();
 
 			expect(result).toStrictEqual({
-				id: 'gandalf',
-				type_id: 'wizard',
+				url: `${hostname}/wizard/gandalf`,
 				color: 'grey',
 				weapon: 'glamdring',
 				creator: `${hostname}/account/anonymous`,
@@ -86,8 +85,7 @@ describe('CreateInstanceOperation', () => {
 			const persisted_node = await repository.fetchNode('wizard', 'gandalf');
 
 			expect(persisted_node).toStrictEqual({
-				id: 'gandalf',
-				type_id: 'wizard',
+				url: `${hostname}/wizard/gandalf`,
 				color: 'grey',
 				weapon: 'glamdring',
 				creator: `${hostname}/account/anonymous`,

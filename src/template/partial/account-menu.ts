@@ -1,6 +1,7 @@
 import Node from 'type/node';
 import Template from 'template';
 import SystemId from 'system/enum/id';
+import getNodeId from 'utility/get-node-id';
 
 interface Input {
 	readonly account: Node;
@@ -47,7 +48,7 @@ class AccountMenuTemplate extends Template<Input> {
 	private getAccountId(): string {
 		const account = this.getAccount();
 
-		return account.id;
+		return getNodeId(account);
 	}
 
 	private getAccountUrl(): string {

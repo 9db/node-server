@@ -47,8 +47,7 @@ describe('JsonFetchInstanceEndpoint', () => {
 		describe('when the specified node exists', () => {
 			it('returns expected response data', async () => {
 				const node = NodeFactory.create({
-					type_id: 'wizard',
-					id: 'gandalf'
+					url: `${hostname}/wizard/gandalf`
 				});
 
 				await repository.storeNode(node);
