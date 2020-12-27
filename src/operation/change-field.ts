@@ -84,11 +84,7 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const parameters = getNodeParameters(node.url);
 		const repository = this.getRepository();
 
-		return repository.setField(
-			parameters,
-			input.field,
-			input.value
-		);
+		return repository.setField(parameters, input.field, input.value);
 	}
 
 	private async performAddSetValueOperation(): Promise<Node> {

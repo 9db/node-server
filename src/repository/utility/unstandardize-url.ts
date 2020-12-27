@@ -1,9 +1,6 @@
 import FieldValue from 'type/field-value';
 
-function unstandardizeUrl(
-	value: FieldValue,
-	hostname: string
-): FieldValue {
+function unstandardizeUrl(value: FieldValue, hostname: string): FieldValue {
 	if (typeof value !== 'string') {
 		return value;
 	}

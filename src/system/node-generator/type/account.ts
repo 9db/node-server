@@ -7,7 +7,7 @@ class AccountTypeGenerator extends SystemNodeGenerator {
 		return {
 			type_id: SystemId.GENERIC_TYPE,
 			id: SystemId.ACCOUNT_TYPE
-		}
+		};
 	}
 }
 

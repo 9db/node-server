@@ -21,7 +21,7 @@ function buildConfig(partial_config?: Partial<ServerConfig>): ServerConfig {
 		port = partial_config.port;
 	}
 
-	const hostname = `http://localhost:${port}`
+	const hostname = `http://localhost:${port}`;
 	const adapter = new MemoryAdapter();
 
 	return {

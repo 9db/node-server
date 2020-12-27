@@ -23,7 +23,9 @@ class Repository {
 		this.system_cache = new SystemCache(hostname);
 	}
 
-	public async fetchNode(parameters: NodeParameters): Promise<Node | undefined> {
+	public async fetchNode(
+		parameters: NodeParameters
+	): Promise<Node | undefined> {
 		const system_node = this.fetchSystemNode(parameters);
 
 		if (system_node !== undefined) {

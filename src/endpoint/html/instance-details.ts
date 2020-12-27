@@ -53,7 +53,10 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		return node as TypeNode;
 	}
 
-	private async renderNode(node: InstanceNode, type_node: TypeNode): Promise<string> {
+	private async renderNode(
+		node: InstanceNode,
+		type_node: TypeNode
+	): Promise<string> {
 		const account = this.getAccount();
 		const fields = await this.buildFieldInputs(node, type_node);
 
@@ -66,7 +69,10 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		return template.render();
 	}
 
-	private buildFieldInputs(node: InstanceNode, type_node: TypeNode): Promise<FieldInput[]> {
+	private buildFieldInputs(
+		node: InstanceNode,
+		type_node: TypeNode
+	): Promise<FieldInput[]> {
 		const field_keys = getFieldKeys(node);
 
 		const promises = field_keys.map((field_key) => {
