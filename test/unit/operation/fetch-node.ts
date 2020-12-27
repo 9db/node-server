@@ -25,8 +25,8 @@ describe('FetchNodeOperation', () => {
 			await repository.storeNode(node);
 
 			const input = {
-				id: node.id,
-				type_id: node.type_id,
+				id: 'gandalf',
+				type_id: 'wizard',
 				repository,
 				account
 			};

@@ -1,9 +1,10 @@
 import Node from 'type/node';
 import Adapter from 'interface/adapter';
 import SystemId from 'system/enum/id';
+import getNodeId from 'utility/get-node-id';
+import getTypeId from 'utility/get-type-id';
 import FieldValue from 'type/field-value';
 import SystemCache from 'system/cache';
-import buildNodeUrl from 'utility/build-node-url';
 import NotFoundError from 'http/error/not-found';
 import transformNode from 'repository/utility/transform-node';
 import NodeParameters from 'type/node-parameters';
@@ -46,7 +47,9 @@ class Repository {
 	}
 
 	public async storeNode(node: Node): Promise<Node> {
-		const node_key = `${node.type_id}/${node.id}`;
+		const node_id = getNodeId(node);
+		const type_id = getTypeId(node);
+		const node_key = `${type_id}/${node_id}`;
 		const adapter = this.getAdapter();
 		const standardized_node = this.standardizeNode(node);
 
@@ -154,12 +157,6 @@ class Repository {
 		return values.map((value) => {
 			return this.unstandardizeValue(value);
 		});
-	}
-
-	public buildNodeUrl(node: Node): string {
-		const hostname = this.getHostname();
-
-		return buildNodeUrl(hostname, node);
 	}
 
 	public isLocalUrl(url: string): boolean {

@@ -23,9 +23,8 @@ class HtmlCreateTypeEndpoint extends HtmlEndpoint<Input> {
 
 		const operation = new CreateTypeOperation(input);
 		const node = await operation.perform();
-		const url = `/${node.id}`;
 
-		this.redirectToUrl(url);
+		this.redirectToUrl(node.url);
 	}
 
 	private getId(): string {

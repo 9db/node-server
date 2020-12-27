@@ -1,5 +1,7 @@
 import Node from 'type/node';
 import SystemId from 'system/enum/id';
+import getNodeId from 'utility/get-node-id';
+import getTypeId from 'utility/get-type-id';
 import FieldValue from 'type/field-value';
 import ChangeType from 'enum/change-type';
 import ChangeStatus from 'enum/change-status';
@@ -29,12 +31,10 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 
 		await repository.storeNode(change_node);
 
-		const change_url = repository.buildNodeUrl(change_node);
-
 		await repository.addValueToList(
 			SystemId.CHANGE_LIST_TYPE,
 			changes_id,
-			change_url
+			change_node.url
 		);
 	}
 
@@ -79,9 +79,11 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 	private performSetFieldValueOperation(): Promise<Node> {
 		const input = this.getInput();
 		const node = input.node;
+		const node_id = getNodeId(node);
+		const type_id = getTypeId(node);
 		const repository = this.getRepository();
 
-		return repository.setField(node.type_id, node.id, input.field, input.value);
+		return repository.setField(type_id, node_id, input.field, input.value);
 	}
 
 	private async performAddSetValueOperation(): Promise<Node> {

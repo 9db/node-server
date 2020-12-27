@@ -53,7 +53,7 @@ class AccountMenuTemplate extends Template<Input> {
 	private getAccountUrl(): string {
 		const account = this.getAccount();
 
-		return this.buildNodeUrl(account);
+		return account.url;
 	}
 
 	private getAccount(): Node {

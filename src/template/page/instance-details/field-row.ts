@@ -1,5 +1,6 @@
 import Node from 'type/node';
 import Template from 'template';
+import getNodeId from 'utility/get-node-id';
 import FieldValue from 'type/field-value';
 import FieldInput from 'template/page/instance-details/type/field-input';
 
@@ -62,7 +63,7 @@ class FieldRowTemplate extends Template<FieldInput> {
 	private getTypeId(): string {
 		const type_node = this.getTypeNode();
 
-		return type_node.id;
+		return getNodeId(type_node);
 	}
 
 	private getTypeNode(): Node {

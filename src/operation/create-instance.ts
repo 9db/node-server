@@ -79,9 +79,8 @@ class CreateInstanceOperation extends Operation<Input, Node> {
 
 	private getAccountUrl(): string {
 		const account = this.getAccount();
-		const repository = this.getRepository();
 
-		return repository.buildNodeUrl(account);
+		return account.url;
 	}
 
 	private getChangesUrl(): string {

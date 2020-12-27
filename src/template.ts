@@ -1,4 +1,3 @@
-import Node from 'type/node';
 import standardizeIndentation from 'template/utility/standardize-indentation';
 
 abstract class Template<Input> {
@@ -16,10 +15,6 @@ abstract class Template<Input> {
 
 	protected getInput(): Input {
 		return this.input;
-	}
-
-	protected buildNodeUrl(node: Node): string {
-		return this.buildUrl(node.type_id, node.id);
 	}
 
 	protected buildUrl(type_id: string, node_id: string): string {

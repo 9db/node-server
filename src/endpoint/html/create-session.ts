@@ -46,7 +46,6 @@ class HtmlCreateSessionEndpoint extends HtmlEndpoint<Input> {
 		const id = KeyGenerator.id();
 		const repository = this.getRepository();
 		const system_account = await repository.fetchSystemAccount();
-		const account_url = repository.buildNodeUrl(account);
 
 		const input = {
 			id,
@@ -54,7 +53,7 @@ class HtmlCreateSessionEndpoint extends HtmlEndpoint<Input> {
 			fields: [
 				{
 					key: 'account',
-					value: account_url
+					value: account.url
 				}
 			],
 			repository,

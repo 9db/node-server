@@ -1,4 +1,6 @@
 import Node from 'type/node';
+import getNodeId from 'utility/get-node-id';
+import getTypeId from 'utility/get-type-id';
 import StringTypeGenerator from 'system/node-generator/type/string';
 import GenericTypeGenerator from 'system/node-generator/type/generic';
 import AccountTypeGenerator from 'system/node-generator/type/account';
@@ -47,7 +49,9 @@ class SystemCache {
 	}
 
 	private addNode(node: Node): void {
-		const cache_key = this.buildCacheKey(node.type_id, node.id);
+		const node_id = getNodeId(node);
+		const type_id = getTypeId(node);
+		const cache_key = this.buildCacheKey(type_id, node_id);
 
 		const nodes = this.getNodes();
 
