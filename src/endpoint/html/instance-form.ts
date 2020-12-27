@@ -6,6 +6,7 @@ import getFieldKeys from 'utility/get-field-keys';
 import BadRequestError from 'http/error/bad-request';
 import FetchNodeOperation from 'operation/fetch-node';
 import InstanceFormTemplate from 'template/page/instance-form';
+import getNodeParametersForUrl from 'utility/get-node-parameters-for-url';
 import FetchSetFieldValuesOperation from 'operation/fetch-set-field-values';
 
 interface Input {
@@ -88,22 +89,12 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 	}
 
 	private fetchNodeForUrl(url: string): Promise<Node> {
-		// TODO: remote url's
-		const parts = url.split('/');
-		const id = parts.pop() as string;
-
-		let type_id = parts.pop() as string;
-
-		if (/^[A-Za-z0-9-]+$/.test(type_id) === false || type_id === 'localhost') {
-			type_id = SystemId.GENERIC_TYPE;
-		}
-
+		const node_parameters = getNodeParametersForUrl(url);
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
 		const input = {
-			id,
-			type_id,
+			...node_parameters,
 			repository,
 			account
 		};
