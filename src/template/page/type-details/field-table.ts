@@ -1,10 +1,9 @@
-import TypeNode from 'type/type-node';
 import Template from 'template';
-import getFieldKeys from 'utility/get-field-keys';
+import FieldInput from 'template/page/type-details/type/field-input';
+import FieldRowTemplate from 'template/page/type-details/field-row';
 
 interface Input {
-	readonly node: TypeNode;
-	readonly type_nodes: TypeNode[];
+	readonly fields: FieldInput[];
 }
 
 class FieldTableTemplate extends Template<Input> {
@@ -41,10 +40,10 @@ class FieldTableTemplate extends Template<Input> {
 	}
 
 	private getRowsHtml(): string {
-		const field_keys = this.getFieldKeys();
+		const fields = this.getFields();
 
-		const serialized_fields = field_keys.map((field_key) => {
-			return this.serializeField(field_key);
+		const serialized_fields = fields.map((field) => {
+			return this.serializeField(field);
 		});
 
 		const result = serialized_fields.join('\n');
@@ -52,34 +51,22 @@ class FieldTableTemplate extends Template<Input> {
 		return result;
 	}
 
-	private serializeField(field_key: string): string {
-		const node = this.getNode();
-		const field_value = node[field_key];
+	private serializeField(field: FieldInput): string {
+		const template = new FieldRowTemplate(field);
 
-		return `
-			<tr>
-				<td>${field_key}</td>
-				<td>${field_value}</td>
-			</tr>
-		`;
+		return template.render();
 	}
 
 	private hasFields(): boolean {
-		const field_keys = this.getFieldKeys();
+		const fields = this.getFields();
 
-		return field_keys.length > 0;
+		return fields.length > 0;
 	}
 
-	private getFieldKeys(): string[] {
-		const node = this.getNode();
-
-		return getFieldKeys(node);
-	}
-
-	private getNode(): TypeNode {
+	private getFields(): FieldInput[] {
 		const input = this.getInput();
 
-		return input.node;
+		return input.fields;
 	}
 }
 

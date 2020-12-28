@@ -1,11 +1,12 @@
 import TypeNode from 'type/type-node';
+import FieldInput from 'template/page/type-details/type/field-input';
 import getNodeParameters from 'utility/get-node-parameters';
 import FieldTableTemplate from 'template/page/type-details/field-table';
 import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
 interface Input extends PageTemplateInput {
 	readonly node: TypeNode;
-	readonly type_nodes: TypeNode[];
+	readonly fields: FieldInput[];
 }
 
 class TypeDetailsTemplate extends PageTemplate<Input> {
@@ -66,12 +67,10 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 	}
 
 	private getFieldTableHtml(): string {
-		const node = this.getNode();
-		const type_nodes = this.getTypeNodes();
+		const fields = this.getFields();
 
 		const input = {
-			node,
-			type_nodes
+			fields
 		};
 
 		const template = new FieldTableTemplate(input);
@@ -218,10 +217,10 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 		return input.node;
 	}
 
-	private getTypeNodes(): TypeNode[] {
+	private getFields(): FieldInput[] {
 		const input = this.getInput();
 
-		return input.type_nodes;
+		return input.fields;
 	}
 }
 

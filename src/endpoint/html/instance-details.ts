@@ -1,4 +1,3 @@
-import SystemId from 'system/enum/id';
 import TypeNode from 'type/type-node';
 import FieldInput from 'template/page/instance-details/type/field-input';
 import HtmlEndpoint from 'endpoint/html';
@@ -6,13 +5,15 @@ import InstanceNode from 'type/instance-node';
 import getFieldKeys from 'utility/get-field-keys';
 import FetchNodeOperation from 'operation/fetch-node';
 import InstanceDetailsTemplate from 'template/page/instance-details';
+import LoadNodeFromUrlOperation from 'operation/load-node-from-url';
 
 class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 	protected async process(): Promise<string> {
 		const node = await this.fetchNode();
-		const type_node = await this.fetchTypeNode();
+		const type_node = await this.fetchTypeNode(node);
+		const fields = await this.buildFieldInputs(node, type_node);
 
-		return this.renderNode(node, type_node);
+		return this.renderNode(node, type_node, fields);
 	}
 
 	private async fetchNode(): Promise<InstanceNode> {
@@ -34,20 +35,18 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		return node as InstanceNode;
 	}
 
-	private async fetchTypeNode(): Promise<TypeNode> {
-		const id = this.getUrlParameter('type_id');
-		const type_id = SystemId.GENERIC_TYPE;
+	private async fetchTypeNode(instance_node: InstanceNode): Promise<TypeNode> {
 		const repository = this.getRepository();
 		const account = this.getAccount();
+		const url = instance_node.type;
 
 		const input = {
-			id,
-			type_id,
+			url,
 			repository,
 			account
 		};
 
-		const operation = new FetchNodeOperation(input);
+		const operation = new LoadNodeFromUrlOperation(input);
 		const node = await operation.perform();
 
 		return node as TypeNode;
@@ -55,10 +54,10 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 
 	private async renderNode(
 		node: InstanceNode,
-		type_node: TypeNode
+		type_node: TypeNode,
+		fields: FieldInput[]
 	): Promise<string> {
 		const account = this.getAccount();
-		const fields = await this.buildFieldInputs(node, type_node);
 
 		const template = new InstanceDetailsTemplate({
 			node,
@@ -88,26 +87,22 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		type_node: TypeNode
 	): Promise<FieldInput> {
 		const value = node[field_key];
-		const type_url = type_node[field_key] as string;
+		const url = type_node[field_key] as string;
 
-		if (type_url === undefined) {
+		if (url === undefined) {
 			throw new Error(`Unable to find type url for instance key ${field_key}`);
 		}
 
-		// TODO: Remote types
-		const parts = type_url.split('/');
-		const type_id = parts.pop() as string;
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
 		const input = {
-			id: type_id,
-			type_id: SystemId.GENERIC_TYPE,
+			url,
 			repository,
 			account
 		};
 
-		const operation = new FetchNodeOperation(input);
+		const operation = new LoadNodeFromUrlOperation(input);
 		const result = await operation.perform();
 		const field_type_node = result as TypeNode;
 

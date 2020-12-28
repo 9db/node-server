@@ -1,7 +1,6 @@
 enum SystemFieldKey {
 	URL = 'url',
-	ID = 'id',
-	TYPE_ID = 'type_id',
+	TYPE = 'type',
 	CREATOR = 'creator',
 	CREATED_AT = 'created_at',
 	UPDATED_AT = 'updated_at',
