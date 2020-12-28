@@ -6,8 +6,9 @@ enum SystemId {
 	STRING_TYPE = 'string',
 
 	CHANGE_LIST_TYPE = 'change-list',
-	INSTANCE_LIST_TYPE = 'instance-list',
-	TYPE_LIST_TYPE = 'type-list',
+
+	INSTANCE_SET_TYPE = 'instance-list',
+	TYPE_SET_TYPE = 'type-list',
 
 	SYSTEM_ACCOUNT = 'system',
 	ANONYMOUS_ACCOUNT = 'anonymous'

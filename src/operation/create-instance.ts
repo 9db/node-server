@@ -1,9 +1,12 @@
 import SystemId from 'system/enum/id';
+import TypeNode from 'type/type-node';
 import DraftField from 'type/draft-field';
 import InstanceNode from 'type/instance-node';
 import KeyGenerator from 'utility/key-generator';
 import buildNodeUrl from 'utility/build-node-url';
 import NodeParameters from 'type/node-parameters';
+import LoadNodeFromUrlOperation from 'operation/load-node-from-url';
+import AddValueToSetFieldOperation from 'operation/add-value-to-set-field';
 import Operation, { OperationInput } from 'operation';
 
 interface Input extends OperationInput {
@@ -13,13 +16,38 @@ interface Input extends OperationInput {
 
 class CreateInstanceOperation extends Operation<Input, InstanceNode> {
 	protected async performInternal(): Promise<InstanceNode> {
-		const node = await this.buildNode();
+		const instance_node = await this.createInstance();
+
+		await this.addInstanceToType(instance_node);
+
+		return instance_node;
+	}
+
+	private async fetchTypeNode(): Promise<TypeNode> {
+		const url = this.getTypeUrl();
+		const repository = this.getRepository();
+		const account = this.getAccount();
+
+		const input = {
+			url,
+			repository,
+			account
+		};
+
+		const operation = new LoadNodeFromUrlOperation(input);
+		const node = await operation.perform();
+
+		return node as TypeNode;
+	}
+
+	private async createInstance(): Promise<InstanceNode> {
+		const node = this.buildNode();
 		const repository = this.getRepository();
 
 		return repository.storeNode(node);
 	}
 
-	private async buildNode(): Promise<InstanceNode> {
+	private buildNode(): InstanceNode {
 		const url = this.getUrl();
 		const type_url = this.getTypeUrl();
 		const draft_fields = this.getDraftFields();
@@ -47,6 +75,24 @@ class CreateInstanceOperation extends Operation<Input, InstanceNode> {
 		});
 
 		return node;
+	}
+
+	private async addInstanceToType(instance_node: InstanceNode): Promise<void> {
+		const type_node = await this.fetchTypeNode();
+		const repository = this.getRepository();
+		const account = this.getAccount();
+
+		const input = {
+			node: type_node,
+			field_key: 'instances',
+			value: instance_node.url,
+			repository,
+			account
+		};
+
+		const operation = new AddValueToSetFieldOperation(input);
+
+		await operation.perform();
 	}
 
 	private getUrl(): string {

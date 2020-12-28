@@ -64,14 +64,14 @@ abstract class SystemNodeGenerator {
 
 	private getInstancesUrl(): string {
 		return this.buildNodeUrl({
-			type_id: SystemId.INSTANCE_LIST_TYPE,
+			type_id: SystemId.INSTANCE_SET_TYPE,
 			id: KeyGenerator.id()
 		});
 	}
 
 	private getChildTypesUrl(): string {
 		return this.buildNodeUrl({
-			type_id: SystemId.TYPE_LIST_TYPE,
+			type_id: SystemId.TYPE_SET_TYPE,
 			id: KeyGenerator.id()
 		});
 	}

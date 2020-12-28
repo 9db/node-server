@@ -3,6 +3,8 @@ import SystemId from 'system/enum/id';
 import DraftField from 'type/draft-field';
 import KeyGenerator from 'utility/key-generator';
 import buildNodeUrl from 'utility/build-node-url';
+import FetchNodeOperation from 'operation/fetch-node';
+import AddValueToSetFieldOperation from 'operation/add-value-to-set-field';
 import Operation, { OperationInput } from 'operation';
 
 interface Input extends OperationInput {
@@ -15,8 +17,11 @@ class CreateTypeOperation extends Operation<Input, TypeNode> {
 		const node = await this.buildNode();
 		const repository = this.getRepository();
 		const persisted_node = await repository.storeNode(node);
+		const type_node = persisted_node as TypeNode;
 
-		return persisted_node as TypeNode;
+		await this.addInstanceToGenericType(type_node);
+
+		return type_node;
 	}
 
 	private async buildNode(): Promise<TypeNode> {
@@ -34,6 +39,24 @@ class CreateTypeOperation extends Operation<Input, TypeNode> {
 		});
 
 		return node;
+	}
+
+	private async addInstanceToGenericType(type_node: TypeNode): Promise<void> {
+		const generic_type = await this.fetchGenericType();
+		const repository = this.getRepository();
+		const account = this.getAccount();
+
+		const input = {
+			node: generic_type,
+			field_key: 'instances',
+			value: type_node.url,
+			repository,
+			account
+		};
+
+		const operation = new AddValueToSetFieldOperation(input);
+
+		await operation.perform();
 	}
 
 	private getTypeNode(): TypeNode {
@@ -58,6 +81,22 @@ class CreateTypeOperation extends Operation<Input, TypeNode> {
 			child_types,
 			parent_type
 		};
+	}
+
+	private async fetchGenericType(): Promise<TypeNode> {
+		const repository = this.getRepository();
+		const account = this.getAccount();
+
+		const operation = new FetchNodeOperation({
+			type_id: SystemId.GENERIC_TYPE,
+			id: SystemId.GENERIC_TYPE,
+			repository,
+			account
+		});
+
+		const node = await operation.perform();
+
+		return node as TypeNode;
 	}
 
 	private getUrl(): string {
@@ -110,7 +149,7 @@ class CreateTypeOperation extends Operation<Input, TypeNode> {
 		const hostname = this.getHostname();
 
 		return buildNodeUrl(hostname, {
-			type_id: SystemId.INSTANCE_LIST_TYPE,
+			type_id: SystemId.INSTANCE_SET_TYPE,
 			id: KeyGenerator.id()
 		});
 	}
@@ -119,7 +158,7 @@ class CreateTypeOperation extends Operation<Input, TypeNode> {
 		const hostname = this.getHostname();
 
 		return buildNodeUrl(hostname, {
-			type_id: SystemId.TYPE_LIST_TYPE,
+			type_id: SystemId.TYPE_SET_TYPE,
 			id: KeyGenerator.id()
 		});
 	}
