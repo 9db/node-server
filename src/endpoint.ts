@@ -137,7 +137,10 @@ abstract class Endpoint<Input, Output extends AllowedOutputs> {
 		return node as TypeNode;
 	}
 
-	protected async fetchInstance(type_id: string, id: string): Promise<InstanceNode> {
+	protected async fetchInstance(
+		type_id: string,
+		id: string
+	): Promise<InstanceNode> {
 		const node = await this.fetchNode(SystemId.GENERIC_TYPE, type_id);
 
 		return node as InstanceNode;

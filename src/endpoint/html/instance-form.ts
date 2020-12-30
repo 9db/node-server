@@ -97,7 +97,7 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 
 		const nodes = await Promise.all(promises);
 
-		return nodes as InstanceNode[];
+		return nodes;
 	}
 
 	private getDraftValueForFieldKey(field_key: string): string {

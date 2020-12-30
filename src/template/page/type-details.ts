@@ -133,7 +133,7 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 	private getInstancesUrl(): string {
 		const node = this.getNode();
 
-		return node.instances as string;
+		return node.instances;
 	}
 
 	private getNewUrl(): string {
