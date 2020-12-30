@@ -4,7 +4,6 @@ import DraftField from 'type/draft-field';
 import HtmlEndpoint from 'endpoint/html';
 import BadRequestError from 'http/error/bad-request';
 import TypeFormTemplate from 'template/page/type-form';
-import FetchNodeOperation from 'operation/fetch-node';
 
 interface Input {
 	readonly id: string | undefined;
@@ -19,22 +18,7 @@ class HtmlTypeFormEndpoint extends HtmlEndpoint<Input> {
 	}
 
 	private async fetchTypeNode(): Promise<TypeNode> {
-		const id = SystemId.GENERIC_TYPE;
-		const type_id = SystemId.GENERIC_TYPE;
-		const repository = this.getRepository();
-		const account = this.getAccount();
-
-		const input = {
-			id,
-			type_id,
-			repository,
-			account
-		};
-
-		const operation = new FetchNodeOperation(input);
-		const node = await operation.perform();
-
-		return node as TypeNode;
+		return this.fetchType(SystemId.GENERIC_TYPE);
 	}
 
 	private renderFormForTypeNode(node: TypeNode): string {

@@ -1,13 +1,9 @@
-import Node from 'type/node';
-import SystemId from 'system/enum/id';
 import TypeNode from 'type/type-node';
 import FieldInput from 'template/page/instance-form/type/field-input';
 import HtmlEndpoint from 'endpoint/html';
 import InstanceNode from 'type/instance-node';
 import getFieldKeys from 'utility/get-field-keys';
 import BadRequestError from 'http/error/bad-request';
-import getNodeParameters from 'utility/get-node-parameters';
-import FetchNodeOperation from 'operation/fetch-node';
 import InstanceFormTemplate from 'template/page/instance-form';
 import FetchSetFieldValuesOperation from 'operation/fetch-set-field-values';
 
@@ -24,22 +20,9 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 	}
 
 	private async fetchTypeNode(): Promise<TypeNode> {
-		const id = this.getUrlParameter('type_id');
-		const type_id = SystemId.GENERIC_TYPE;
-		const repository = this.getRepository();
-		const account = this.getAccount();
+		const type_id = this.getUrlParameter('type_id');
 
-		const input = {
-			id,
-			type_id,
-			repository,
-			account
-		};
-
-		const operation = new FetchNodeOperation(input);
-		const node = await operation.perform();
-
-		return node as TypeNode;
+		return this.fetchType(type_id);
 	}
 
 	private async renderFormForTypeNode(type_node: TypeNode): Promise<string> {
@@ -79,8 +62,7 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 		key: string,
 		type_url: string
 	): Promise<FieldInput> {
-		const node = await this.fetchNodeForUrl(type_url);
-		const type_node = node as TypeNode;
+		const type_node = await this.loadTypeNodeFromUrl(type_url);
 		const instance_list = await this.fetchInstanceListForTypeNode(type_node);
 		const draft_value = this.getDraftValueForFieldKey(key);
 
@@ -90,22 +72,6 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 			instance_list,
 			draft_value
 		};
-	}
-
-	private fetchNodeForUrl(url: string): Promise<Node> {
-		const node_parameters = getNodeParameters(url);
-		const repository = this.getRepository();
-		const account = this.getAccount();
-
-		const input = {
-			...node_parameters,
-			repository,
-			account
-		};
-
-		const operation = new FetchNodeOperation(input);
-
-		return operation.perform();
 	}
 
 	private async fetchInstanceListForTypeNode(
@@ -126,7 +92,7 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 		const instance_urls = result as string[];
 
 		const promises = instance_urls.map((instance_url) => {
-			return this.fetchNodeForUrl(instance_url);
+			return this.loadInstanceNodeFromUrl(instance_url);
 		});
 
 		const nodes = await Promise.all(promises);

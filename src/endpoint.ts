@@ -1,5 +1,8 @@
 import HTTP from 'http';
 
+import Node from 'type/node';
+import TypeNode from 'type/type-node';
+import SystemId from 'system/enum/id';
 import HttpError from 'http/error';
 import HeaderMap from 'http/type/header-map';
 import Repository from 'repository';
@@ -10,12 +13,15 @@ import StatusCode from 'http/enum/status-code';
 import AccountNode from 'type/node/account';
 import ContentType from 'http/enum/content-type';
 import ServerError from 'http/error/server-error';
+import InstanceNode from 'type/instance-node';
 import UrlParameters from 'http/type/url-parameters';
 import JsonBodyParser from 'server/body-parser/json';
 import BadRequestError from 'http/error/bad-request';
 import parseQuerystring from 'http/utility/parse-querystring';
+import FetchNodeOperation from 'operation/fetch-node';
 import UrlEncodedBodyParser from 'server/body-parser/url-encoded';
 import getSuccessfulStatusCode from 'http/utility/get-successful-status-code';
+import LoadNodeFromUrlOperation from 'operation/load-node-from-url';
 import LoadAccountForRequestOperation from 'operation/load-account-for-request';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -123,6 +129,61 @@ abstract class Endpoint<Input, Output extends AllowedOutputs> {
 		this.setHeaderValue(HttpHeader.LOCATION, url);
 
 		this.sendString('');
+	}
+
+	protected async fetchType(type_id: string): Promise<TypeNode> {
+		const node = await this.fetchNode(SystemId.GENERIC_TYPE, type_id);
+
+		return node as TypeNode;
+	}
+
+	protected async fetchInstance(type_id: string, id: string): Promise<InstanceNode> {
+		const node = await this.fetchNode(SystemId.GENERIC_TYPE, type_id);
+
+		return node as InstanceNode;
+	}
+
+	protected async loadInstanceNodeFromUrl(url: string): Promise<InstanceNode> {
+		const node = await this.loadNodeFromUrl(url);
+
+		return node as InstanceNode;
+	}
+
+	protected async loadTypeNodeFromUrl(url: string): Promise<TypeNode> {
+		const node = await this.loadNodeFromUrl(url);
+
+		return node as TypeNode;
+	}
+
+	private fetchNode(type_id: string, id: string): Promise<Node> {
+		const repository = this.getRepository();
+		const account = this.getAccount();
+
+		const input = {
+			type_id,
+			id,
+			repository,
+			account
+		};
+
+		const operation = new FetchNodeOperation(input);
+
+		return operation.perform();
+	}
+
+	private loadNodeFromUrl(url: string): Promise<Node> {
+		const repository = this.getRepository();
+		const account = this.getAccount();
+
+		const input = {
+			url,
+			repository,
+			account
+		};
+
+		const operation = new LoadNodeFromUrlOperation(input);
+
+		return operation.perform();
 	}
 
 	private async serveInternal(): Promise<Output | void> {

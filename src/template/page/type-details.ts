@@ -80,13 +80,13 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 
 	private getLinksHtml(): string {
 		const edit_link_html = this.getEditLinkHtml();
-		const list_link_html = this.getListLinkHtml();
+		const instances_link_html = this.getInstancesLinkHtml();
 		const new_link_html = this.getNewLinkHtml();
 
 		return `
 			<ul>
 				${edit_link_html}
-				${list_link_html}
+				${instances_link_html}
 				${new_link_html}
 			</ul>
 		`;
@@ -102,13 +102,13 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 		`;
 	}
 
-	private getListLinkHtml(): string {
-		const list_url = this.getListUrl();
+	private getInstancesLinkHtml(): string {
+		const instances_url = this.getInstancesUrl();
 		const node_id = this.getNodeId();
 
 		return `
 			<li>
-				<a href="${list_url}">View list of ${node_id} instances</a>
+				<a href="${instances_url}">View list of ${node_id} instances</a>
 			</li>
 		`;
 	}
@@ -130,10 +130,10 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 		return `${node_url}/edit`;
 	}
 
-	private getListUrl(): string {
-		const node_url = this.getNodeUrl();
+	private getInstancesUrl(): string {
+		const node = this.getNode();
 
-		return `${node_url}/list`;
+		return node.instances as string;
 	}
 
 	private getNewUrl(): string {

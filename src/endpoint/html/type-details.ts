@@ -1,37 +1,16 @@
 import TypeNode from 'type/type-node';
-import SystemId from 'system/enum/id';
 import FieldInput from 'template/page/type-details/type/field-input';
 import HtmlEndpoint from 'endpoint/html';
 import getFieldKeys from 'utility/get-field-keys';
-import FetchNodeOperation from 'operation/fetch-node';
 import TypeDetailsTemplate from 'template/page/type-details';
-import LoadNodeFromUrlOperation from 'operation/load-node-from-url';
 
 class HtmlTypeDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 	protected async process(): Promise<string> {
-		const node = await this.fetchNode();
+		const type_id = this.getUrlParameter('type_id');
+		const node = await this.fetchType(type_id);
 		const fields = await this.buildFieldInputs(node);
 
 		return this.renderNode(node, fields);
-	}
-
-	private async fetchNode(): Promise<TypeNode> {
-		const id = this.getUrlParameter('type_id');
-		const type_id = SystemId.GENERIC_TYPE;
-		const repository = this.getRepository();
-		const account = this.getAccount();
-
-		const input = {
-			id,
-			type_id,
-			repository,
-			account
-		};
-
-		const operation = new FetchNodeOperation(input);
-		const node = await operation.perform();
-
-		return node as TypeNode;
 	}
 
 	private buildFieldInputs(node: TypeNode): Promise<FieldInput[]> {
@@ -54,18 +33,7 @@ class HtmlTypeDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 			throw new Error(`Unable to find type url for instance key ${field_key}`);
 		}
 
-		const repository = this.getRepository();
-		const account = this.getAccount();
-
-		const input = {
-			url,
-			repository,
-			account
-		};
-
-		const operation = new LoadNodeFromUrlOperation(input);
-		const result = await operation.perform();
-		const field_type_node = result as TypeNode;
+		const field_type_node = await this.loadTypeNodeFromUrl(url);
 
 		return {
 			key: field_key,
