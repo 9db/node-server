@@ -6,7 +6,7 @@ class HtmlFieldDetailsRoute extends HtmlRoute {
 	public constructor() {
 		super(
 			HttpMethod.GET,
-			'/:type_id/:node_id/:field_key',
+			'/:type_id/:instance_id/:field_key',
 			HtmlFieldDetailsEndpoint
 		);
 	}

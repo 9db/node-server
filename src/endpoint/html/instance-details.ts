@@ -1,25 +1,40 @@
 import TypeNode from 'type/type-node';
+import SystemId from 'system/enum/id';
 import FieldValue from 'type/field-value';
 import FieldInput from 'template/page/instance-details/type/field-input';
 import HtmlEndpoint from 'endpoint/html';
 import InstanceNode from 'type/instance-node';
 import getFieldKeys from 'utility/get-field-keys';
+import getListInnerType from 'utility/get-list-inner-type';
 import ListDetailsTemplate from 'template/page/list-details';
 import InstanceDetailsTemplate from 'template/page/instance-details';
 
 class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
-	protected async process(): Promise<string> {
+	protected async process(): Promise<string | void> {
+		if (this.isTypeNode()) {
+			return this.redirectToTypeUrl();
+		}
+
 		if (this.isListNode()) {
 			return this.renderList();
 		}
 
 		const type_id = this.getTypeId();
-		const id = this.getNodeId();
-		const node = await this.fetchInstance(type_id, id);
-		const type_node = await this.loadTypeNodeFromUrl(node.type);
-		const fields = await this.buildFieldInputs(node, type_node);
+		const instance_id = this.getInstanceId();
+		const instance_node = await this.fetchInstance(type_id, instance_id);
+		const type_node = await this.loadTypeFromUrl(instance_node.type);
+		const fields = await this.buildFieldInputs(instance_node, type_node);
 
-		return this.renderNode(node, type_node, fields);
+		return this.renderNode(instance_node, type_node, fields);
+	}
+
+	private redirectToTypeUrl(): Promise<void> {
+		const instance_id = this.getInstanceId();
+		const url = `/${instance_id}`;
+
+		this.redirectToUrl(url);
+
+		return Promise.resolve();
 	}
 
 	private async renderNode(
@@ -63,7 +78,7 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 			throw new Error(`Unable to find type url for instance key ${field_key}`);
 		}
 
-		const field_type_node = await this.loadTypeNodeFromUrl(url);
+		const field_type_node = await this.loadTypeFromUrl(url);
 
 		return {
 			key: field_key,
@@ -89,30 +104,41 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 	}
 
 	private isListNode(): boolean {
+		const inner_type_id = this.getListInnerType();
+
+		return inner_type_id !== null;
+	}
+
+	private isTypeNode(): boolean {
 		const type_id = this.getTypeId();
 
-		return /-(list|set)$/.test(type_id);
+		return type_id === SystemId.GENERIC_TYPE;
 	}
 
 	private fetchListType(): Promise<TypeNode> {
-		const type_id = this.getTypeId();
-		const match = type_id.match(/^(.*)-(list|set)$/);
+		const inner_type_id = this.getListInnerType();
 
-		if (match === null) {
+		if (inner_type_id === null) {
+			const type_id = this.getTypeId();
+
 			throw new Error(`Unable to fetch list type from type id: ${type_id}`);
 		}
 
-		const inner_type_id = match[1] as string;
-
 		return this.fetchType(inner_type_id);
+	}
+
+	private getListInnerType(): string | null {
+		const type_id = this.getTypeId();
+
+		return getListInnerType(type_id);
 	}
 
 	private fetchListValues(): Promise<FieldValue[]> {
 		return Promise.resolve([]);
 	}
 
-	private getNodeId(): string {
-		return this.getUrlParameter('id');
+	private getInstanceId(): string {
+		return this.getUrlParameter('instance_id');
 	}
 
 	private getTypeId(): string {

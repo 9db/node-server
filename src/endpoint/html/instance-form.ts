@@ -62,7 +62,7 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 		key: string,
 		type_url: string
 	): Promise<FieldInput> {
-		const type_node = await this.loadTypeNodeFromUrl(type_url);
+		const type_node = await this.loadTypeFromUrl(type_url);
 		const instance_list = await this.fetchInstanceListForTypeNode(type_node);
 		const draft_value = this.getDraftValueForFieldKey(key);
 
@@ -92,7 +92,7 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 		const instance_urls = result as string[];
 
 		const promises = instance_urls.map((instance_url) => {
-			return this.loadInstanceNodeFromUrl(instance_url);
+			return this.loadInstanceFromUrl(instance_url);
 		});
 
 		const nodes = await Promise.all(promises);

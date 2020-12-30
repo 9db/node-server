@@ -33,7 +33,7 @@ class HtmlTypeDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 			throw new Error(`Unable to find type url for instance key ${field_key}`);
 		}
 
-		const field_type_node = await this.loadTypeNodeFromUrl(url);
+		const field_type_node = await this.loadTypeFromUrl(url);
 
 		return {
 			key: field_key,

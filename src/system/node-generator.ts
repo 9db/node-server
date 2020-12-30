@@ -1,6 +1,5 @@
 import Node from 'type/node';
 import SystemId from 'system/enum/id';
-import KeyGenerator from 'utility/key-generator';
 import buildNodeUrl from 'utility/build-node-url';
 import NodeParameters from 'type/node-parameters';
 
@@ -47,32 +46,38 @@ abstract class SystemNodeGenerator {
 	}
 
 	private getTypeUrl(): string {
-		const parameters = this.getNodeParameters();
+		const type_id = this.getTypeId();
 
 		return this.buildNodeUrl({
 			type_id: SystemId.GENERIC_TYPE,
-			id: parameters.type_id
+			id: type_id
 		});
 	}
 
 	private getChangesUrl(): string {
+		const type_id = this.getTypeId();
+
 		return this.buildNodeUrl({
 			type_id: SystemId.CHANGE_LIST_TYPE,
-			id: KeyGenerator.id()
+			id: `${type_id}-changes`
 		});
 	}
 
 	private getInstancesUrl(): string {
+		const type_id = this.getTypeId();
+
 		return this.buildNodeUrl({
 			type_id: SystemId.INSTANCE_SET_TYPE,
-			id: KeyGenerator.id()
+			id: `${type_id}-instances`
 		});
 	}
 
 	private getChildTypesUrl(): string {
+		const type_id = this.getTypeId();
+
 		return this.buildNodeUrl({
 			type_id: SystemId.TYPE_SET_TYPE,
-			id: KeyGenerator.id()
+			id: `${type_id}-child-types`
 		});
 	}
 
@@ -84,10 +89,15 @@ abstract class SystemNodeGenerator {
 	}
 
 	private isTypeNode(): boolean {
-		const parameters = this.getNodeParameters();
-		const type_id = parameters.type_id;
+		const type_id = this.getTypeId();
 
 		return type_id === SystemId.GENERIC_TYPE;
+	}
+
+	private getTypeId(): string {
+		const parameters = this.getNodeParameters();
+
+		return parameters.type_id;
 	}
 
 	private getHostname(): string {

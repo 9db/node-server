@@ -4,7 +4,11 @@ import HtmlInstanceDetailsEndpoint from 'endpoint/html/instance-details';
 
 class HtmlInstanceDetailsRoute extends HtmlRoute {
 	public constructor() {
-		super(HttpMethod.GET, '/:type_id/:id', HtmlInstanceDetailsEndpoint);
+		super(
+			HttpMethod.GET,
+			'/:type_id/:instance_id',
+			HtmlInstanceDetailsEndpoint
+		);
 	}
 }
 

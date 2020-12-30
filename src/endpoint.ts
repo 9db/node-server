@@ -143,13 +143,13 @@ abstract class Endpoint<Input, Output extends AllowedOutputs> {
 		return node as InstanceNode;
 	}
 
-	protected async loadInstanceNodeFromUrl(url: string): Promise<InstanceNode> {
+	protected async loadInstanceFromUrl(url: string): Promise<InstanceNode> {
 		const node = await this.loadNodeFromUrl(url);
 
 		return node as InstanceNode;
 	}
 
-	protected async loadTypeNodeFromUrl(url: string): Promise<TypeNode> {
+	protected async loadTypeFromUrl(url: string): Promise<TypeNode> {
 		const node = await this.loadNodeFromUrl(url);
 
 		return node as TypeNode;
