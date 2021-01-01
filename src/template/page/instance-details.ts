@@ -5,7 +5,7 @@ import FieldTableTemplate from 'template/page/instance-details/field-table';
 import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
 interface Input extends PageTemplateInput {
-	readonly node: InstanceNode;
+	readonly instance: InstanceNode;
 	readonly fields: FieldInput[];
 }
 
@@ -13,7 +13,7 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 	protected getBreadcrumbs(): Breadcrumb[] {
 		const type_id = this.getTypeId();
 		const type_url = this.getTypeUrl();
-		const node_id = this.getNodeId();
+		const instance_id = this.getInstanceId();
 
 		return [
 			{
@@ -21,13 +21,13 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 				url: type_url
 			},
 			{
-				label: node_id
+				label: instance_id
 			}
 		];
 	}
 
 	protected getContentTitle(): string {
-		return this.getNodeId();
+		return this.getInstanceId();
 	}
 
 	protected getContentHtml(): string {
@@ -99,26 +99,26 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 	}
 
 	private getEditUrl(): string {
-		const node_url = this.getNodeUrl();
+		const instance_url = this.getInstanceUrl();
 
-		return `${node_url}/edit`;
+		return `${instance_url}/edit`;
 	}
 
-	private getNodeUrl(): string {
-		const node = this.getNode();
+	private getInstanceUrl(): string {
+		const instance = this.getInstance();
 
-		return node.url;
+		return instance.url;
 	}
 
 	private getTypeUrl(): string {
-		const node = this.getNode();
+		const instance = this.getInstance();
 
-		return node.type;
+		return instance.type;
 	}
 
 	private getTypeId(): string {
-		const node = this.getNode();
-		const parameters = getNodeParameters(node.url);
+		const instance = this.getInstance();
+		const parameters = getNodeParameters(instance.url);
 
 		return parameters.type_id;
 	}
@@ -131,9 +131,9 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 	}
 
 	private getCreatorUrl(): string {
-		const node = this.getNode();
+		const instance = this.getInstance();
 
-		return node.creator;
+		return instance.creator;
 	}
 
 	private serializeCreatedAt(): string {
@@ -155,15 +155,15 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 	}
 
 	private getCreatedAt(): number {
-		const node = this.getNode();
+		const instance = this.getInstance();
 
-		return node.created_at;
+		return instance.created_at;
 	}
 
 	private getUpdatedAt(): number {
-		const node = this.getNode();
+		const instance = this.getInstance();
 
-		return node.updated_at;
+		return instance.updated_at;
 	}
 
 	private getFields(): FieldInput[] {
@@ -172,17 +172,17 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 		return input.fields;
 	}
 
-	private getNodeId(): string {
-		const node = this.getNode();
-		const parameters = getNodeParameters(node.url);
+	private getInstanceId(): string {
+		const instance = this.getInstance();
+		const parameters = getNodeParameters(instance.url);
 
 		return parameters.id;
 	}
 
-	private getNode(): InstanceNode {
+	private getInstance(): InstanceNode {
 		const input = this.getInput();
 
-		return input.node;
+		return input.instance;
 	}
 }
 

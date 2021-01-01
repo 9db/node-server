@@ -1,4 +1,5 @@
 import TypeNode from 'type/type-node';
+import SystemId from 'system/enum/id';
 import FieldInput from 'template/page/type-details/type/field-input';
 import getNodeParameters from 'utility/get-node-parameters';
 import FieldTableTemplate from 'template/page/type-details/field-table';
@@ -131,9 +132,9 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 	}
 
 	private getInstancesUrl(): string {
-		const node = this.getNode();
+		const node_id = this.getNodeId();
 
-		return node.instances;
+		return `/${SystemId.GENERIC_TYPE}/${node_id}/instances`;
 	}
 
 	private getNewUrl(): string {

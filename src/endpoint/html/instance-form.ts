@@ -5,7 +5,7 @@ import InstanceNode from 'type/instance-node';
 import getFieldKeys from 'utility/get-field-keys';
 import BadRequestError from 'http/error/bad-request';
 import InstanceFormTemplate from 'template/page/instance-form';
-import FetchSetFieldValuesOperation from 'operation/fetch-set-field-values';
+import FetchListFieldValuesOperation from 'operation/fetch-list-field-values';
 
 interface Input {
 	readonly id: string | undefined;
@@ -87,7 +87,7 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 			account
 		};
 
-		const operation = new FetchSetFieldValuesOperation(input);
+		const operation = new FetchListFieldValuesOperation(input);
 		const result = await operation.perform();
 		const instance_urls = result as string[];
 

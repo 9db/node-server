@@ -21,11 +21,11 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 
 		const type_id = this.getTypeId();
 		const instance_id = this.getInstanceId();
-		const instance_node = await this.fetchInstance(type_id, instance_id);
-		const type_node = await this.loadTypeFromUrl(instance_node.type);
-		const fields = await this.buildFieldInputs(instance_node, type_node);
+		const instance = await this.fetchInstance(type_id, instance_id);
+		const type_node = await this.loadTypeFromUrl(instance.type);
+		const fields = await this.buildFieldInputs(instance, type_node);
 
-		return this.renderNode(instance_node, type_node, fields);
+		return this.renderInstance(instance, type_node, fields);
 	}
 
 	private redirectToTypeUrl(): Promise<void> {
@@ -37,15 +37,15 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		return Promise.resolve();
 	}
 
-	private async renderNode(
-		node: InstanceNode,
+	private async renderInstance(
+		instance: InstanceNode,
 		type_node: TypeNode,
 		fields: FieldInput[]
 	): Promise<string> {
 		const account = this.getAccount();
 
 		const template = new InstanceDetailsTemplate({
-			node,
+			instance,
 			fields,
 			account
 		});

@@ -67,7 +67,7 @@ abstract class SystemNodeGenerator {
 		const type_id = this.getTypeId();
 
 		return this.buildNodeUrl({
-			type_id: SystemId.INSTANCE_SET_TYPE,
+			type_id: `${type_id}-set`,
 			id: `${type_id}-instances`
 		});
 	}

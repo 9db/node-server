@@ -141,7 +141,7 @@ abstract class Endpoint<Input, Output extends AllowedOutputs> {
 		type_id: string,
 		id: string
 	): Promise<InstanceNode> {
-		const node = await this.fetchNode(SystemId.GENERIC_TYPE, type_id);
+		const node = await this.fetchNode(type_id, id);
 
 		return node as InstanceNode;
 	}

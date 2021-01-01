@@ -147,9 +147,10 @@ class CreateTypeOperation extends Operation<Input, TypeNode> {
 
 	private getInstancesUrl(): string {
 		const hostname = this.getHostname();
+		const id = this.getId();
 
 		return buildNodeUrl(hostname, {
-			type_id: SystemId.INSTANCE_SET_TYPE,
+			type_id: `${id}-set`,
 			id: KeyGenerator.id()
 		});
 	}

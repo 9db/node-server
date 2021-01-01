@@ -21,7 +21,17 @@ class FetchListFieldValuesOperation extends Operation<Input, FieldValue[]> {
 		const offset = this.getOffset();
 		const limit = this.getLimit();
 
-		return repository.fetchValuesFromList(parameters, offset, limit);
+		if (this.isSet()) {
+			return repository.fetchValuesFromSet(parameters, offset, limit);
+		} else {
+			return repository.fetchValuesFromList(parameters, offset, limit);
+		}
+	}
+
+	private isSet(): boolean {
+		const list_type_id = this.getListTypeId();
+
+		return list_type_id.endsWith('-set');
 	}
 
 	private getListUrl(): string {
@@ -36,6 +46,13 @@ class FetchListFieldValuesOperation extends Operation<Input, FieldValue[]> {
 		}
 
 		return set_url;
+	}
+
+	private getListTypeId(): string {
+		const list_url = this.getListUrl();
+		const parameters = getNodeParameters(list_url);
+
+		return parameters.type_id;
 	}
 
 	private getFieldKey(): string {
