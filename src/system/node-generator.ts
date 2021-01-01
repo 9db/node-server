@@ -73,11 +73,11 @@ abstract class SystemNodeGenerator {
 	}
 
 	private getChildTypesUrl(): string {
-		const type_id = this.getTypeId();
+		const node_id = this.getNodeId();
 
 		return this.buildNodeUrl({
 			type_id: SystemId.TYPE_SET_TYPE,
-			id: `${type_id}-child-types`
+			id: `${node_id}-child-types`
 		});
 	}
 
@@ -92,6 +92,12 @@ abstract class SystemNodeGenerator {
 		const type_id = this.getTypeId();
 
 		return type_id === SystemId.GENERIC_TYPE;
+	}
+
+	private getNodeId(): string {
+		const parameters = this.getNodeParameters();
+
+		return parameters.id;
 	}
 
 	private getTypeId(): string {

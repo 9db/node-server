@@ -43,6 +43,10 @@ class ListFieldTemplate extends PageTemplate<Input> {
 	}
 
 	protected getContentHtml(): string {
+		if (!this.hasValues()) {
+			return this.getEmptyHtml();
+		}
+
 		const list_html = this.getListHtml();
 
 		return `
@@ -51,6 +55,12 @@ class ListFieldTemplate extends PageTemplate<Input> {
 					${list_html}
 				</ul>
 			</section>
+		`;
+	}
+
+	private getEmptyHtml(): string {
+		return `
+			<em>Empty list</em>
 		`;
 	}
 
@@ -121,6 +131,12 @@ class ListFieldTemplate extends PageTemplate<Input> {
 		const input = this.getInput();
 
 		return input.type_node;
+	}
+
+	private hasValues(): boolean {
+		const values = this.getValues();
+
+		return values.length > 0;
 	}
 
 	private getValues(): FieldValue[] {
