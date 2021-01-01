@@ -1,5 +1,7 @@
 import Node from 'type/node';
 import NodeParameters from 'type/node-parameters';
+import getListInnerType from 'utility/get-list-inner-type';
+import ListNodeGenerator from 'system/node-generator/list';
 import getNodeParameters from 'utility/get-node-parameters';
 import StringTypeGenerator from 'system/node-generator/type/string';
 import GenericTypeGenerator from 'system/node-generator/type/generic';
@@ -31,11 +33,28 @@ class SystemCache {
 	}
 
 	public fetchNode(parameters: NodeParameters): Node | undefined {
+		if (this.isListNode(parameters)) {
+			return this.fetchListNode(parameters);
+		}
+
 		const cache_key = this.buildCacheKey(parameters);
 
 		const nodes = this.getNodes();
 
 		return nodes[cache_key];
+	}
+
+	private isListNode(parameters: NodeParameters): boolean {
+		const inner_type = getListInnerType(parameters.type_id);
+
+		return inner_type !== null;
+	}
+
+	private fetchListNode(parameters: NodeParameters): Node {
+		const hostname = this.getHostname();
+		const generator = new ListNodeGenerator(hostname, parameters);
+
+		return generator.generate();
 	}
 
 	private generateNodes(): void {
@@ -52,7 +71,6 @@ class SystemCache {
 	private addNode(node: Node): void {
 		const parameters = getNodeParameters(node.url);
 		const cache_key = this.buildCacheKey(parameters);
-
 		const nodes = this.getNodes();
 
 		nodes[cache_key] = node;

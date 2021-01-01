@@ -74,6 +74,8 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 			fields
 		};
 
+		console.log(fields);
+
 		const template = new FieldTableTemplate(input);
 
 		return template.render();
@@ -82,12 +84,14 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 	private getLinksHtml(): string {
 		const edit_link_html = this.getEditLinkHtml();
 		const instances_link_html = this.getInstancesLinkHtml();
+		const child_types_link_html = this.getChildTypesLinkHtml();
 		const new_link_html = this.getNewLinkHtml();
 
 		return `
 			<ul>
 				${edit_link_html}
 				${instances_link_html}
+				${child_types_link_html}
 				${new_link_html}
 			</ul>
 		`;
@@ -114,6 +118,17 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 		`;
 	}
 
+	private getChildTypesLinkHtml(): string {
+		const child_types_url = this.getChildTypesUrl();
+		const node_id = this.getNodeId();
+
+		return `
+			<li>
+				<a href="${child_types_url}">View list of ${node_id} child types</a>
+			</li>
+		`;
+	}
+
 	private getNewLinkHtml(): string {
 		const new_url = this.getNewUrl();
 		const node_id = this.getNodeId();
@@ -135,6 +150,12 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 		const node_id = this.getNodeId();
 
 		return `/${SystemId.GENERIC_TYPE}/${node_id}/instances`;
+	}
+
+	private getChildTypesUrl(): string {
+		const node_id = this.getNodeId();
+
+		return `/${SystemId.GENERIC_TYPE}/${node_id}/child_types`;
 	}
 
 	private getNewUrl(): string {

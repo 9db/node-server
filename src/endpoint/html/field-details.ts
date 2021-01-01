@@ -34,6 +34,9 @@ class HtmlFieldDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		const field_url = type_node[field_key];
 
 		if (typeof field_url !== 'string') {
+			console.log('throwing error');
+			console.log(field_key);
+			console.log(type_node);
 			throw new BadRequestError();
 		}
 
