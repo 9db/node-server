@@ -4,6 +4,19 @@ import StaticEndpoint from 'endpoint/static';
 class StaticCssEndpoint extends StaticEndpoint {
 	protected process(): Promise<Buffer> {
 		const result = Buffer.from(`
+			body {
+				background: #222;
+				color: #FFF;
+			}
+
+			a {
+				color: #0FF;
+			}
+
+			a:visited {
+				color: #09F;
+			}
+
 			menu {
 				margin: 0;
 				float: right;
