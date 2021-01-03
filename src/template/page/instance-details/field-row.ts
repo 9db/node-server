@@ -1,4 +1,4 @@
-import {URL} from 'url';
+import { URL } from 'url';
 
 import Template from 'template';
 import TypeNode from 'type/type-node';
