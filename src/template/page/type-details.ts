@@ -1,13 +1,16 @@
 import TypeNode from 'type/type-node';
 import SystemId from 'system/enum/id';
 import FieldInput from 'template/page/type-details/type/field-input';
+import PermissionNode from 'type/node/permission';
 import getNodeParameters from 'utility/get-node-parameters';
 import FieldTableTemplate from 'template/page/type-details/field-table';
+import PermissionsTableTemplate from 'template/partial/permissions-table';
 import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
 interface Input extends PageTemplateInput {
 	readonly node: TypeNode;
 	readonly fields: FieldInput[];
+	readonly permissions: PermissionNode[];
 }
 
 class TypeDetailsTemplate extends PageTemplate<Input> {
@@ -38,6 +41,7 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 		const updated_at = this.serializeUpdatedAt();
 		const field_table_html = this.getFieldTableHtml();
 		const links_html = this.getLinksHtml();
+		const permissions_html = this.getPermissionsHtml();
 
 		return `
 			<section>
@@ -64,19 +68,21 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 
 				${links_html}
 			</section>
+
+			<section>
+				<h3>Permissions:</h3>
+
+				${permissions_html}
+			</section>
 		`;
 	}
 
 	private getFieldTableHtml(): string {
 		const fields = this.getFields();
 
-		const input = {
+		const template = new FieldTableTemplate({
 			fields
-		};
-
-		console.log(fields);
-
-		const template = new FieldTableTemplate(input);
+		});
 
 		return template.render();
 	}
@@ -95,6 +101,16 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 				${new_link_html}
 			</ul>
 		`;
+	}
+
+	private getPermissionsHtml(): string {
+		const permissions = this.getPermissions();
+
+		const template = new PermissionsTableTemplate({
+			permissions
+		});
+
+		return template.render();
 	}
 
 	private getEditLinkHtml(): string {
@@ -243,6 +259,12 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 		const input = this.getInput();
 
 		return input.fields;
+	}
+
+	private getPermissions(): PermissionNode[] {
+		const input = this.getInput();
+
+		return input.permissions;
 	}
 }
 

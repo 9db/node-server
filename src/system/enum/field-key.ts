@@ -1,13 +1,14 @@
 enum SystemFieldKey {
-	URL = 'url',
-	TYPE = 'type',
-	CREATOR = 'creator',
-	CREATED_AT = 'created_at',
-	UPDATED_AT = 'updated_at',
 	CHANGES = 'changes',
-	INSTANCES = 'instances',
 	CHILD_TYPES = 'child_types',
-	PARENT_TYPE  = 'parent_type'
+	CREATED_AT = 'created_at',
+	CREATOR = 'creator',
+	INSTANCES = 'instances',
+	PARENT_TYPE = 'parent_type',
+	PERMISSIONS = 'permissions',
+	TYPE = 'type',
+	UPDATED_AT = 'updated_at',
+	URL = 'url'
 }
 
 export default SystemFieldKey;

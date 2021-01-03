@@ -1,6 +1,6 @@
 import Node from 'type/node';
 import LoadNodeFromUrlOperation from 'operation/load-node-from-url';
-import Operation, {OperationInput} from 'operation';
+import Operation, { OperationInput } from 'operation';
 import FetchListFieldValuesOperation from 'operation/fetch-list-field-values';
 
 interface Input extends OperationInput {

@@ -1,12 +1,15 @@
 import FieldInput from 'template/page/instance-details/type/field-input';
 import InstanceNode from 'type/instance-node';
+import PermissionNode from 'type/node/permission';
 import getNodeParameters from 'utility/get-node-parameters';
 import FieldTableTemplate from 'template/page/instance-details/field-table';
+import PermissionsTableTemplate from 'template/partial/permissions-table';
 import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
 interface Input extends PageTemplateInput {
 	readonly instance: InstanceNode;
 	readonly fields: FieldInput[];
+	readonly permissions: PermissionNode[];
 }
 
 class InstanceDetailsTemplate extends PageTemplate<Input> {
@@ -37,6 +40,7 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 		const updated_at = this.serializeUpdatedAt();
 		const field_table_html = this.getFieldTableHtml();
 		const links_html = this.getLinksHtml();
+		const permissions_html = this.getPermissionsHtml();
 
 		return `
 			<section>
@@ -63,6 +67,12 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 
 				${links_html}
 			</section>
+
+			<section>
+				<h3>Permissions:</h3>
+
+				${permissions_html}
+			</section>
 		`;
 	}
 
@@ -86,6 +96,16 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 				${edit_link_html}
 			</ul>
 		`;
+	}
+
+	private getPermissionsHtml(): string {
+		const permissions = this.getPermissions();
+
+		const template = new PermissionsTableTemplate({
+			permissions
+		});
+
+		return template.render();
 	}
 
 	private getEditLinkHtml(): string {
@@ -183,6 +203,12 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 		const input = this.getInput();
 
 		return input.instance;
+	}
+
+	private getPermissions(): PermissionNode[] {
+		const input = this.getInput();
+
+		return input.permissions;
 	}
 }
 

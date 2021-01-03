@@ -5,9 +5,11 @@ import FieldInput from 'template/page/instance-details/type/field-input';
 import HtmlEndpoint from 'endpoint/html';
 import InstanceNode from 'type/instance-node';
 import getFieldKeys from 'utility/get-field-keys';
+import PermissionNode from 'type/node/permission';
 import getListInnerType from 'utility/get-list-inner-type';
 import ListDetailsTemplate from 'template/page/list-details';
 import InstanceDetailsTemplate from 'template/page/instance-details';
+import FetchNodePermissionsOperation from 'operation/fetch-node-permissions';
 
 class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 	protected async process(): Promise<string | void> {
@@ -24,8 +26,9 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		const instance = await this.fetchInstance(type_id, instance_id);
 		const type_node = await this.loadTypeFromUrl(instance.type);
 		const fields = await this.buildFieldInputs(instance, type_node);
+		const permissions = await this.fetchPermissions(instance);
 
-		return this.renderInstance(instance, type_node, fields);
+		return this.renderInstance(instance, type_node, fields, permissions);
 	}
 
 	private redirectToTypeUrl(): Promise<void> {
@@ -40,13 +43,15 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 	private async renderInstance(
 		instance: InstanceNode,
 		type_node: TypeNode,
-		fields: FieldInput[]
+		fields: FieldInput[],
+		permissions: PermissionNode[]
 	): Promise<string> {
 		const account = this.getAccount();
 
 		const template = new InstanceDetailsTemplate({
 			instance,
 			fields,
+			permissions,
 			account
 		});
 
@@ -85,6 +90,21 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 			value,
 			type_node: field_type_node
 		};
+	}
+
+	private fetchPermissions(node: InstanceNode): Promise<PermissionNode[]> {
+		const repository = this.getRepository();
+		const account = this.getAccount();
+
+		const input = {
+			node,
+			repository,
+			account
+		};
+
+		const operation = new FetchNodePermissionsOperation(input);
+
+		return operation.perform();
 	}
 
 	private async renderList(): Promise<string> {
