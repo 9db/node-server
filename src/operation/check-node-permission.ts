@@ -3,8 +3,11 @@ import SystemId from 'system/enum/id';
 import PermissionNode from 'type/node/permission';
 import PermissionType from 'enum/permission-type';
 import UnauthorizedError from 'http/error/unauthorized';
+import getNodeParameters from 'utility/get-node-parameters';
+import LoadNodeFromUrlOperation from 'operation/load-node-from-url';
 import Operation, { OperationInput } from 'operation';
 import FetchNodePermissionsOperation from 'operation/fetch-node-permissions';
+import FetchListFieldValuesOperation from 'operation/fetch-list-field-values';
 
 interface Input extends OperationInput {
 	readonly node: Node;
@@ -13,13 +16,22 @@ interface Input extends OperationInput {
 
 class CheckNodePermissionOperation extends Operation<Input, void> {
 	protected async performInternal(): Promise<void> {
-		const permissions = await this.fetchNodePermissions();
+		const permission = await this.fetchRequiredPermission();
 
-		if (this.hasRequiredPermission(permissions)) {
-			return;
+		if (permission === undefined) {
+			throw new UnauthorizedError();
 		}
 
-		throw new UnauthorizedError();
+		await this.ensureAccountExistsInGroup(permission.group);
+	}
+
+	private async fetchRequiredPermission(): Promise<PermissionNode | undefined> {
+		const permissions = await this.fetchNodePermissions();
+		const permission_type = this.getPermissionType();
+
+		return permissions.find((permission) => {
+			return permission.permission_type === permission_type;
+		});
 	}
 
 	private fetchNodePermissions(): Promise<PermissionNode[]> {
@@ -38,26 +50,45 @@ class CheckNodePermissionOperation extends Operation<Input, void> {
 		return operation.perform();
 	}
 
-	private hasRequiredPermission(permissions: PermissionNode[]): boolean {
-		return permissions.some((permission) => {
-			return this.isRequiredPermission(permission);
+	private async ensureAccountExistsInGroup(group_url: string): Promise<void> {
+		if (this.isEveryoneGroup(group_url)) {
+			return;
+		}
+
+		const repository = this.getRepository();
+		const account = this.getAccount();
+
+		const load_node_operation = new LoadNodeFromUrlOperation({
+			url: group_url,
+			repository,
+			account
 		});
+
+		const node = await load_node_operation.perform();
+		const field_key = 'accounts';
+
+		const list_values_operation = new FetchListFieldValuesOperation({
+			node,
+			field_key,
+			repository,
+			account
+		});
+
+		const values = await list_values_operation.perform();
+		const account_urls = values as string[];
+
+		if (account_urls.includes(account.url)) {
+			return;
+		}
+
+		throw new UnauthorizedError();
 	}
 
-	private isRequiredPermission(permission: PermissionNode): boolean {
-		const permission_type = this.getPermissionType();
+	private isEveryoneGroup(group_url: string): boolean {
+		const parameters = getNodeParameters(group_url);
+		const id = parameters.id;
 
-		if (permission.permission_type !== permission_type) {
-			return false;
-		}
-
-		if (permission.group === SystemId.EVERYONE_GROUP) {
-			return true;
-		}
-
-		// TODO: Check the actual group members...
-
-		return true;
+		return id === SystemId.EVERYONE_GROUP;
 	}
 
 	private getPermissionType(): PermissionType {
