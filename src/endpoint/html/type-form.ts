@@ -2,9 +2,11 @@ import TypeNode from 'type/type-node';
 import SystemId from 'system/enum/id';
 import DraftField from 'type/draft-field';
 import HtmlEndpoint from 'endpoint/html';
+import PermissionType from 'enum/permission-type';
 import BadRequestError from 'http/error/bad-request';
 import TypeFormTemplate from 'template/page/type-form';
 import FetchTypeInstancesOperation from 'operation/fetch-type-instances';
+import CheckNodePermissionOperation from 'operation/check-node-permission';
 
 interface Input {
 	readonly id: string | undefined;
@@ -14,9 +16,29 @@ interface Input {
 class HtmlTypeFormEndpoint extends HtmlEndpoint<Input> {
 	protected async process(): Promise<string> {
 		const generic_type = await this.fetchType(SystemId.GENERIC_TYPE);
+
+		await this.checkPermission(generic_type);
+
 		const type_nodes = await this.fetchTypeNodes(generic_type);
 
 		return this.renderFormForTypeNode(generic_type, type_nodes);
+	}
+
+	private checkPermission(node: TypeNode): Promise<void> {
+		const permission_type = PermissionType.CREATE;
+		const repository = this.getRepository();
+		const account = this.getAccount();
+
+		const input = {
+			node,
+			permission_type,
+			repository,
+			account
+		};
+
+		const operation = new CheckNodePermissionOperation(input);
+
+		return operation.perform();
 	}
 
 	private async fetchTypeNodes(type_node: TypeNode): Promise<TypeNode[]> {
