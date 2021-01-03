@@ -36,6 +36,9 @@ class CreateInstanceOperation extends Operation<Input, InstanceNode> {
 			account
 		};
 
+		console.log(url);
+		console.log('---------------------------');
+
 		const operation = new LoadNodeFromUrlOperation(input);
 		const node = await operation.perform();
 

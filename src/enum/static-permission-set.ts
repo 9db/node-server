@@ -1,5 +1,5 @@
 enum StaticPermissionSet {
-	PUBLIC_READ = 'public-read'
+	EVERYONE_READ = 'everyone-read'
 }
 
 export default StaticPermissionSet;

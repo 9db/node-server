@@ -16,8 +16,8 @@ interface Input extends OperationInput {
 class FetchListFieldValuesOperation extends Operation<Input, FieldValue[]> {
 	protected performInternal(): Promise<FieldValue[]> {
 		const repository = this.getRepository();
-		const set_url = this.getListUrl();
-		const parameters = getNodeParameters(set_url);
+		const list_url = this.getListUrl();
+		const parameters = getNodeParameters(list_url);
 		const offset = this.getOffset();
 		const limit = this.getLimit();
 
@@ -37,15 +37,15 @@ class FetchListFieldValuesOperation extends Operation<Input, FieldValue[]> {
 	private getListUrl(): string {
 		const node = this.getNode();
 		const field_key = this.getFieldKey();
-		const set_url = node[field_key];
+		const list_url = node[field_key];
 
-		if (typeof set_url !== 'string') {
+		if (typeof list_url !== 'string') {
 			throw new Error(
-				`Invalid value for set url field: ${field_key}: ${typeof set_url}`
+				`Invalid value for list url field: ${field_key}: ${typeof list_url}`
 			);
 		}
 
-		return set_url;
+		return list_url;
 	}
 
 	private getListTypeId(): string {

@@ -74,7 +74,7 @@ abstract class SystemNodeGenerator {
 	private getPermissionsUrl(): string {
 		return this.buildNodeUrl({
 			type_id: SystemId.PERMISSION_SET_TYPE,
-			id: StaticPermissionSet.PUBLIC_READ
+			id: StaticPermissionSet.EVERYONE_READ
 		});
 	}
 

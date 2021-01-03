@@ -8,13 +8,15 @@ import ListTypeGenerator from 'system/node-generator/list-type';
 import GroupTypeGenerator from 'system/node-generator/type/group';
 import StringTypeGenerator from 'system/node-generator/type/string';
 import AdminGroupGenerator from 'system/node-generator/group/admin';
+import SessionTypeGenerator from 'system/node-generator/type/session';
 import GenericTypeGenerator from 'system/node-generator/type/generic';
 import AccountTypeGenerator from 'system/node-generator/type/account';
 import EveryoneGroupGenerator from 'system/node-generator/group/everyone';
 import SystemAccountGenerator from 'system/node-generator/account/system';
 import { GeneratorConstructor } from 'system/node-generator';
 import AnonymousAccountGenerator from 'system/node-generator/account/anonymous';
-import PublicReadPermissionGenerator from 'system/node-generator/permission/public-read';
+import AdminCreatePermissionGenerator from 'system/node-generator/permission/admin-create';
+import EveryoneReadPermissionGenerator from 'system/node-generator/permission/everyone-read';
 
 const GENERATORS: GeneratorConstructor[] = [
 	GroupTypeGenerator,
@@ -22,10 +24,12 @@ const GENERATORS: GeneratorConstructor[] = [
 	StringTypeGenerator,
 	GenericTypeGenerator,
 	AccountTypeGenerator,
+	SessionTypeGenerator,
 	SystemAccountGenerator,
 	EveryoneGroupGenerator,
 	AnonymousAccountGenerator,
-	PublicReadPermissionGenerator
+	AdminCreatePermissionGenerator,
+	EveryoneReadPermissionGenerator
 ];
 
 interface NodeCache {
@@ -103,6 +107,10 @@ class SystemCache {
 		const parameters = getNodeParameters(node.url);
 		const cache_key = this.buildCacheKey(parameters);
 		const nodes = this.getNodes();
+
+		if (nodes[cache_key] !== undefined) {
+			throw new Error(`Node was already defined for key: ${cache_key}`);
+		}
 
 		nodes[cache_key] = node;
 	}

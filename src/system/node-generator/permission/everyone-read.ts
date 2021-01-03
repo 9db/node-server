@@ -4,7 +4,7 @@ import PermissionNode from 'type/node/permission';
 import NodeParameters from 'type/node-parameters';
 import SystemNodeGenerator from 'system/node-generator';
 
-class PublicReadPermissionGenerator extends SystemNodeGenerator {
+class EveryoneReadPermissionGenerator extends SystemNodeGenerator {
 	public generate(): PermissionNode {
 		const node = super.generate();
 		const group = this.getEveryoneGroupUrl();
@@ -20,7 +20,7 @@ class PublicReadPermissionGenerator extends SystemNodeGenerator {
 	protected getNodeParameters(): NodeParameters {
 		return {
 			type_id: SystemId.PERMISSION_TYPE,
-			id: SystemId.PUBLIC_READ_PERMISSION
+			id: SystemId.EVERYONE_READ_PERMISSION
 		};
 	}
 
@@ -32,4 +32,4 @@ class PublicReadPermissionGenerator extends SystemNodeGenerator {
 	}
 }
 
-export default PublicReadPermissionGenerator;
+export default EveryoneReadPermissionGenerator;

@@ -1,6 +1,5 @@
 import Node from 'type/node';
 import SystemId from 'system/enum/id';
-import ServerError from 'http/error/server-error';
 import PermissionNode from 'type/node/permission';
 import BadRequestError from 'http/error/bad-request';
 import getNodeParameters from 'utility/get-node-parameters';
@@ -47,27 +46,34 @@ class FetchNodePermissionsOperation extends Operation<Input, PermissionNode[]> {
 		const permission_set_id = this.getPermissionSetId();
 
 		switch (permission_set_id) {
-			case StaticPermissionSet.PUBLIC_READ:
-				return this.fetchPublicReadPermissions();
+			case StaticPermissionSet.EVERYONE_READ:
+				return this.fetchEveryoneReadPermissions();
 			default:
 				throw new BadRequestError();
 		}
 	}
 
-	private async fetchPublicReadPermissions(): Promise<PermissionNode[]> {
+	private async fetchEveryoneReadPermissions(): Promise<PermissionNode[]> {
 		const repository = this.getRepository();
-		const node = await repository.fetchNode({
+
+		const everyone_read_promise = repository.fetchNode({
 			type_id: SystemId.PERMISSION_TYPE,
-			id: SystemId.PUBLIC_READ_PERMISSION
+			id: SystemId.EVERYONE_READ_PERMISSION
 		});
 
-		if (node === undefined) {
-			throw new ServerError('Unable to find public read permission');
-		}
+		const admin_create_promise = repository.fetchNode({
+			type_id: SystemId.PERMISSION_TYPE,
+			id: SystemId.ADMIN_CREATE_PERMISSION
+		});
 
-		const permission_node = node as PermissionNode;
+		const promises = [everyone_read_promise, admin_create_promise];
+		const results = await Promise.all(promises);
 
-		return [permission_node];
+		const nodes = results.filter((result) => {
+			return result !== undefined;
+		});
+
+		return nodes as PermissionNode[];
 	}
 
 	private getPermissionSetId(): string {
