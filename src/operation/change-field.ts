@@ -167,6 +167,7 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 		const creator = `${hostname}/account/anonymous`;
 		const approver = `${hostname}/account/system`;
 		const changes = `${hostname}/change-list/non`;
+		const permissions = `${hostname}/permission-set/non`;
 		const created_at = Date.now();
 		const updated_at = created_at;
 
@@ -182,7 +183,8 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 			creator,
 			created_at,
 			updated_at,
-			changes
+			changes,
+			permissions
 		};
 	}
 

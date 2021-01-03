@@ -9,13 +9,15 @@ import AccountTypeGenerator from 'system/node-generator/type/account';
 import SystemAccountGenerator from 'system/node-generator/account/system';
 import { GeneratorConstructor } from 'system/node-generator';
 import AnonymousAccountGenerator from 'system/node-generator/account/anonymous';
+import PublicReadPermissionGenerator from 'system/node-generator/permission/public-read';
 
 const GENERATORS: GeneratorConstructor[] = [
 	StringTypeGenerator,
 	GenericTypeGenerator,
 	AccountTypeGenerator,
 	SystemAccountGenerator,
-	AnonymousAccountGenerator
+	AnonymousAccountGenerator,
+	PublicReadPermissionGenerator
 ];
 
 interface NodeCache {

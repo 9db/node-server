@@ -64,6 +64,7 @@ class CreateTypeOperation extends Operation<Input, TypeNode> {
 		const type_url = this.getTypeUrl();
 		const creator = this.getAccountUrl();
 		const changes = this.getChangesUrl();
+		const permissions = this.getPermissionsUrl();
 		const instances = this.getInstancesUrl();
 		const child_types = this.getChildTypesUrl();
 		const parent_type = this.getParentTypeUrl();
@@ -77,6 +78,7 @@ class CreateTypeOperation extends Operation<Input, TypeNode> {
 			created_at,
 			updated_at,
 			changes,
+			permissions,
 			instances,
 			child_types,
 			parent_type
@@ -141,6 +143,15 @@ class CreateTypeOperation extends Operation<Input, TypeNode> {
 
 		return buildNodeUrl(hostname, {
 			type_id: SystemId.CHANGE_LIST_TYPE,
+			id: KeyGenerator.id()
+		});
+	}
+
+	private getPermissionsUrl(): string {
+		const hostname = this.getHostname();
+
+		return buildNodeUrl(hostname, {
+			type_id: SystemId.PERMISSION_SET_TYPE,
 			id: KeyGenerator.id()
 		});
 	}

@@ -8,13 +8,19 @@ const HOSTNAME = 'https://9db.org';
 function randomCreatorUrl(): string {
 	const id = KeyGenerator.id();
 
-	return `${HOSTNAME}/account/${id}`;
+	return `${HOSTNAME}/${SystemId.ACCOUNT_TYPE}/${id}`;
 }
 
 function randomChangesUrl(): string {
 	const id = KeyGenerator.id();
 
-	return `${HOSTNAME}/change-list/${id}`;
+	return `${HOSTNAME}/${SystemId.CHANGE_LIST_TYPE}/${id}`;
+}
+
+function randomPermissionsUrl(): string {
+	const id = KeyGenerator.id();
+
+	return `${HOSTNAME}/${SystemId.PERMISSION_SET_TYPE}/${id}`;
 }
 
 class NodeFactory {
@@ -39,6 +45,7 @@ class NodeFactory {
 			created_at: Date.now(),
 			updated_at: Date.now(),
 			changes: randomChangesUrl(),
+			permissions: randomPermissionsUrl(),
 			...node
 		};
 	}

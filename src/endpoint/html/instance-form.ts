@@ -80,6 +80,12 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
+		console.log('>>>>>');
+		console.log('>>>>>');
+		console.log(type_node);
+		console.log('>>>>>');
+		console.log('>>>>>');
+
 		const input = {
 			type_node,
 			repository,

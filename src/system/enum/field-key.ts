@@ -6,7 +6,8 @@ enum SystemFieldKey {
 	UPDATED_AT = 'updated_at',
 	CHANGES = 'changes',
 	INSTANCES = 'instances',
-	CHILD_TYPES = 'child_types'
+	CHILD_TYPES = 'child_types',
+	PARENT_TYPE  = 'parent_type'
 }
 
 export default SystemFieldKey;

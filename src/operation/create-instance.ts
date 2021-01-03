@@ -55,6 +55,7 @@ class CreateInstanceOperation extends Operation<Input, InstanceNode> {
 		const draft_fields = this.getDraftFields();
 		const creator = this.getAccountUrl();
 		const changes = this.getChangesUrl();
+		const permissions = this.getPermissionsUrl();
 		const created_at = Date.now();
 		const updated_at = created_at;
 
@@ -64,7 +65,8 @@ class CreateInstanceOperation extends Operation<Input, InstanceNode> {
 			creator,
 			created_at,
 			updated_at,
-			changes
+			changes,
+			permissions
 		};
 
 		draft_fields.forEach((draft_field) => {
@@ -152,6 +154,15 @@ class CreateInstanceOperation extends Operation<Input, InstanceNode> {
 
 		return buildNodeUrl(hostname, {
 			type_id: SystemId.CHANGE_LIST_TYPE,
+			id: KeyGenerator.id()
+		});
+	}
+
+	private getPermissionsUrl(): string {
+		const hostname = this.getHostname();
+
+		return buildNodeUrl(hostname, {
+			type_id: SystemId.PERMISSION_SET_TYPE,
 			id: KeyGenerator.id()
 		});
 	}

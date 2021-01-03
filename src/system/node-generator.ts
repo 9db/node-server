@@ -2,6 +2,7 @@ import Node from 'type/node';
 import SystemId from 'system/enum/id';
 import buildNodeUrl from 'utility/build-node-url';
 import NodeParameters from 'type/node-parameters';
+import StaticPermissionSet from 'enum/static-permission-set';
 
 abstract class SystemNodeGenerator {
 	private hostname: string;
@@ -17,7 +18,8 @@ abstract class SystemNodeGenerator {
 			creator: this.getCreatorUrl(),
 			created_at: 0,
 			updated_at: 0,
-			changes: this.getChangesUrl()
+			changes: this.getChangesUrl(),
+			permissions: this.getPermissionsUrl()
 		};
 
 		if (this.isTypeNode()) {
@@ -39,6 +41,12 @@ abstract class SystemNodeGenerator {
 		});
 	}
 
+	protected buildNodeUrl(parameters: NodeParameters): string {
+		const hostname = this.getHostname();
+
+		return buildNodeUrl(hostname, parameters);
+	}
+
 	private getNodeUrl(): string {
 		const parameters = this.getNodeParameters();
 
@@ -55,20 +63,27 @@ abstract class SystemNodeGenerator {
 	}
 
 	private getChangesUrl(): string {
-		const type_id = this.getTypeId();
+		const node_id = this.getNodeId();
 
 		return this.buildNodeUrl({
 			type_id: SystemId.CHANGE_LIST_TYPE,
-			id: `${type_id}-changes`
+			id: `${node_id}-changes`
+		});
+	}
+
+	private getPermissionsUrl(): string {
+		return this.buildNodeUrl({
+			type_id: SystemId.PERMISSION_SET_TYPE,
+			id: StaticPermissionSet.PUBLIC_READ
 		});
 	}
 
 	private getInstancesUrl(): string {
-		const type_id = this.getTypeId();
+		const node_id = this.getNodeId();
 
 		return this.buildNodeUrl({
-			type_id: `${type_id}-set`,
-			id: `${type_id}-instances`
+			type_id: `${node_id}-set`,
+			id: `${node_id}-instances`
 		});
 	}
 
@@ -108,12 +123,6 @@ abstract class SystemNodeGenerator {
 
 	private getHostname(): string {
 		return this.hostname;
-	}
-
-	private buildNodeUrl(parameters: NodeParameters): string {
-		const hostname = this.getHostname();
-
-		return buildNodeUrl(hostname, parameters);
 	}
 
 	protected abstract getNodeParameters(): NodeParameters;

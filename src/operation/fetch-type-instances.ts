@@ -1,11 +1,9 @@
 import TypeNode from 'type/type-node';
 import SystemId from 'system/enum/id';
-import FieldValue from 'type/field-value';
 import InstanceNode from 'type/instance-node';
 import getNodeParameters from 'utility/get-node-parameters';
-import LoadNodeFromUrlOperation from 'operation/load-node-from-url';
+import FetchListFieldNodesOperation from 'operation/fetch-list-field-nodes';
 import Operation, { OperationInput } from 'operation';
-import FetchListFieldValuesOperation from 'operation/fetch-list-field-values';
 
 interface Input extends OperationInput {
 	readonly type_node: TypeNode;
@@ -13,14 +11,13 @@ interface Input extends OperationInput {
 
 class FetchTypeInstancesOperation extends Operation<Input, InstanceNode[]> {
 	protected async performInternal(): Promise<InstanceNode[]> {
-		const list_values = await this.fetchListValues();
-		const instances = await this.fetchInstancesFromListValues(list_values);
+		const instances = await this.fetchInstances();
 		const system_instances = await this.fetchSystemInstances();
 
 		return [...instances, ...system_instances];
 	}
 
-	private fetchListValues(): Promise<FieldValue[]> {
+	private async fetchInstances(): Promise<InstanceNode[]> {
 		const type_node = this.getTypeNode();
 		const repository = this.getRepository();
 		const account = this.getAccount();
@@ -32,37 +29,10 @@ class FetchTypeInstancesOperation extends Operation<Input, InstanceNode[]> {
 			account
 		};
 
-		const operation = new FetchListFieldValuesOperation(input);
+		const operation = new FetchListFieldNodesOperation(input);
+		const nodes = await operation.perform();
 
-		return operation.perform();
-	}
-
-	private fetchInstancesFromListValues(
-		list_values: FieldValue[]
-	): Promise<InstanceNode[]> {
-		const instance_urls = list_values as string[];
-
-		const promises = instance_urls.map((instance_url) => {
-			return this.loadInstanceFromUrl(instance_url);
-		});
-
-		return Promise.all(promises);
-	}
-
-	private async loadInstanceFromUrl(url: string): Promise<InstanceNode> {
-		const repository = this.getRepository();
-		const account = this.getAccount();
-
-		const input = {
-			url,
-			repository,
-			account
-		};
-
-		const operation = new LoadNodeFromUrlOperation(input);
-		const node = await operation.perform();
-
-		return node as InstanceNode;
+		return nodes as InstanceNode[];
 	}
 
 	private fetchSystemInstances(): Promise<InstanceNode[]> {
