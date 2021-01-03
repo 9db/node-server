@@ -1,12 +1,14 @@
 import TypeNode from 'type/type-node';
 import DraftField from 'type/draft-field';
 import getNodeParameters from 'utility/get-node-parameters';
+import FieldTableTemplate from 'template/page/type-form/field-table';
 import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
 interface Input extends PageTemplateInput {
-	readonly node: TypeNode;
+	readonly generic_type: TypeNode;
 	readonly draft_id: string;
 	readonly draft_fields: DraftField[];
+	readonly type_nodes: TypeNode[];
 }
 
 class TypeFormTemplate extends PageTemplate<Input> {
@@ -32,14 +34,14 @@ class TypeFormTemplate extends PageTemplate<Input> {
 	protected getContentHtml(): string {
 		const id_input_html = this.getIdInputHtml();
 		const parent_type_input_html = this.getParentTypeInputHtml();
-		const field_inputs_html = this.getFieldInputsHtml();
+		const field_table_html = this.getFieldTableHtml();
 		const submission_html = this.getSubmissionHtml();
 
 		return `
 			<form action="/type" method="POST">
 				${id_input_html}
 				${parent_type_input_html}
-				${field_inputs_html}
+				${field_table_html}
 				${submission_html}
 			</form>
 		`;
@@ -70,62 +72,18 @@ class TypeFormTemplate extends PageTemplate<Input> {
 		`;
 	}
 
-	private getFieldInputsHtml(): string {
+	private getFieldTableHtml(): string {
 		const draft_fields = this.getDraftFields();
+		const type_nodes = this.getTypeNodes();
 
-		const serialized_fields = draft_fields.map((field, index) => {
-			return this.serializeDraftField(field, index);
-		});
+		const input = {
+			draft_fields,
+			type_nodes
+		};
 
-		const fields_html = serialized_fields.join('\n');
+		const template = new FieldTableTemplate(input);
 
-		return `
-			<fieldset>
-				<label>Fields:</label>
-				<table>
-					<thead>
-						<tr>
-							<th></th>
-							<th>
-								Key
-							</th>
-							<th>
-								Value
-							</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						${fields_html}
-					</tbody>
-					<caption>
-						<input type="submit" formaction="/type/new?action=add_field" formmethod="POST" value="Add another field" />
-					</caption>
-				</table>
-			</fieldset>
-		`;
-	}
-
-	private serializeDraftField(draft_field: DraftField, index: number): string {
-		const { key, value } = draft_field;
-		const display_index = index + 1;
-
-		return `
-			<tr>
-				<td>
-					${display_index}
-				</td>
-				<td>
-					<input name="fields[${index}][key]" value="${key}" />
-				</td>
-				<td>
-					<input name="fields[${index}][value]" value="${value}" />
-				</td>
-				<td>
-					<input type="submit" formaction="/type/new?action=remove_field&index=${index}" formmethod="POST" value="x" />
-				</td>
-			</tr>
-		`;
+		return template.render();
 	}
 
 	private getSubmissionHtml(): string {
@@ -146,23 +104,29 @@ class TypeFormTemplate extends PageTemplate<Input> {
 		return input.draft_fields;
 	}
 
+	private getTypeNodes(): TypeNode[] {
+		const input = this.getInput();
+
+		return input.type_nodes;
+	}
+
 	private getTypeUrl(): string {
-		const node = this.getNode();
+		const node = this.getGenericType();
 
 		return node.url;
 	}
 
 	private getTypeLabel(): string {
-		const node = this.getNode();
+		const node = this.getGenericType();
 		const parameters = getNodeParameters(node.url);
 
 		return parameters.id;
 	}
 
-	private getNode(): TypeNode {
+	private getGenericType(): TypeNode {
 		const input = this.getInput();
 
-		return input.node;
+		return input.generic_type;
 	}
 }
 

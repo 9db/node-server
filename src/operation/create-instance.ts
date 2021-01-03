@@ -4,6 +4,7 @@ import DraftField from 'type/draft-field';
 import InstanceNode from 'type/instance-node';
 import KeyGenerator from 'utility/key-generator';
 import buildNodeUrl from 'utility/build-node-url';
+import getFieldKeys from 'utility/get-field-keys';
 import NodeParameters from 'type/node-parameters';
 import LoadNodeFromUrlOperation from 'operation/load-node-from-url';
 import AddValueToSetFieldOperation from 'operation/add-value-to-set-field';
@@ -16,9 +17,10 @@ interface Input extends OperationInput {
 
 class CreateInstanceOperation extends Operation<Input, InstanceNode> {
 	protected async performInternal(): Promise<InstanceNode> {
-		const instance_node = await this.createInstance();
+		const type_node = await this.fetchTypeNode();
+		const instance_node = await this.createInstance(type_node);
 
-		await this.addInstanceToType(instance_node);
+		await this.addInstanceToType(instance_node, type_node);
 
 		return instance_node;
 	}
@@ -40,14 +42,14 @@ class CreateInstanceOperation extends Operation<Input, InstanceNode> {
 		return node as TypeNode;
 	}
 
-	private async createInstance(): Promise<InstanceNode> {
-		const node = this.buildNode();
+	private async createInstance(type_node: TypeNode): Promise<InstanceNode> {
+		const node = this.buildNode(type_node);
 		const repository = this.getRepository();
 
 		return repository.storeNode(node);
 	}
 
-	private buildNode(): InstanceNode {
+	private buildNode(type_node: TypeNode): InstanceNode {
 		const url = this.getUrl();
 		const type_url = this.getTypeUrl();
 		const draft_fields = this.getDraftFields();
@@ -74,11 +76,26 @@ class CreateInstanceOperation extends Operation<Input, InstanceNode> {
 			};
 		});
 
+		const type_field_keys = getFieldKeys(type_node);
+
+		type_field_keys.forEach((type_field_key) => {
+			if (node[type_field_key] !== undefined) {
+				return;
+			}
+
+			node = {
+				...node,
+				[type_field_key]: null
+			};
+		});
+
 		return node;
 	}
 
-	private async addInstanceToType(instance_node: InstanceNode): Promise<void> {
-		const type_node = await this.fetchTypeNode();
+	private async addInstanceToType(
+		instance_node: InstanceNode,
+		type_node: TypeNode
+	): Promise<void> {
 		const repository = this.getRepository();
 		const account = this.getAccount();
 

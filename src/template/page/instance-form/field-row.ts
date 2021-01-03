@@ -81,8 +81,9 @@ class FieldRowTemplate extends Template<Input> {
 		];
 
 		field_instance_list.forEach((instance) => {
-			const id = instance.id;
-			const url = `/${instance.type_id}/${id}`;
+			const url = instance.url;
+			const parameters = getNodeParameters(url);
+			const id = parameters.id;
 
 			serialized_options.push(`
 				<option value="${url}">${id}</option>

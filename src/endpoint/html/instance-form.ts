@@ -5,7 +5,7 @@ import InstanceNode from 'type/instance-node';
 import getFieldKeys from 'utility/get-field-keys';
 import BadRequestError from 'http/error/bad-request';
 import InstanceFormTemplate from 'template/page/instance-form';
-import FetchListFieldValuesOperation from 'operation/fetch-list-field-values';
+import FetchTypeInstancesOperation from 'operation/fetch-type-instances';
 
 interface Input {
 	readonly id: string | undefined;
@@ -74,30 +74,21 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 		};
 	}
 
-	private async fetchInstanceListForTypeNode(
+	private fetchInstanceListForTypeNode(
 		type_node: TypeNode
-	): Promise<InstanceNode[] | undefined> {
+	): Promise<InstanceNode[]> {
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
 		const input = {
-			node: type_node,
-			field_key: 'instances',
+			type_node,
 			repository,
 			account
 		};
 
-		const operation = new FetchListFieldValuesOperation(input);
-		const result = await operation.perform();
-		const instance_urls = result as string[];
+		const operation = new FetchTypeInstancesOperation(input);
 
-		const promises = instance_urls.map((instance_url) => {
-			return this.loadInstanceFromUrl(instance_url);
-		});
-
-		const nodes = await Promise.all(promises);
-
-		return nodes;
+		return operation.perform();
 	}
 
 	private getDraftValueForFieldKey(field_key: string): string {

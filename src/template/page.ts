@@ -103,7 +103,7 @@ abstract class PageTemplate<T extends PageTemplateInput> extends Template<T> {
 		const version = manifest.version;
 
 		return `
-			<span>Running ${project_name} v${version}.</span>
+			<span>Running ${project_name} v${version}</span>
 		`;
 	}
 

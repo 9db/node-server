@@ -4,6 +4,7 @@ import DraftField from 'type/draft-field';
 import HtmlEndpoint from 'endpoint/html';
 import BadRequestError from 'http/error/bad-request';
 import TypeFormTemplate from 'template/page/type-form';
+import FetchTypeInstancesOperation from 'operation/fetch-type-instances';
 
 interface Input {
 	readonly id: string | undefined;
@@ -12,24 +13,41 @@ interface Input {
 
 class HtmlTypeFormEndpoint extends HtmlEndpoint<Input> {
 	protected async process(): Promise<string> {
-		const type_node = await this.fetchTypeNode();
+		const generic_type = await this.fetchType(SystemId.GENERIC_TYPE);
+		const type_nodes = await this.fetchTypeNodes(generic_type);
 
-		return this.renderFormForTypeNode(type_node);
+		return this.renderFormForTypeNode(generic_type, type_nodes);
 	}
 
-	private async fetchTypeNode(): Promise<TypeNode> {
-		return this.fetchType(SystemId.GENERIC_TYPE);
+	private async fetchTypeNodes(type_node: TypeNode): Promise<TypeNode[]> {
+		const repository = this.getRepository();
+		const account = this.getAccount();
+
+		const input = {
+			type_node,
+			repository,
+			account
+		};
+
+		const operation = new FetchTypeInstancesOperation(input);
+		const result = await operation.perform();
+
+		return result as TypeNode[];
 	}
 
-	private renderFormForTypeNode(node: TypeNode): string {
+	private renderFormForTypeNode(
+		generic_type: TypeNode,
+		type_nodes: TypeNode[]
+	): string {
 		const account = this.getAccount();
 		const draft_id = this.getDraftId();
 		const draft_fields = this.getDraftFields();
 
 		const template = new TypeFormTemplate({
-			node,
+			generic_type,
 			draft_id,
 			draft_fields,
+			type_nodes,
 			account
 		});
 
