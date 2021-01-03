@@ -3,7 +3,9 @@ import NodeParameters from 'type/node-parameters';
 import getListInnerType from 'utility/get-list-inner-type';
 import ListNodeGenerator from 'system/node-generator/list';
 import getNodeParameters from 'utility/get-node-parameters';
+import GroupTypeGenerator from 'system/node-generator/type/group';
 import StringTypeGenerator from 'system/node-generator/type/string';
+import AdminGroupGenerator from 'system/node-generator/group/admin';
 import GenericTypeGenerator from 'system/node-generator/type/generic';
 import AccountTypeGenerator from 'system/node-generator/type/account';
 import SystemAccountGenerator from 'system/node-generator/account/system';
@@ -12,6 +14,8 @@ import AnonymousAccountGenerator from 'system/node-generator/account/anonymous';
 import PublicReadPermissionGenerator from 'system/node-generator/permission/public-read';
 
 const GENERATORS: GeneratorConstructor[] = [
+	GroupTypeGenerator,
+	AdminGroupGenerator,
 	StringTypeGenerator,
 	GenericTypeGenerator,
 	AccountTypeGenerator,
