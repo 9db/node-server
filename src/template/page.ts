@@ -102,8 +102,19 @@ abstract class PageTemplate<T extends PageTemplateInput> extends Template<T> {
 		const project_name = manifest.name;
 		const version = manifest.version;
 
+		let url: string;
+
+		if (manifest.homepage !== undefined) {
+			url = manifest.homepage;
+		} else {
+			url = `https://npmjs.com/package/${project_name}`;
+		}
+
 		return `
-			<span>Running ${project_name} v${version}</span>
+			<span>
+				Running
+				<a href="${url}">${project_name} v${version}</a>
+			</span>
 		`;
 	}
 
