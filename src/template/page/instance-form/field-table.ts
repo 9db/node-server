@@ -8,6 +8,10 @@ interface Input {
 
 class FieldTableTemplate extends Template<Input> {
 	protected getHtml(): string {
+		if (!this.hasFields()) {
+			return this.getEmptyHtml();
+		}
+
 		const value_list_header = this.getValueListHeader();
 		const explicit_value_header = this.getExplicitValueHeader();
 		const field_rows_html = this.getFieldRowsHtml();
@@ -26,6 +30,12 @@ class FieldTableTemplate extends Template<Input> {
 					${field_rows_html}
 				</tbody>
 			</table>
+		`;
+	}
+
+	private getEmptyHtml(): string {
+		return `
+			<em>This type has no fields to specify.</em>
 		`;
 	}
 
@@ -48,6 +58,12 @@ class FieldTableTemplate extends Template<Input> {
 		const template = new FieldRowTemplate(input);
 
 		return template.render();
+	}
+
+	private hasFields(): boolean {
+		const fields = this.getFields();
+
+		return fields.length > 0;
 	}
 
 	private getFields(): FieldInput[] {

@@ -54,6 +54,11 @@ class StaticCssEndpoint extends StaticEndpoint {
 				font-weight: bold;
 				margin-bottom: 4px;
 			}
+
+			input[type="submit"] {
+				display: block;
+				margin-top: 16px;
+			}
 		`);
 
 		return Promise.resolve(result);
