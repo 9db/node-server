@@ -152,7 +152,7 @@ class CreateTypeOperation extends Operation<Input, TypeNode> {
 
 		return buildNodeUrl(hostname, {
 			type_id: SystemId.PERMISSION_SET_TYPE,
-			id: KeyGenerator.id()
+			id: SystemId.EVERYONE_READ_PERMISSION
 		});
 	}
 

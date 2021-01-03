@@ -36,9 +36,6 @@ class CreateInstanceOperation extends Operation<Input, InstanceNode> {
 			account
 		};
 
-		console.log(url);
-		console.log('---------------------------');
-
 		const operation = new LoadNodeFromUrlOperation(input);
 		const node = await operation.perform();
 
@@ -166,7 +163,7 @@ class CreateInstanceOperation extends Operation<Input, InstanceNode> {
 
 		return buildNodeUrl(hostname, {
 			type_id: SystemId.PERMISSION_SET_TYPE,
-			id: KeyGenerator.id()
+			id: SystemId.EVERYONE_READ_PERMISSION
 		});
 	}
 }
