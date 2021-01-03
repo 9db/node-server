@@ -1,3 +1,5 @@
+import {URL} from 'url';
+
 import Template from 'template';
 import TypeNode from 'type/type-node';
 import FieldValue from 'type/field-value';
@@ -39,6 +41,36 @@ class FieldRowTemplate extends Template<FieldInput> {
 	}
 
 	private getValueHtml(): string {
+		if (this.valueIsUrl()) {
+			return this.formatValueAsUrl();
+		}
+
+		return this.formatValueAsString();
+	}
+
+	private valueIsUrl(): boolean {
+		const value = this.getValue() as string;
+
+		try {
+			new URL(value);
+		} catch (error) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private formatValueAsUrl(): string {
+		const value = this.getValue() as string;
+		const parameters = getNodeParameters(value);
+		const id = parameters.id;
+
+		return `
+			<a href="${value}">${id}</a>
+		`;
+	}
+
+	private formatValueAsString(): string {
 		const value = this.getValue();
 
 		if (value === null) {
