@@ -7,12 +7,12 @@ import SystemNodeGenerator from 'system/node-generator';
 class PublicReadPermissionGenerator extends SystemNodeGenerator {
 	public generate(): PermissionNode {
 		const node = super.generate();
-		const account = this.getAnonymousUrl();
+		const group = this.getEveryoneGroupUrl();
 		const permission_type = PermissionType.READ;
 
 		return {
 			...node,
-			account,
+			group,
 			permission_type
 		};
 	}
@@ -24,10 +24,10 @@ class PublicReadPermissionGenerator extends SystemNodeGenerator {
 		};
 	}
 
-	private getAnonymousUrl(): string {
+	private getEveryoneGroupUrl(): string {
 		return this.buildNodeUrl({
-			type_id: SystemId.ACCOUNT_TYPE,
-			id: SystemId.ANONYMOUS_ACCOUNT
+			type_id: SystemId.GROUP_TYPE,
+			id: SystemId.EVERYONE_GROUP
 		});
 	}
 }

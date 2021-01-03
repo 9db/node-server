@@ -1,7 +1,7 @@
 import NodeParameters from 'type/node-parameters';
 import SystemNodeGenerator from 'system/node-generator';
 
-class ListNodeGenerator extends SystemNodeGenerator {
+class ListTypeGenerator extends SystemNodeGenerator {
 	private parameters: NodeParameters;
 
 	public constructor(hostname: string, parameters: NodeParameters) {
@@ -15,4 +15,4 @@ class ListNodeGenerator extends SystemNodeGenerator {
 	}
 }
 
-export default ListNodeGenerator;
+export default ListTypeGenerator;

@@ -1,13 +1,16 @@
 import Node from 'type/node';
+import SystemId from 'system/enum/id';
 import NodeParameters from 'type/node-parameters';
 import getListInnerType from 'utility/get-list-inner-type';
 import ListNodeGenerator from 'system/node-generator/list';
 import getNodeParameters from 'utility/get-node-parameters';
+import ListTypeGenerator from 'system/node-generator/list-type';
 import GroupTypeGenerator from 'system/node-generator/type/group';
 import StringTypeGenerator from 'system/node-generator/type/string';
 import AdminGroupGenerator from 'system/node-generator/group/admin';
 import GenericTypeGenerator from 'system/node-generator/type/generic';
 import AccountTypeGenerator from 'system/node-generator/type/account';
+import EveryoneGroupGenerator from 'system/node-generator/group/everyone';
 import SystemAccountGenerator from 'system/node-generator/account/system';
 import { GeneratorConstructor } from 'system/node-generator';
 import AnonymousAccountGenerator from 'system/node-generator/account/anonymous';
@@ -20,6 +23,7 @@ const GENERATORS: GeneratorConstructor[] = [
 	GenericTypeGenerator,
 	AccountTypeGenerator,
 	SystemAccountGenerator,
+	EveryoneGroupGenerator,
 	AnonymousAccountGenerator,
 	PublicReadPermissionGenerator
 ];
@@ -43,6 +47,10 @@ class SystemCache {
 			return this.fetchListNode(parameters);
 		}
 
+		if (this.isListTypeNode(parameters)) {
+			return this.fetchListTypeNode(parameters);
+		}
+
 		const cache_key = this.buildCacheKey(parameters);
 
 		const nodes = this.getNodes();
@@ -59,6 +67,23 @@ class SystemCache {
 	private fetchListNode(parameters: NodeParameters): Node {
 		const hostname = this.getHostname();
 		const generator = new ListNodeGenerator(hostname, parameters);
+
+		return generator.generate();
+	}
+
+	private isListTypeNode(parameters: NodeParameters): boolean {
+		if (parameters.type_id !== SystemId.GENERIC_TYPE) {
+			return false;
+		}
+
+		const inner_type = getListInnerType(parameters.id);
+
+		return inner_type !== null;
+	}
+
+	private fetchListTypeNode(parameters: NodeParameters): Node {
+		const hostname = this.getHostname();
+		const generator = new ListTypeGenerator(hostname, parameters);
 
 		return generator.generate();
 	}

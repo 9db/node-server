@@ -1,5 +1,5 @@
 import Node from 'type/node';
-import AccountNode from 'type/node/account';
+import SystemId from 'system/enum/id';
 import PermissionNode from 'type/node/permission';
 import PermissionType from 'enum/permission-type';
 import UnauthorizedError from 'http/error/unauthorized';
@@ -12,12 +12,8 @@ interface Input extends OperationInput {
 }
 
 class CheckNodePermissionOperation extends Operation<Input, void> {
-	private anonymous_account: AccountNode | undefined;
-
 	protected async performInternal(): Promise<void> {
 		const permissions = await this.fetchNodePermissions();
-
-		await this.fetchAnonymousAccount();
 
 		if (this.hasRequiredPermission(permissions)) {
 			return;
@@ -55,34 +51,13 @@ class CheckNodePermissionOperation extends Operation<Input, void> {
 			return false;
 		}
 
-		const anonymous_account = this.getAnonymousAccount();
-
-		if (permission.account === anonymous_account.url) {
+		if (permission.group === SystemId.EVERYONE_GROUP) {
 			return true;
 		}
 
-		const account = this.getAccount();
-
-		if (permission.account !== account.url) {
-			return false;
-		}
+		// TODO: Check the actual group members...
 
 		return true;
-	}
-
-	private async fetchAnonymousAccount(): Promise<void> {
-		const repository = this.getRepository();
-		const account = await repository.fetchAnonymousAccount();
-
-		this.anonymous_account = account;
-	}
-
-	private getAnonymousAccount(): AccountNode {
-		if (this.anonymous_account === undefined) {
-			throw new Error('Tried to read anonymous account, but it was not set');
-		}
-
-		return this.anonymous_account;
 	}
 
 	private getPermissionType(): PermissionType {

@@ -15,7 +15,7 @@ class PermissionsTableTemplate extends Template<Input> {
 				<thead>
 					<tr>
 						<th>
-							Account
+							Group
 						</th>
 						<th>
 							Permission type
@@ -40,15 +40,15 @@ class PermissionsTableTemplate extends Template<Input> {
 	}
 
 	private serializePermission(permission: PermissionNode): string {
-		const account_url = permission.account;
-		const parameters = getNodeParameters(account_url);
-		const account_id = parameters.id;
+		const group_url = permission.group;
+		const parameters = getNodeParameters(group_url);
+		const group_id = parameters.id;
 		const permission_type = permission.permission_type;
 
 		return `
 			<tr>
 				<td>
-					<a href="${account_url}">${account_id}</a>
+					<a href="${group_url}">${group_id}</a>
 				</td>
 				<td>
 					${permission_type}

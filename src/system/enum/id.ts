@@ -18,7 +18,8 @@ enum SystemId {
 
 	PUBLIC_READ_PERMISSION = 'public-read',
 
-	ADMIN_GROUP = 'admin'
+	ADMIN_GROUP = 'admin',
+	EVERYONE_GROUP = 'everyone'
 }
 
 export default SystemId;
