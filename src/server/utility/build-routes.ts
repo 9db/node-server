@@ -8,7 +8,7 @@ import HtmlNotFoundRoute from 'route/html/not-found';
 import JsonNotFoundRoute from 'route/json/not-found';
 import HtmlCreateTypeRoute from 'route/html/create-type';
 import HtmlTypeDetailsRoute from 'route/html/type-details';
-import PlaintextRobotsRoute from 'route/plaintext/version';
+import PlaintextRobotsRoute from 'route/plaintext/robots';
 import HtmlInstanceFormRoute from 'route/html/instance-form';
 import PlaintextVersionRoute from 'route/plaintext/version';
 import HtmlFieldDetailsRoute from 'route/html/field-details';
