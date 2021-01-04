@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "private": false,
   "author": "9DB",
-  "homepage": "https://9db.org",
+  "homepage": "https://github.com/9db/node-server",
   "repository": "https://github.com/9db/node-server",
   "main": "./dist/src/index.js",
   "dependencies": {},
