@@ -10,9 +10,9 @@ interface Input extends OperationInput {
 
 class FetchAccountOperation extends Operation<Input, AccountNode> {
 	protected async performInternal(): Promise<AccountNode> {
-		const account_key = await this.fetchAccountId();
+		const account_id = await this.fetchAccountId();
 
-		return this.fetchAccount(account_key);
+		return this.fetchAccount(account_id);
 	}
 
 	private async fetchAccount(account_id: string): Promise<AccountNode> {
