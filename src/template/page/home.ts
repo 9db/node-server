@@ -1,8 +1,10 @@
 import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
-class HomePageTemplate extends PageTemplate<PageTemplateInput> {
+interface Input extends PageTemplateInput {}
+
+class HomePageTemplate extends PageTemplate<Input> {
 	protected getContentTitle(): string {
-		return 'Home';
+		return '9DB dev server';
 	}
 
 	protected getBreadcrumbs(): Breadcrumb[] {
@@ -15,7 +17,12 @@ class HomePageTemplate extends PageTemplate<PageTemplateInput> {
 
 	protected getContentHtml(): string {
 		return `
-			<p>Temporary home page.</p>
+			<p>
+				This is a development server that I'm using for testing out my new 9DB
+				database and API specification. You can view a list of the ongoing
+				issues that I'm tackling as part of this work
+				<a href="/type/issue/instances">here</a>.
+			</p>
 		`;
 	}
 }
