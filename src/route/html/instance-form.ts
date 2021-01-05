@@ -4,7 +4,7 @@ import HtmlInstanceFormEndpoint from 'endpoint/html/instance-form';
 
 class HtmlInstanceFormRoute extends HtmlRoute {
 	public constructor() {
-		super(HttpMethod.GET, `/:type_id/new`, HtmlInstanceFormEndpoint);
+		super(HttpMethod.GET, '/create-instance', HtmlInstanceFormEndpoint);
 	}
 }
 

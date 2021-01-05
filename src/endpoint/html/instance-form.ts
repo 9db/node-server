@@ -24,7 +24,11 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 	}
 
 	private async fetchTypeNode(): Promise<TypeNode> {
-		const type_id = this.getUrlParameter('type_id');
+		const type_id = this.getQueryParameter('type_id');
+
+		if (type_id === undefined) {
+			throw new BadRequestError();
+		}
 
 		return this.fetchType(type_id);
 	}

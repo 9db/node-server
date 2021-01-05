@@ -175,9 +175,13 @@ class TypeDetailsTemplate extends PageTemplate<Input> {
 	}
 
 	private getNewUrl(): string {
-		const node_url = this.getNodeUrl();
+		const node_id = this.getNodeId();
 
-		return `${node_url}/new`;
+		if (node_id === SystemId.GENERIC_TYPE) {
+			return '/create-type';
+		} else {
+			return `/create-instance?type_id=${node_id}`;
+		}
 	}
 
 	private getNodeUrl(): string {

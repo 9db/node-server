@@ -1,4 +1,5 @@
 enum ChangeType {
+	ADD_FIELD = 'add_field',
 	SET_FIELD_VALUE = 'set_field_value',
 	ADD_LIST_VALUE = 'add_list_value',
 	REMOVE_LIST_VALUE = 'remove_list_value',

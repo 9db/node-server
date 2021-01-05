@@ -26,11 +26,12 @@ class ChangeFieldOperation extends Operation<Input, Node> {
 	}
 
 	private async addChangeNode(): Promise<void> {
-		const changes_id = this.getChangesId();
 		const change_node = this.buildChangeNode();
 		const repository = this.getRepository();
 
 		await repository.storeNode(change_node);
+
+		const changes_id = this.getChangesId();
 
 		const parameters = {
 			type_id: SystemId.CHANGE_LIST_TYPE,
