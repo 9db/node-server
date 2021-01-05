@@ -6,6 +6,7 @@ import ListNodeGenerator from 'system/node-generator/list';
 import getNodeParameters from 'utility/get-node-parameters';
 import ListTypeGenerator from 'system/node-generator/list-type';
 import GroupTypeGenerator from 'system/node-generator/type/group';
+import ChangeTypeGenerator from 'system/node-generator/type/change';
 import StringTypeGenerator from 'system/node-generator/type/string';
 import AdminGroupGenerator from 'system/node-generator/group/admin';
 import SessionTypeGenerator from 'system/node-generator/type/session';
@@ -20,6 +21,7 @@ import EveryoneReadPermissionGenerator from 'system/node-generator/permission/ev
 
 const GENERATORS: GeneratorConstructor[] = [
 	GroupTypeGenerator,
+	ChangeTypeGenerator,
 	AdminGroupGenerator,
 	StringTypeGenerator,
 	GenericTypeGenerator,

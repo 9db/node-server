@@ -24,10 +24,10 @@ class PathParser {
 
 			parameter_keys.push(parameter_key);
 
-			return '([^\\/]+)';
+			return '([^\\/?]+)';
 		});
 
-		const querystring = '(\\?[^/]+)?';
+		const querystring = '(\\?[^/?]+)?';
 
 		const regex_string = '^/' + regex_parts.join('/') + querystring + '$';
 		const regex = new RegExp(regex_string);

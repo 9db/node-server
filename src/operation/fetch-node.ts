@@ -7,6 +7,7 @@ import Operation, { OperationInput } from 'operation';
 interface Input extends OperationInput {
 	readonly id: string;
 	readonly type_id: string;
+	readonly version?: number;
 }
 
 class FetchNodeOperation extends Operation<Input, Node> {
