@@ -1,11 +1,11 @@
 import Node from 'type/node';
 import SystemId from 'system/enum/id';
 import NodeParameters from 'type/node-parameters';
-import SystemNodeGenerator from 'system/node-generator';
+import SystemNodeBuilder from 'system/node-builder';
 
-class SessionTypeGenerator extends SystemNodeGenerator {
-	public generate(): Node {
-		const node = super.generate();
+class SessionTypeBuilder extends SystemNodeBuilder {
+	public build(): Node {
+		const node = super.build();
 		const account = this.getAccountTypeUrl();
 
 		return {
@@ -22,11 +22,8 @@ class SessionTypeGenerator extends SystemNodeGenerator {
 	}
 
 	private getAccountTypeUrl(): string {
-		return this.buildNodeUrl({
-			type_id: SystemId.GENERIC_TYPE,
-			id: SystemId.ACCOUNT_TYPE
-		});
+		return this.buildUrl(SystemId.GENERIC_TYPE, SystemId.ACCOUNT_TYPE);
 	}
 }
 
-export default SessionTypeGenerator;
+export default SessionTypeBuilder;

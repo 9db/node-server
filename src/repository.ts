@@ -2,7 +2,6 @@ import Node from 'type/node';
 import Adapter from 'interface/adapter';
 import SystemId from 'system/enum/id';
 import FieldValue from 'type/field-value';
-import SystemCache from 'system/cache';
 import AccountNode from 'type/node/account';
 import NotFoundError from 'http/error/not-found';
 import transformNode from 'repository/utility/transform-node';
@@ -10,29 +9,26 @@ import NodeParameters from 'type/node-parameters';
 import standardizeUrl from 'repository/utility/standardize-url';
 import unstandardizeUrl from 'repository/utility/unstandardize-url';
 import getNodeParameters from 'utility/get-node-parameters';
+import SystemNodeGenerator from 'system/node-generator';
 
 class Repository {
 	private hostname: string;
 	private adapter: Adapter;
-	private system_cache: SystemCache;
+	private system_node_promise: Promise<void>;
 
 	public constructor(hostname: string, adapter: Adapter) {
 		this.hostname = hostname;
 		this.adapter = adapter;
 
-		this.system_cache = new SystemCache(hostname);
+		const generator = new SystemNodeGenerator(adapter);
+
+		this.system_node_promise = generator.generate();
 	}
 
 	public async fetchNode(
 		parameters: NodeParameters
 	): Promise<Node | undefined> {
-		const system_node = this.fetchSystemNode(parameters);
-
-		if (system_node !== undefined) {
-			// NOTE: No transformation happens on system nodes, for performance
-			// reasons. They are generated upfront to use the correct hostname.
-			return Promise.resolve(system_node);
-		}
+		await this.generateSystemNodes();
 
 		const adapter = this.getAdapter();
 		const node_key = this.getNodeKey(parameters);
@@ -127,10 +123,8 @@ class Repository {
 		return `${parameters.type_id}/${parameters.id}`;
 	}
 
-	private fetchSystemNode(parameters: NodeParameters): Node | undefined {
-		const system_cache = this.getSystemCache();
-
-		return system_cache.fetchNode(parameters);
+	private generateSystemNodes(): Promise<void> {
+		return this.system_node_promise;
 	}
 
 	private standardizeNode(node: Node): Node {
@@ -153,10 +147,6 @@ class Repository {
 
 	private getAdapter(): Adapter {
 		return this.adapter;
-	}
-
-	private getSystemCache(): SystemCache {
-		return this.system_cache;
 	}
 }
 

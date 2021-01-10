@@ -2,11 +2,11 @@ import SystemId from 'system/enum/id';
 import ActionType from 'enum/action-type';
 import PermissionNode from 'type/node/permission';
 import NodeParameters from 'type/node-parameters';
-import SystemNodeGenerator from 'system/node-generator';
+import SystemNodeBuilder from 'system/node-builder';
 
-class EveryoneReadPermissionGenerator extends SystemNodeGenerator {
-	public generate(): PermissionNode {
-		const node = super.generate();
+class EveryoneReadPermissionBuilder extends SystemNodeBuilder {
+	public build(): PermissionNode {
+		const node = super.build();
 		const group = this.getEveryoneGroupUrl();
 		const action_type = ActionType.READ;
 
@@ -25,11 +25,8 @@ class EveryoneReadPermissionGenerator extends SystemNodeGenerator {
 	}
 
 	private getEveryoneGroupUrl(): string {
-		return this.buildNodeUrl({
-			type_id: SystemId.GROUP_TYPE,
-			id: SystemId.EVERYONE_GROUP
-		});
+		return this.buildUrl(SystemId.GROUP_TYPE, SystemId.EVERYONE_GROUP);
 	}
 }
 
-export default EveryoneReadPermissionGenerator;
+export default EveryoneReadPermissionBuilder;

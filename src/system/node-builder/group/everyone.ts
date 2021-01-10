@@ -1,11 +1,11 @@
 import SystemId from 'system/enum/id';
 import GroupNode from 'type/node/group';
 import NodeParameters from 'type/node-parameters';
-import SystemNodeGenerator from 'system/node-generator';
+import SystemNodeBuilder from 'system/node-builder';
 
-class EveryoneGroupGenerator extends SystemNodeGenerator {
-	public generate(): GroupNode {
-		const node = super.generate();
+class EveryoneGroupBuilder extends SystemNodeBuilder {
+	public build(): GroupNode {
+		const node = super.build();
 		const accounts: string[] = [];
 
 		return {
@@ -22,4 +22,4 @@ class EveryoneGroupGenerator extends SystemNodeGenerator {
 	}
 }
 
-export default EveryoneGroupGenerator;
+export default EveryoneGroupBuilder;

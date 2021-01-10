@@ -1,8 +1,8 @@
 import SystemId from 'system/enum/id';
 import NodeParameters from 'type/node-parameters';
-import SystemNodeGenerator from 'system/node-generator';
+import SystemNodeBuilder from 'system/node-builder';
 
-class SystemAccountGenerator extends SystemNodeGenerator {
+class SystemAccountBuilder extends SystemNodeBuilder {
 	protected getNodeParameters(): NodeParameters {
 		return {
 			type_id: SystemId.ACCOUNT_TYPE,
@@ -11,4 +11,4 @@ class SystemAccountGenerator extends SystemNodeGenerator {
 	}
 }
 
-export default SystemAccountGenerator;
+export default SystemAccountBuilder;

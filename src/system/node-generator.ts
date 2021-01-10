@@ -1,103 +1,94 @@
 import Node from 'type/node';
-import SystemId from 'system/enum/id';
-import buildNodeUrl from 'utility/build-node-url';
+import Adapter from 'interface/adapter';
 import NodeParameters from 'type/node-parameters';
+import GroupTypeBuilder from 'system/node-builder/type/group';
+import getNodeParameters from 'utility/get-node-parameters';
+import ChangeTypeBuilder from 'system/node-builder/type/change';
+import StringTypeBuilder from 'system/node-builder/type/string';
+import AdminGroupBuilder from 'system/node-builder/group/admin';
+import SessionTypeBuilder from 'system/node-builder/type/session';
+import GenericTypeBuilder from 'system/node-builder/type/generic';
+import AccountTypeBuilder from 'system/node-builder/type/account';
+import EveryoneGroupBuilder from 'system/node-builder/group/everyone';
+import SystemAccountBuilder from 'system/node-builder/account/system';
+import AnonymousAccountBuilder from 'system/node-builder/account/anonymous';
+import AdminCreatePermissionBuilder from 'system/node-builder/permission/admin-create';
+import EveryoneReadPermissionBuilder from 'system/node-builder/permission/everyone-read';
 
-abstract class SystemNodeGenerator {
-	private hostname: string;
+const BUILDER_CONSTRUCTORS = [
+	// Types
+	GroupTypeBuilder,
+	ChangeTypeBuilder,
+	StringTypeBuilder,
+	AccountTypeBuilder,
+	GenericTypeBuilder,
+	SessionTypeBuilder,
 
-	public constructor(hostname: string) {
-		this.hostname = hostname;
+	// Groups
+	AdminGroupBuilder,
+	EveryoneGroupBuilder,
+
+	// Accounts
+	SystemAccountBuilder,
+	AnonymousAccountBuilder,
+
+	// Permissions
+	AdminCreatePermissionBuilder,
+	EveryoneReadPermissionBuilder
+];
+
+class SystemNodeGenerator {
+	private adapter: Adapter;
+
+	public constructor(adapter: Adapter) {
+		this.adapter = adapter;
 	}
 
-	public generate(): Node {
-		let node: Node = {
-			url: this.getNodeUrl(),
-			type: this.getTypeUrl(),
-			creator: this.getCreatorUrl(),
-			created_at: 0,
-			updated_at: 0,
-			changes: [],
-			permissions: this.getPermissionsList()
-		};
+	public async generate(): Promise<void> {
+		const nodes = this.getNodes();
 
-		if (this.isTypeNode()) {
-			node = {
-				...node,
-				instances: [],
-				child_types: [],
-				parent_type: this.getParentTypeUrl()
-			};
+		let index = 0;
+
+		while (index < nodes.length) {
+			const node = nodes[index];
+
+			index++;
+
+			await this.persistNodeIfNecessary(node);
+		}
+	}
+
+	private getNodes(): Node[] {
+		return BUILDER_CONSTRUCTORS.map((builder_constructor) => {
+			const builder = new builder_constructor();
+
+			return builder.build();
+		});
+	}
+
+	private async persistNodeIfNecessary(node: Node): Promise<void> {
+		const parameters = getNodeParameters(node.url);
+		const node_key = this.getNodeKey(parameters);
+		const adapter = this.getAdapter();
+
+		const existing_node = await adapter.fetchNode(node_key);
+
+		if (existing_node !== undefined) {
+			return;
 		}
 
-		return node;
+		console.log(`Generating initial system node: ${node_key}`);
+
+		await adapter.storeNode(node_key, node);
 	}
 
-	protected getCreatorUrl(): string {
-		return this.buildNodeUrl({
-			type_id: SystemId.ACCOUNT_TYPE,
-			id: SystemId.SYSTEM_ACCOUNT
-		});
+	private getNodeKey(node_parameters: NodeParameters): string {
+		return `${node_parameters.type_id}/${node_parameters.id}`;
 	}
 
-	protected buildNodeUrl(parameters: NodeParameters): string {
-		const hostname = this.getHostname();
-
-		return buildNodeUrl(hostname, parameters);
+	private getAdapter(): Adapter {
+		return this.adapter;
 	}
-
-	protected getPermissionsList(): string[] {
-		const everyone_read_url = this.buildNodeUrl({
-			type_id: SystemId.PERMISSION_TYPE,
-			id: SystemId.EVERYONE_READ_PERMISSION
-		});
-
-		return [everyone_read_url];
-	}
-
-	private getNodeUrl(): string {
-		const parameters = this.getNodeParameters();
-
-		return this.buildNodeUrl(parameters);
-	}
-
-	private getTypeUrl(): string {
-		const type_id = this.getTypeId();
-
-		return this.buildNodeUrl({
-			type_id: SystemId.GENERIC_TYPE,
-			id: type_id
-		});
-	}
-
-	private getParentTypeUrl(): string {
-		return this.buildNodeUrl({
-			type_id: SystemId.GENERIC_TYPE,
-			id: SystemId.GENERIC_TYPE
-		});
-	}
-
-	private isTypeNode(): boolean {
-		const type_id = this.getTypeId();
-
-		return type_id === SystemId.GENERIC_TYPE;
-	}
-
-	private getTypeId(): string {
-		const parameters = this.getNodeParameters();
-
-		return parameters.type_id;
-	}
-
-	private getHostname(): string {
-		return this.hostname;
-	}
-
-	protected abstract getNodeParameters(): NodeParameters;
-}
-
-export interface GeneratorConstructor {
-	new (hostname: string): SystemNodeGenerator;
 }
 
 export default SystemNodeGenerator;

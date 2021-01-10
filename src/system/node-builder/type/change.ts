@@ -1,11 +1,11 @@
 import Node from 'type/node';
 import SystemId from 'system/enum/id';
 import NodeParameters from 'type/node-parameters';
-import SystemNodeGenerator from 'system/node-generator';
+import SystemNodeBuilder from 'system/node-builder';
 
-class ChangeTypeGenerator extends SystemNodeGenerator {
-	public generate(): Node {
-		const node = super.generate();
+class ChangeTypeBuilder extends SystemNodeBuilder {
+	public build(): Node {
+		const node = super.build();
 		const status = this.getStatusUrl();
 		const change_type = this.getChangeTypeUrl();
 		const field = this.getFieldUrl();
@@ -32,46 +32,30 @@ class ChangeTypeGenerator extends SystemNodeGenerator {
 	}
 
 	private getStatusUrl(): string {
-		return this.buildNodeUrl({
-			type_id: SystemId.GENERIC_TYPE,
-			id: 'change-status'
-		});
+		// TODO: Codify this type
+		return this.buildUrl(SystemId.GENERIC_TYPE, 'change-status');
 	}
 
 	private getChangeTypeUrl(): string {
-		return this.buildNodeUrl({
-			type_id: SystemId.GENERIC_TYPE,
-			id: 'change-type'
-		});
+		// TODO: Codify this type
+		return this.buildUrl(SystemId.GENERIC_TYPE, 'change-type');
 	}
 
 	private getFieldUrl(): string {
-		return this.buildNodeUrl({
-			type_id: SystemId.GENERIC_TYPE,
-			id: SystemId.STRING_TYPE
-		});
+		return this.buildUrl(SystemId.GENERIC_TYPE, SystemId.STRING_TYPE);
 	}
 
 	private getOldValueUrl(): string {
-		return this.buildNodeUrl({
-			type_id: SystemId.GENERIC_TYPE,
-			id: SystemId.STRING_TYPE
-		});
+		return this.buildUrl(SystemId.GENERIC_TYPE, SystemId.STRING_TYPE);
 	}
 
 	private getNewValueUrl(): string {
-		return this.buildNodeUrl({
-			type_id: SystemId.GENERIC_TYPE,
-			id: SystemId.STRING_TYPE
-		});
+		return this.buildUrl(SystemId.GENERIC_TYPE, SystemId.STRING_TYPE);
 	}
 
 	private getApproverUrl(): string {
-		return this.buildNodeUrl({
-			type_id: SystemId.GENERIC_TYPE,
-			id: SystemId.ACCOUNT_TYPE
-		});
+		return this.buildUrl(SystemId.GENERIC_TYPE, SystemId.ACCOUNT_TYPE);
 	}
 }
 
-export default ChangeTypeGenerator;
+export default ChangeTypeBuilder;
