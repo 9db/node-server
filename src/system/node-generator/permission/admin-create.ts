@@ -1,5 +1,5 @@
 import SystemId from 'system/enum/id';
-import PermissionType from 'enum/permission-type';
+import ActionType from 'enum/action-type';
 import PermissionNode from 'type/node/permission';
 import NodeParameters from 'type/node-parameters';
 import SystemNodeGenerator from 'system/node-generator';
@@ -8,12 +8,12 @@ class AdminCreatePermissionGenerator extends SystemNodeGenerator {
 	public generate(): PermissionNode {
 		const node = super.generate();
 		const group = this.getEveryoneGroupUrl();
-		const permission_type = PermissionType.CREATE;
+		const action_type = ActionType.CREATE;
 
 		return {
 			...node,
 			group,
-			permission_type
+			action_type
 		};
 	}
 

@@ -1,7 +1,7 @@
 import Node from 'type/node';
 import SystemId from 'system/enum/id';
+import ActionType from 'enum/action-type';
 import PermissionNode from 'type/node/permission';
-import PermissionType from 'enum/permission-type';
 import UnauthorizedError from 'http/error/unauthorized';
 import getNodeParameters from 'utility/get-node-parameters';
 import LoadNodeFromUrlOperation from 'operation/load-node-from-url';
@@ -11,7 +11,7 @@ import FetchListFieldValuesOperation from 'operation/fetch-list-field-values';
 
 interface Input extends OperationInput {
 	readonly node: Node;
-	readonly permission_type: PermissionType;
+	readonly action_type: ActionType;
 }
 
 class CheckNodePermissionOperation extends Operation<Input, void> {
@@ -27,10 +27,10 @@ class CheckNodePermissionOperation extends Operation<Input, void> {
 
 	private async fetchRequiredPermission(): Promise<PermissionNode | undefined> {
 		const permissions = await this.fetchNodePermissions();
-		const permission_type = this.getPermissionType();
+		const action_type = this.getActionType();
 
 		return permissions.find((permission) => {
-			return permission.permission_type === permission_type;
+			return permission.action_type === action_type;
 		});
 	}
 
@@ -91,10 +91,10 @@ class CheckNodePermissionOperation extends Operation<Input, void> {
 		return id === SystemId.EVERYONE_GROUP;
 	}
 
-	private getPermissionType(): PermissionType {
+	private getActionType(): ActionType {
 		const input = this.getInput();
 
-		return input.permission_type;
+		return input.action_type;
 	}
 
 	private getNode(): Node {

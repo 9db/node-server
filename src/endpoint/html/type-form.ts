@@ -1,8 +1,8 @@
 import TypeNode from 'type/type-node';
 import SystemId from 'system/enum/id';
+import ActionType from 'enum/action-type';
 import DraftField from 'type/draft-field';
 import HtmlEndpoint from 'endpoint/html';
-import PermissionType from 'enum/permission-type';
 import BadRequestError from 'http/error/bad-request';
 import TypeFormTemplate from 'template/page/type-form';
 import FetchTypeInstancesOperation from 'operation/fetch-type-instances';
@@ -25,13 +25,13 @@ class HtmlTypeFormEndpoint extends HtmlEndpoint<Input> {
 	}
 
 	private checkPermission(node: TypeNode): Promise<void> {
-		const permission_type = PermissionType.CREATE;
+		const action_type = ActionType.CREATE;
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
 		const input = {
 			node,
-			permission_type,
+			action_type,
 			repository,
 			account
 		};

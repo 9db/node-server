@@ -1,6 +1,6 @@
 import Node from 'type/node';
+import ActionType from 'enum/action-type';
 import NotFoundError from 'http/error/not-found';
-import PermissionType from 'enum/permission-type';
 import CheckNodePermissionOperation from 'operation/check-node-permission';
 import Operation, { OperationInput } from 'operation';
 
@@ -36,13 +36,13 @@ class FetchNodeOperation extends Operation<Input, Node> {
 	}
 
 	private checkNodePermission(node: Node): Promise<void> {
-		const permission_type = PermissionType.READ;
+		const action_type = ActionType.READ;
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
 		const input = {
 			node,
-			permission_type,
+			action_type,
 			repository,
 			account
 		};

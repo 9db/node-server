@@ -18,7 +18,7 @@ class PermissionsTableTemplate extends Template<Input> {
 							Group
 						</th>
 						<th>
-							Permission type
+							Action type
 						</th>
 					</tr>
 				</thead>
@@ -43,7 +43,7 @@ class PermissionsTableTemplate extends Template<Input> {
 		const group_url = permission.group;
 		const parameters = getNodeParameters(group_url);
 		const group_id = parameters.id;
-		const permission_type = permission.permission_type;
+		const action_type = permission.action_type;
 
 		return `
 			<tr>
@@ -51,7 +51,7 @@ class PermissionsTableTemplate extends Template<Input> {
 					<a href="${group_url}">${group_id}</a>
 				</td>
 				<td>
-					${permission_type}
+					${action_type}
 				</td>
 			</tr>
 		`;

@@ -1,4 +1,4 @@
-enum PermissionType {
+enum ActionType {
 	READ = 'read',
 	CREATE = 'create',
 	UPDATE = 'update',
@@ -6,4 +6,4 @@ enum PermissionType {
 	PROPOSE = 'propose'
 }
 
-export default PermissionType;
+export default ActionType;

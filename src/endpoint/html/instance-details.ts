@@ -1,13 +1,11 @@
 import TypeNode from 'type/type-node';
 import SystemId from 'system/enum/id';
-import FieldValue from 'type/field-value';
+import ActionType from 'enum/action-type';
 import FieldInput from 'template/page/instance-details/type/field-input';
 import HtmlEndpoint from 'endpoint/html';
 import InstanceNode from 'type/instance-node';
 import getFieldKeys from 'utility/get-field-keys';
 import PermissionNode from 'type/node/permission';
-import getListInnerType from 'utility/get-list-inner-type';
-import ListDetailsTemplate from 'template/page/list-details';
 import InstanceDetailsTemplate from 'template/page/instance-details';
 import FetchNodePermissionsOperation from 'operation/fetch-node-permissions';
 
@@ -17,18 +15,21 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 			return this.redirectToTypeUrl();
 		}
 
-		if (this.isListNode()) {
-			return this.renderList();
-		}
-
 		const type_id = this.getTypeId();
 		const instance_id = this.getInstanceId();
 		const instance = await this.fetchInstance(type_id, instance_id);
 		const type_node = await this.loadTypeFromUrl(instance.type);
 		const fields = await this.buildFieldInputs(instance, type_node);
 		const permissions = await this.fetchPermissions(instance);
+		const available_action_types = await this.fetchAvailableActionTypes(instance);
 
-		return this.renderInstance(instance, type_node, fields, permissions);
+		return this.renderInstance(
+			instance,
+			type_node,
+			fields,
+			permissions,
+			available_action_types
+		);
 	}
 
 	private redirectToTypeUrl(): Promise<void> {
@@ -44,7 +45,8 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		instance: InstanceNode,
 		_type_node: TypeNode,
 		fields: FieldInput[],
-		permissions: PermissionNode[]
+		permissions: PermissionNode[],
+		available_action_types: ActionType[]
 	): Promise<string> {
 		const account = this.getAccount();
 
@@ -52,6 +54,7 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 			instance,
 			fields,
 			permissions,
+			available_action_types,
 			account
 		});
 
@@ -107,54 +110,14 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		return operation.perform();
 	}
 
-	private async renderList(): Promise<string> {
-		const account = this.getAccount();
-		const type_node = await this.fetchListType();
-		const values = await this.fetchListValues();
-
-		const input = {
-			type_node,
-			values,
-			account
-		};
-
-		const template = new ListDetailsTemplate(input);
-
-		return template.render();
-	}
-
-	private isListNode(): boolean {
-		const inner_type_id = this.getListInnerType();
-
-		return inner_type_id !== null;
+	private fetchAvailableActionTypes(instance: InstanceNode): Promise<ActionType[]> {
+		return Promise.resolve([]);
 	}
 
 	private isTypeNode(): boolean {
 		const type_id = this.getTypeId();
 
 		return type_id === SystemId.GENERIC_TYPE;
-	}
-
-	private fetchListType(): Promise<TypeNode> {
-		const inner_type_id = this.getListInnerType();
-
-		if (inner_type_id === null) {
-			const type_id = this.getTypeId();
-
-			throw new Error(`Unable to fetch list type from type id: ${type_id}`);
-		}
-
-		return this.fetchType(inner_type_id);
-	}
-
-	private getListInnerType(): string | null {
-		const type_id = this.getTypeId();
-
-		return getListInnerType(type_id);
-	}
-
-	private fetchListValues(): Promise<FieldValue[]> {
-		return Promise.resolve([]);
 	}
 
 	private getInstanceId(): string {

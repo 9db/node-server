@@ -1,4 +1,5 @@
 import FieldInput from 'template/page/instance-details/type/field-input';
+import ActionType from 'enum/action-type';
 import InstanceNode from 'type/instance-node';
 import PermissionNode from 'type/node/permission';
 import getNodeParameters from 'utility/get-node-parameters';
@@ -10,6 +11,7 @@ interface Input extends PageTemplateInput {
 	readonly instance: InstanceNode;
 	readonly fields: FieldInput[];
 	readonly permissions: PermissionNode[];
+	readonly available_action_types: ActionType[];
 }
 
 class InstanceDetailsTemplate extends PageTemplate<Input> {
@@ -39,7 +41,7 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 		const created_at = this.serializeCreatedAt();
 		const updated_at = this.serializeUpdatedAt();
 		const field_table_html = this.getFieldTableHtml();
-		const links_html = this.getLinksHtml();
+		const actions_html = this.getActionsHtml();
 		const permissions_html = this.getPermissionsHtml();
 
 		return `
@@ -63,9 +65,9 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 			</section>
 
 			<section>
-				<h3>Links:</h3>
+				<h3>Actions:</h3>
 
-				${links_html}
+				${actions_html}
 			</section>
 
 			<section>
@@ -88,12 +90,24 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 		return template.render();
 	}
 
-	private getLinksHtml(): string {
-		const edit_link_html = this.getEditLinkHtml();
+	private getActionsHtml(): string {
+		let serialized_actions: string[] = [];
+
+		if (this.updateActionAvailable()) {
+			const edit_action_html = this.getEditActionHtml();
+
+			serialized_actions.push(edit_action_html);
+		}
+
+		if (serialized_actions.length === 0) {
+			return '<em>No available actions.</em>';
+		}
+
+		const list_html = serialized_actions.join('\n');
 
 		return `
 			<ul>
-				${edit_link_html}
+				${list_html}
 			</ul>
 		`;
 	}
@@ -108,7 +122,7 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 		return template.render();
 	}
 
-	private getEditLinkHtml(): string {
+	private getEditActionHtml(): string {
 		const edit_url = this.getEditUrl();
 
 		return `
@@ -209,6 +223,18 @@ class InstanceDetailsTemplate extends PageTemplate<Input> {
 		const input = this.getInput();
 
 		return input.permissions;
+	}
+
+	private updateActionAvailable(): boolean {
+		const available_action_types = this.getAvailableActionTypes();
+
+		return available_action_types.includes(ActionType.UPDATE);
+	}
+
+	private getAvailableActionTypes(): ActionType[] {
+		const input = this.getInput();
+
+		return input.available_action_types;
 	}
 }
 

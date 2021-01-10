@@ -3,7 +3,7 @@ import FieldInput from 'template/page/instance-form/type/field-input';
 import HtmlEndpoint from 'endpoint/html';
 import InstanceNode from 'type/instance-node';
 import getFieldKeys from 'utility/get-field-keys';
-import PermissionType from 'enum/permission-type';
+import ActionType from 'enum/action-type';
 import BadRequestError from 'http/error/bad-request';
 import InstanceFormTemplate from 'template/page/instance-form';
 import FetchTypeInstancesOperation from 'operation/fetch-type-instances';
@@ -34,13 +34,13 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 	}
 
 	private checkPermission(node: TypeNode): Promise<void> {
-		const permission_type = PermissionType.CREATE;
+		const action_type = ActionType.CREATE;
 		const repository = this.getRepository();
 		const account = this.getAccount();
 
 		const input = {
 			node,
-			permission_type,
+			action_type,
 			repository,
 			account
 		};
