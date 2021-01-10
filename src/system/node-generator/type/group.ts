@@ -24,7 +24,7 @@ class GroupTypeGenerator extends SystemNodeGenerator {
 	private getAccountsTypeUrl(): string {
 		return this.buildNodeUrl({
 			type_id: SystemId.GENERIC_TYPE,
-			id: SystemId.ACCOUNT_SET_TYPE
+			id: SystemId.ACCOUNT_LIST_TYPE
 		});
 	}
 }

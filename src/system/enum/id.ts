@@ -7,11 +7,7 @@ enum SystemId {
 	SESSION_TYPE = 'session',
 	STRING_TYPE = 'string',
 
-	CHANGE_LIST_TYPE = 'change-list',
-
-	ACCOUNT_SET_TYPE = 'account-set',
-	PERMISSION_SET_TYPE = 'permission-set',
-	TYPE_SET_TYPE = 'type-set',
+	ACCOUNT_LIST_TYPE = 'account-list',
 
 	SYSTEM_ACCOUNT = 'system',
 	ANONYMOUS_ACCOUNT = 'anonymous',

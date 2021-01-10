@@ -1,5 +1,5 @@
 function getListInnerType(type_id: string): string | null {
-	const match = type_id.match(/^(.*)-(list|set)$/);
+	const match = type_id.match(/^(.*)-list$/);
 
 	if (match === null) {
 		return null;
