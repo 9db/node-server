@@ -1,13 +1,14 @@
 import TypeNode from 'type/type-node';
 import SystemId from 'system/enum/id';
 import ActionType from 'enum/action-type';
-import FieldInput from 'template/page/instance-details/type/field-input';
+import FieldInput from 'template/page/node-details/type/field-input';
 import HtmlEndpoint from 'endpoint/html';
 import InstanceNode from 'type/instance-node';
 import getFieldKeys from 'utility/get-field-keys';
 import PermissionNode from 'type/node/permission';
 import InstanceDetailsTemplate from 'template/page/instance-details';
 import FetchNodePermissionsOperation from 'operation/fetch-node-permissions';
+import FetchAvailableActionTypesOperation from 'operation/fetch-available-action-types';
 
 class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 	protected async process(): Promise<string | void> {
@@ -21,9 +22,11 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		const type_node = await this.loadTypeFromUrl(instance.type);
 		const fields = await this.buildFieldInputs(instance, type_node);
 		const permissions = await this.fetchPermissions(instance);
-		const available_action_types = await this.fetchAvailableActionTypes(instance);
+		const available_action_types = await this.fetchAvailableActionTypes(
+			instance
+		);
 
-		return this.renderInstance(
+		return this.renderNode(
 			instance,
 			type_node,
 			fields,
@@ -41,8 +44,8 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		return Promise.resolve();
 	}
 
-	private async renderInstance(
-		instance: InstanceNode,
+	private async renderNode(
+		node: InstanceNode,
 		_type_node: TypeNode,
 		fields: FieldInput[],
 		permissions: PermissionNode[],
@@ -51,7 +54,7 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		const account = this.getAccount();
 
 		const template = new InstanceDetailsTemplate({
-			instance,
+			node,
 			fields,
 			permissions,
 			available_action_types,
@@ -110,8 +113,19 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		return operation.perform();
 	}
 
-	private fetchAvailableActionTypes(instance: InstanceNode): Promise<ActionType[]> {
-		return Promise.resolve([]);
+	private fetchAvailableActionTypes(node: InstanceNode): Promise<ActionType[]> {
+		const repository = this.getRepository();
+		const account = this.getAccount();
+
+		const input = {
+			node,
+			repository,
+			account
+		};
+
+		const operation = new FetchAvailableActionTypesOperation(input);
+
+		return operation.perform();
 	}
 
 	private isTypeNode(): boolean {

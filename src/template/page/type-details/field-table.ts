@@ -1,5 +1,5 @@
 import Template from 'template';
-import FieldInput from 'template/page/type-details/type/field-input';
+import FieldInput from 'template/page/node-details/type/field-input';
 import FieldRowTemplate from 'template/page/type-details/field-row';
 
 interface Input {

@@ -3,7 +3,7 @@ import { URL } from 'url';
 import Template from 'template';
 import TypeNode from 'type/type-node';
 import FieldValue from 'type/field-value';
-import FieldInput from 'template/page/instance-details/type/field-input';
+import FieldInput from 'template/page/node-details/type/field-input';
 import getNodeParameters from 'utility/get-node-parameters';
 
 class FieldRowTemplate extends Template<FieldInput> {

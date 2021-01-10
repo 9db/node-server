@@ -1,6 +1,6 @@
 import Template from 'template';
 import TypeNode from 'type/type-node';
-import FieldInput from 'template/page/type-details/type/field-input';
+import FieldInput from 'template/page/node-details/type/field-input';
 import getNodeParameters from 'utility/get-node-parameters';
 
 class FieldRowTemplate extends Template<FieldInput> {

@@ -1,19 +1,29 @@
 import TypeNode from 'type/type-node';
-import FieldInput from 'template/page/type-details/type/field-input';
+import ActionType from 'enum/action-type';
+import FieldInput from 'template/page/node-details/type/field-input';
 import HtmlEndpoint from 'endpoint/html';
 import getFieldKeys from 'utility/get-field-keys';
 import PermissionNode from 'type/node/permission';
 import TypeDetailsTemplate from 'template/page/type-details';
 import FetchNodePermissionsOperation from 'operation/fetch-node-permissions';
+import FetchAvailableActionTypesOperation from 'operation/fetch-available-action-types';
 
 class HtmlTypeDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 	protected async process(): Promise<string> {
 		const type_id = this.getUrlParameter('type_id');
-		const node = await this.fetchType(type_id);
-		const fields = await this.buildFieldInputs(node);
-		const permissions = await this.fetchPermissions(node);
+		const type_node = await this.fetchType(type_id);
+		const fields = await this.buildFieldInputs(type_node);
+		const permissions = await this.fetchPermissions(type_node);
+		const available_action_types = await this.fetchAvailableActionTypes(
+			type_node
+		);
 
-		return this.renderNode(node, fields, permissions);
+		return this.renderNode(
+			type_node,
+			fields,
+			permissions,
+			available_action_types
+		);
 	}
 
 	private buildFieldInputs(node: TypeNode): Promise<FieldInput[]> {
@@ -40,6 +50,7 @@ class HtmlTypeDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 
 		return {
 			key: field_key,
+			value: null,
 			type_node: field_type_node
 		};
 	}
@@ -59,10 +70,26 @@ class HtmlTypeDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 		return operation.perform();
 	}
 
+	private fetchAvailableActionTypes(node: TypeNode): Promise<ActionType[]> {
+		const repository = this.getRepository();
+		const account = this.getAccount();
+
+		const input = {
+			node,
+			repository,
+			account
+		};
+
+		const operation = new FetchAvailableActionTypesOperation(input);
+
+		return operation.perform();
+	}
+
 	private renderNode(
 		node: TypeNode,
 		fields: FieldInput[],
-		permissions: PermissionNode[]
+		permissions: PermissionNode[],
+		available_action_types: ActionType[]
 	): string {
 		const account = this.getAccount();
 
@@ -70,6 +97,7 @@ class HtmlTypeDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 			node,
 			fields,
 			permissions,
+			available_action_types,
 			account
 		});
 
