@@ -9,7 +9,7 @@ class PlaintextRobotsRoute extends PlaintextRoute {
 		super(HttpMethod.GET, '/robots.txt', PlaintextRobotsEndpoint);
 	}
 
-	protected matchesContentType(request: HTTP.IncomingMessage): boolean {
+	protected matchesContentType(_request: HTTP.IncomingMessage): boolean {
 		return true;
 	}
 }

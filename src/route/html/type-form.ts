@@ -4,11 +4,7 @@ import HtmlTypeFormEndpoint from 'endpoint/html/type-form';
 
 class HtmlTypeFormRoute extends HtmlRoute {
 	public constructor() {
-		super(
-			HttpMethod.GET,
-			`/create-type`,
-			HtmlTypeFormEndpoint
-		);
+		super(HttpMethod.GET, `/create-type`, HtmlTypeFormEndpoint);
 	}
 }
 

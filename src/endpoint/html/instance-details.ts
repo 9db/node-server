@@ -42,7 +42,7 @@ class HtmlInstanceDetailsEndpoint extends HtmlEndpoint<Record<string, never>> {
 
 	private async renderInstance(
 		instance: InstanceNode,
-		type_node: TypeNode,
+		_type_node: TypeNode,
 		fields: FieldInput[],
 		permissions: PermissionNode[]
 	): Promise<string> {

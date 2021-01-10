@@ -1,5 +1,5 @@
 import Node from 'type/node';
-import FieldValue, {PrimitiveValue, ListValue} from 'type/field-value';
+import FieldValue, { PrimitiveValue, ListValue } from 'type/field-value';
 import FieldValueTransformer from 'repository/interface/field-value-transformer';
 
 interface WritableNode {

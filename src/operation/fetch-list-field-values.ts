@@ -1,5 +1,5 @@
 import Node from 'type/node';
-import {ListValue} from 'type/field-value';
+import { ListValue } from 'type/field-value';
 import BadRequestError from 'http/error/bad-request';
 import Operation, { OperationInput } from 'operation';
 
