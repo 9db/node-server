@@ -2,7 +2,6 @@ import Node from 'type/node';
 import SystemId from 'system/enum/id';
 import buildNodeUrl from 'utility/build-node-url';
 import NodeParameters from 'type/node-parameters';
-import StaticPermissionSet from 'enum/static-permission-set';
 
 abstract class SystemNodeGenerator {
 	private hostname: string;
@@ -18,15 +17,15 @@ abstract class SystemNodeGenerator {
 			creator: this.getCreatorUrl(),
 			created_at: 0,
 			updated_at: 0,
-			changes: this.getChangesUrl(),
-			permissions: this.getPermissionsUrl()
+			changes: [],
+			permissions: this.getPermissionsList()
 		};
 
 		if (this.isTypeNode()) {
 			node = {
 				...node,
-				instances: this.getInstancesUrl(),
-				child_types: this.getChildTypesUrl(),
+				instances: [],
+				child_types: [],
 				parent_type: this.getParentTypeUrl()
 			};
 		}
@@ -47,6 +46,15 @@ abstract class SystemNodeGenerator {
 		return buildNodeUrl(hostname, parameters);
 	}
 
+	protected getPermissionsList(): string[] {
+		const everyone_read_url = this.buildNodeUrl({
+			type_id: SystemId.PERMISSION_TYPE,
+			id: SystemId.EVERYONE_READ_PERMISSION
+		});
+
+		return [everyone_read_url];
+	}
+
 	private getNodeUrl(): string {
 		const parameters = this.getNodeParameters();
 
@@ -62,40 +70,6 @@ abstract class SystemNodeGenerator {
 		});
 	}
 
-	private getChangesUrl(): string {
-		const node_id = this.getNodeId();
-
-		return this.buildNodeUrl({
-			type_id: SystemId.CHANGE_LIST_TYPE,
-			id: `${node_id}-changes`
-		});
-	}
-
-	private getPermissionsUrl(): string {
-		return this.buildNodeUrl({
-			type_id: SystemId.PERMISSION_SET_TYPE,
-			id: StaticPermissionSet.EVERYONE_READ
-		});
-	}
-
-	private getInstancesUrl(): string {
-		const node_id = this.getNodeId();
-
-		return this.buildNodeUrl({
-			type_id: `${node_id}-set`,
-			id: `${node_id}-instances`
-		});
-	}
-
-	private getChildTypesUrl(): string {
-		const node_id = this.getNodeId();
-
-		return this.buildNodeUrl({
-			type_id: SystemId.TYPE_SET_TYPE,
-			id: `${node_id}-child-types`
-		});
-	}
-
 	private getParentTypeUrl(): string {
 		return this.buildNodeUrl({
 			type_id: SystemId.GENERIC_TYPE,
@@ -107,12 +81,6 @@ abstract class SystemNodeGenerator {
 		const type_id = this.getTypeId();
 
 		return type_id === SystemId.GENERIC_TYPE;
-	}
-
-	private getNodeId(): string {
-		const parameters = this.getNodeParameters();
-
-		return parameters.id;
 	}
 
 	private getTypeId(): string {

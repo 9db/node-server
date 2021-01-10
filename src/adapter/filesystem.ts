@@ -7,6 +7,7 @@ import Node from 'type/node';
 import Adapter from 'interface/adapter';
 import FieldValue from 'type/field-value';
 import NotFoundError from 'http/error/not-found';
+import BadRequestError from 'http/error/bad-request';
 
 const exists = Util.promisify(FS.exists);
 
@@ -60,134 +61,25 @@ class FilesystemAdapter implements Adapter {
 	public async setField(
 		node_key: string,
 		field_key: string,
-		field_value: FieldValue
+		old_value: FieldValue,
+		new_value: FieldValue
 	): Promise<Node> {
 		const node = await this.fetchNodeUnsafe(node_key);
+		const current_value = node[field_key];
+
+		if (current_value !== old_value) {
+			throw new BadRequestError(`
+				Invalid old value supplied for field ${field_key}
+				(expected ${current_value}, but received ${old_value})
+			`);
+		}
 
 		const updated_node = {
 			...node,
-			[field_key]: field_value
+			[field_key]: new_value
 		};
 
 		return this.storeNode(node_key, updated_node);
-	}
-
-	public async addValueToSet(
-		node_key: string,
-		value: FieldValue
-	): Promise<void> {
-		const set_values = await this.fetchSetValues(node_key);
-
-		if (set_values.includes(value)) {
-			return;
-		}
-
-		const updated_set_values = [...set_values, value];
-
-		this.storeSetValues(node_key, updated_set_values);
-	}
-
-	public async removeValueFromSet(
-		node_key: string,
-		value: FieldValue
-	): Promise<void> {
-		const set_values = await this.fetchSetValues(node_key);
-
-		if (!set_values.includes(value)) {
-			return;
-		}
-
-		const updated_set_values = set_values.filter((existing_value) => {
-			return existing_value !== value;
-		});
-
-		this.storeSetValues(node_key, updated_set_values);
-	}
-
-	public async fetchValuesFromSet(
-		node_key: string,
-		offset: number,
-		limit: number
-	): Promise<FieldValue[]> {
-		const set_values = await this.fetchSetValues(node_key);
-
-		return set_values.slice(offset, offset + limit);
-	}
-
-	public async addValueToList(
-		node_key: string,
-		value: FieldValue,
-		position?: number
-	): Promise<void> {
-		const list_values = await this.fetchListValues(node_key);
-
-		if (position === undefined) {
-			position = list_values.length;
-		}
-
-		const updated_list_values = [];
-		const max_index = Math.max(position + 1, list_values.length);
-
-		let index = 0;
-
-		while (index < max_index) {
-			if (index === position) {
-				updated_list_values.push(value);
-			}
-
-			const current_value = list_values[index];
-
-			if (current_value !== undefined) {
-				updated_list_values.push(current_value);
-			} else if (index !== position) {
-				updated_list_values.push(null);
-			}
-
-			index++;
-		}
-
-		this.storeListValues(node_key, updated_list_values);
-	}
-
-	public async removeValueFromList(
-		node_key: string,
-		value: FieldValue,
-		position?: number
-	): Promise<void> {
-		const list_values = await this.fetchListValues(node_key);
-
-		if (position === undefined) {
-			position = list_values.lastIndexOf(value);
-		}
-
-		if (position === -1) {
-			return;
-		}
-
-		const target_value = list_values[position];
-
-		if (target_value !== value) {
-			throw new Error(
-				`Expected to see ${value} at index ${position}, but saw ${target_value}`
-			);
-		}
-
-		const updated_list_values = [
-			...list_values.slice(0, position),
-			...list_values.slice(position + 1)
-		];
-
-		this.storeListValues(node_key, updated_list_values);
-	}
-
-	public async fetchValuesFromList(
-		node_key: string,
-		offset: number,
-		limit: number
-	): Promise<FieldValue[]> {
-		const list_values = await this.fetchListValues(node_key);
-
-		return list_values.slice(offset, offset + limit);
 	}
 
 	public async fetchAccountId(
@@ -229,66 +121,6 @@ class FilesystemAdapter implements Adapter {
 		}
 
 		return node;
-	}
-
-	private async fetchSetValues(node_key: string): Promise<FieldValue[]> {
-		const set_filepath = this.buildNodeFilepath(node_key);
-		const set_exists = await exists(set_filepath);
-
-		if (set_exists === false) {
-			return Promise.resolve([]);
-		}
-
-		const set_string = await readFile(set_filepath, 'utf8');
-		const set_data = JSON.parse(set_string);
-
-		if (!Array.isArray(set_data)) {
-			throw new Error(`Invalid set data for key ${node_key}: ${set_string}`);
-		}
-
-		return set_data as FieldValue[];
-	}
-
-	private async storeSetValues(
-		node_key: string,
-		set_values: FieldValue[]
-	): Promise<void> {
-		await this.ensureTypeDirectoryExists(node_key);
-
-		const set_filepath = this.buildNodeFilepath(node_key);
-		const set_data = JSON.stringify(set_values, null, 2);
-
-		await writeFile(set_filepath, set_data, 'utf8');
-	}
-
-	private async fetchListValues(node_key: string): Promise<FieldValue[]> {
-		const list_filepath = this.buildNodeFilepath(node_key);
-		const list_exists = await exists(list_filepath);
-
-		if (list_exists === false) {
-			return Promise.resolve([]);
-		}
-
-		const list_string = await readFile(list_filepath, 'utf8');
-		const list_data = JSON.parse(list_string);
-
-		if (!Array.isArray(list_data)) {
-			throw new Error(`Invalid list data for key ${node_key}: ${list_string}`);
-		}
-
-		return list_data as FieldValue[];
-	}
-
-	private async storeListValues(
-		node_key: string,
-		list_values: FieldValue[]
-	): Promise<void> {
-		await this.ensureTypeDirectoryExists(node_key);
-
-		const list_filepath = this.buildNodeFilepath(node_key);
-		const list_data = JSON.stringify(list_values, null, 2);
-
-		await writeFile(list_filepath, list_data, 'utf8');
 	}
 
 	private ensureTypeDirectoryExists(node_key: string): Promise<void> {

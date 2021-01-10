@@ -11,18 +11,6 @@ function randomCreatorUrl(): string {
 	return `${HOSTNAME}/${SystemId.ACCOUNT_TYPE}/${id}`;
 }
 
-function randomChangesUrl(): string {
-	const id = KeyGenerator.id();
-
-	return `${HOSTNAME}/${SystemId.CHANGE_LIST_TYPE}/${id}`;
-}
-
-function randomPermissionsUrl(): string {
-	const id = KeyGenerator.id();
-
-	return `${HOSTNAME}/${SystemId.PERMISSION_SET_TYPE}/${id}`;
-}
-
 class NodeFactory {
 	public static create(node?: Partial<Node>): Node {
 		const id = KeyGenerator.id();
@@ -44,8 +32,8 @@ class NodeFactory {
 			creator: randomCreatorUrl(),
 			created_at: Date.now(),
 			updated_at: Date.now(),
-			changes: randomChangesUrl(),
-			permissions: randomPermissionsUrl(),
+			changes: [],
+			permissions: [],
 			...node
 		};
 	}

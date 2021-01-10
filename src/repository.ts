@@ -59,95 +59,22 @@ class Repository {
 	public async setField(
 		parameters: NodeParameters,
 		field_key: string,
-		field_value: FieldValue
+		old_value: FieldValue,
+		new_value: FieldValue
 	): Promise<Node> {
 		const node_key = this.getNodeKey(parameters);
-		const standardized_value = this.standardizeValue(field_value);
+		const standardized_old_value = this.standardizeValue(old_value);
+		const standardized_new_value = this.standardizeValue(new_value);
 		const adapter = this.getAdapter();
 
 		const node = await adapter.setField(
 			node_key,
 			field_key,
-			standardized_value
+			standardized_old_value,
+			standardized_new_value
 		);
 
 		return this.unstandardizeNode(node);
-	}
-
-	public async addValueToSet(
-		parameters: NodeParameters,
-		value: FieldValue
-	): Promise<void> {
-		const node_key = this.getNodeKey(parameters);
-		const standardized_value = this.standardizeValue(value);
-		const adapter = this.getAdapter();
-
-		await adapter.addValueToSet(node_key, standardized_value);
-	}
-
-	public async removeValueFromSet(
-		parameters: NodeParameters,
-		value: FieldValue
-	): Promise<void> {
-		const node_key = this.getNodeKey(parameters);
-		const standardized_value = this.standardizeValue(value);
-		const adapter = this.getAdapter();
-
-		await adapter.removeValueFromSet(node_key, standardized_value);
-	}
-
-	public async fetchValuesFromSet(
-		parameters: NodeParameters,
-		offset: number,
-		limit: number
-	): Promise<FieldValue[]> {
-		const node_key = this.getNodeKey(parameters);
-		const adapter = this.getAdapter();
-
-		const values = await adapter.fetchValuesFromSet(node_key, offset, limit);
-
-		return values.map((value) => {
-			return this.unstandardizeValue(value);
-		});
-	}
-
-	public async addValueToList(
-		parameters: NodeParameters,
-		value: FieldValue,
-		position?: number
-	): Promise<void> {
-		const node_key = this.getNodeKey(parameters);
-		const standardized_value = this.standardizeValue(value);
-		const adapter = this.getAdapter();
-
-		await adapter.addValueToList(node_key, standardized_value, position);
-	}
-
-	public async removeValueFromList(
-		parameters: NodeParameters,
-		value: FieldValue,
-		position?: number
-	): Promise<void> {
-		const node_key = this.getNodeKey(parameters);
-		const standardized_value = this.standardizeValue(value);
-		const adapter = this.getAdapter();
-
-		await adapter.removeValueFromList(node_key, standardized_value, position);
-	}
-
-	public async fetchValuesFromList(
-		parameters: NodeParameters,
-		offset: number,
-		limit: number
-	): Promise<FieldValue[]> {
-		const node_key = this.getNodeKey(parameters);
-		const adapter = this.getAdapter();
-
-		const values = await adapter.fetchValuesFromList(node_key, offset, limit);
-
-		return values.map((value) => {
-			return this.unstandardizeValue(value);
-		});
 	}
 
 	public isLocalUrl(url: string): boolean {
@@ -222,12 +149,6 @@ class Repository {
 		const hostname = this.getHostname();
 
 		return standardizeUrl(value, hostname);
-	}
-
-	private unstandardizeValue(value: FieldValue): FieldValue {
-		const hostname = this.getHostname();
-
-		return unstandardizeUrl(value, hostname);
 	}
 
 	private getAdapter(): Adapter {

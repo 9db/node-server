@@ -9,8 +9,8 @@ class ChangeTypeGenerator extends SystemNodeGenerator {
 		const status = this.getStatusUrl();
 		const change_type = this.getChangeTypeUrl();
 		const field = this.getFieldUrl();
-		const value = this.getValueUrl();
-		const previous_value = this.getPreviousValueUrl();
+		const old_value = this.getOldValueUrl();
+		const new_value = this.getNewValueUrl();
 		const approver = this.getApproverUrl();
 
 		return {
@@ -18,8 +18,8 @@ class ChangeTypeGenerator extends SystemNodeGenerator {
 			status,
 			change_type,
 			field,
-			value,
-			previous_value,
+			old_value,
+			new_value,
 			approver
 		};
 	}
@@ -52,14 +52,14 @@ class ChangeTypeGenerator extends SystemNodeGenerator {
 		});
 	}
 
-	private getValueUrl(): string {
+	private getOldValueUrl(): string {
 		return this.buildNodeUrl({
 			type_id: SystemId.GENERIC_TYPE,
 			id: SystemId.STRING_TYPE
 		});
 	}
 
-	private getPreviousValueUrl(): string {
+	private getNewValueUrl(): string {
 		return this.buildNodeUrl({
 			type_id: SystemId.GENERIC_TYPE,
 			id: SystemId.STRING_TYPE

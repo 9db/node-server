@@ -1,10 +1,9 @@
 import TypeNode from 'type/type-node';
 import SystemId from 'system/enum/id';
 import DraftField from 'type/draft-field';
-import KeyGenerator from 'utility/key-generator';
 import buildNodeUrl from 'utility/build-node-url';
 import FetchNodeOperation from 'operation/fetch-node';
-import AddValueToSetFieldOperation from 'operation/add-value-to-set-field';
+import AddValueToListOperation from 'operation/add-value-to-list';
 import Operation, { OperationInput } from 'operation';
 
 interface Input extends OperationInput {
@@ -54,7 +53,7 @@ class CreateTypeOperation extends Operation<Input, TypeNode> {
 			account
 		};
 
-		const operation = new AddValueToSetFieldOperation(input);
+		const operation = new AddValueToListOperation(input);
 
 		await operation.perform();
 	}
@@ -63,10 +62,10 @@ class CreateTypeOperation extends Operation<Input, TypeNode> {
 		const url = this.getUrl();
 		const type_url = this.getTypeUrl();
 		const creator = this.getAccountUrl();
-		const changes = this.getChangesUrl();
-		const permissions = this.getPermissionsUrl();
-		const instances = this.getInstancesUrl();
-		const child_types = this.getChildTypesUrl();
+		const changes: string[] = [];
+		const permissions: string[] = [];
+		const instances: string[] = [];
+		const child_types: string[] = [];
 		const parent_type = this.getParentTypeUrl();
 		const created_at = Date.now();
 		const updated_at = created_at;
@@ -136,43 +135,6 @@ class CreateTypeOperation extends Operation<Input, TypeNode> {
 		const account = this.getAccount();
 
 		return account.url;
-	}
-
-	private getChangesUrl(): string {
-		const hostname = this.getHostname();
-
-		return buildNodeUrl(hostname, {
-			type_id: SystemId.CHANGE_LIST_TYPE,
-			id: KeyGenerator.id()
-		});
-	}
-
-	private getPermissionsUrl(): string {
-		const hostname = this.getHostname();
-
-		return buildNodeUrl(hostname, {
-			type_id: SystemId.PERMISSION_SET_TYPE,
-			id: SystemId.EVERYONE_READ_PERMISSION
-		});
-	}
-
-	private getInstancesUrl(): string {
-		const hostname = this.getHostname();
-		const id = this.getId();
-
-		return buildNodeUrl(hostname, {
-			type_id: `${id}-set`,
-			id: KeyGenerator.id()
-		});
-	}
-
-	private getChildTypesUrl(): string {
-		const hostname = this.getHostname();
-
-		return buildNodeUrl(hostname, {
-			type_id: SystemId.TYPE_SET_TYPE,
-			id: KeyGenerator.id()
-		});
 	}
 
 	private getParentTypeUrl(): string {

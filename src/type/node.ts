@@ -6,8 +6,8 @@ interface Node {
 	readonly creator: string;
 	readonly created_at: number;
 	readonly updated_at: number;
-	readonly changes: string;
-	readonly permissions: string;
+	readonly changes: string[];
+	readonly permissions: string[];
 	readonly [key: string]: FieldValue;
 }
 

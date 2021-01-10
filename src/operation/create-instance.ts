@@ -2,12 +2,11 @@ import SystemId from 'system/enum/id';
 import TypeNode from 'type/type-node';
 import DraftField from 'type/draft-field';
 import InstanceNode from 'type/instance-node';
-import KeyGenerator from 'utility/key-generator';
 import buildNodeUrl from 'utility/build-node-url';
 import getFieldKeys from 'utility/get-field-keys';
 import NodeParameters from 'type/node-parameters';
+import AddValueToListOperation from 'operation/add-value-to-list';
 import LoadNodeFromUrlOperation from 'operation/load-node-from-url';
-import AddValueToSetFieldOperation from 'operation/add-value-to-set-field';
 import Operation, { OperationInput } from 'operation';
 
 interface Input extends OperationInput {
@@ -54,8 +53,8 @@ class CreateInstanceOperation extends Operation<Input, InstanceNode> {
 		const type_url = this.getTypeUrl();
 		const draft_fields = this.getDraftFields();
 		const creator = this.getAccountUrl();
-		const changes = this.getChangesUrl();
-		const permissions = this.getPermissionsUrl();
+		const changes: string[] = [];
+		const permissions: string[] = [];
 		const created_at = Date.now();
 		const updated_at = created_at;
 
@@ -109,7 +108,7 @@ class CreateInstanceOperation extends Operation<Input, InstanceNode> {
 			account
 		};
 
-		const operation = new AddValueToSetFieldOperation(input);
+		const operation = new AddValueToListOperation(input);
 
 		await operation.perform();
 	}
@@ -147,24 +146,6 @@ class CreateInstanceOperation extends Operation<Input, InstanceNode> {
 		const account = this.getAccount();
 
 		return account.url;
-	}
-
-	private getChangesUrl(): string {
-		const hostname = this.getHostname();
-
-		return buildNodeUrl(hostname, {
-			type_id: SystemId.CHANGE_LIST_TYPE,
-			id: KeyGenerator.id()
-		});
-	}
-
-	private getPermissionsUrl(): string {
-		const hostname = this.getHostname();
-
-		return buildNodeUrl(hostname, {
-			type_id: SystemId.PERMISSION_SET_TYPE,
-			id: SystemId.EVERYONE_READ_PERMISSION
-		});
 	}
 }
 

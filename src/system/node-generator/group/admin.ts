@@ -6,7 +6,7 @@ import SystemNodeGenerator from 'system/node-generator';
 class AdminGroupGenerator extends SystemNodeGenerator {
 	public generate(): GroupNode {
 		const node = super.generate();
-		const accounts = this.getAccountsUrl();
+		const accounts: string[] = [];
 
 		return {
 			...node,
@@ -19,13 +19,6 @@ class AdminGroupGenerator extends SystemNodeGenerator {
 			type_id: SystemId.GROUP_TYPE,
 			id: SystemId.ADMIN_GROUP
 		};
-	}
-
-	private getAccountsUrl(): string {
-		return this.buildNodeUrl({
-			type_id: SystemId.ACCOUNT_SET_TYPE,
-			id: SystemId.ADMIN_GROUP
-		});
 	}
 }
 
