@@ -78,6 +78,12 @@ abstract class NodeDetailsTemplate extends PageTemplate<Input> {
 		`;
 	}
 
+	protected getNode(): Node {
+		const input = this.getInput();
+
+		return input.node;
+	}
+
 	protected getFields(): FieldInput[] {
 		const input = this.getInput();
 
@@ -233,12 +239,6 @@ abstract class NodeDetailsTemplate extends PageTemplate<Input> {
 		const parameters = getNodeParameters(node.url);
 
 		return parameters.id;
-	}
-
-	private getNode(): Node {
-		const input = this.getInput();
-
-		return input.node;
 	}
 
 	private getPermissions(): PermissionNode[] {

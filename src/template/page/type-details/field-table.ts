@@ -35,7 +35,7 @@ class FieldTableTemplate extends Template<Input> {
 
 	private getEmptyHtml(): string {
 		return `
-			<em>No fields specified</em>
+			<em>No fields specified.</em>
 		`;
 	}
 
