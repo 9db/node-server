@@ -96,26 +96,32 @@ class Repository {
 	}
 
 	public async fetchAnonymousAccount(): Promise<AccountNode> {
+		const type_id = SystemId.ACCOUNT_TYPE;
+		const id = SystemId.ANONYMOUS_ACCOUNT;
+
 		const node = await this.fetchNode({
-			type_id: SystemId.ACCOUNT_TYPE,
-			id: SystemId.ANONYMOUS_ACCOUNT
+			type_id,
+			id
 		});
 
 		if (node === undefined) {
-			throw new NotFoundError();
+			throw new NotFoundError(`Unable to find node: ${type_id}/${id}`);
 		}
 
 		return node as AccountNode;
 	}
 
 	public async fetchSystemAccount(): Promise<AccountNode> {
+		const type_id = SystemId.ACCOUNT_TYPE;
+		const id = SystemId.SYSTEM_ACCOUNT;
+
 		const node = await this.fetchNode({
-			type_id: SystemId.ACCOUNT_TYPE,
-			id: SystemId.SYSTEM_ACCOUNT
+			type_id,
+			id
 		});
 
 		if (node === undefined) {
-			throw new NotFoundError();
+			throw new NotFoundError(`Unable to find node: ${type_id}/${id}`);
 		}
 
 		return node as AccountNode;

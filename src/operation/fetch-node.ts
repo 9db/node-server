@@ -20,16 +20,16 @@ class FetchNodeOperation extends Operation<Input, Node> {
 	}
 
 	private async fetchNode(): Promise<Node> {
-		const input = this.getInput();
+		const { type_id, id } = this.getInput();
 		const repository = this.getRepository();
 
 		const node = await repository.fetchNode({
-			type_id: input.type_id,
-			id: input.id
+			type_id,
+			id
 		});
 
 		if (node === undefined) {
-			throw new NotFoundError();
+			throw new NotFoundError(`Unable to find node: ${type_id}/${id}`);
 		}
 
 		return node;

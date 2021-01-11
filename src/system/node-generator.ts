@@ -12,6 +12,7 @@ import GenericTypeBuilder from 'system/node-builder/type/generic';
 import AccountTypeBuilder from 'system/node-builder/type/account';
 import EveryoneGroupBuilder from 'system/node-builder/group/everyone';
 import SystemAccountBuilder from 'system/node-builder/account/system';
+import PermissionTypeBuilder from 'system/node-builder/type/permission';
 import AnonymousAccountBuilder from 'system/node-builder/account/anonymous';
 import AdminCreatePermissionBuilder from 'system/node-builder/permission/admin-create';
 import EveryoneReadPermissionBuilder from 'system/node-builder/permission/everyone-read';
@@ -25,6 +26,7 @@ const BUILDER_CONSTRUCTORS = [
 	AccountTypeBuilder,
 	GenericTypeBuilder,
 	SessionTypeBuilder,
+	PermissionTypeBuilder,
 
 	// Groups
 	AdminGroupBuilder,

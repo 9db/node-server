@@ -37,7 +37,7 @@ class FieldTableTemplate extends Template<Input> {
 						${fields_html}
 					</tbody>
 					<caption>
-						<input type="submit" formaction="/type/new?action=add_field" formmethod="POST" value="Add another field" />
+						<input type="submit" formaction="/create-type?action=add_field" formmethod="POST" value="Add another field" />
 					</caption>
 				</table>
 			</fieldset>

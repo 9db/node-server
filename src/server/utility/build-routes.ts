@@ -35,12 +35,12 @@ function buildRoutes(): Route[] {
 		new HtmlLoginRoute(),
 		new HtmlLogoutRoute(),
 		new HtmlTypeFormRoute(),
-		new HtmlCreateTypeRoute(),
 		new HtmlInstanceFormRoute(),
-		new HtmlTypeDetailsRoute(),
 		new HtmlCreateSessionRoute(),
-		new HtmlCreateInstanceRoute(),
 		new HtmlUpdateTypeFormRoute(),
+		new HtmlCreateTypeRoute(),
+		new HtmlCreateInstanceRoute(),
+		new HtmlTypeDetailsRoute(),
 		new HtmlInstanceDetailsRoute(),
 
 		// 404 fallbacks:

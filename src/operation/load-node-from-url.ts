@@ -23,7 +23,7 @@ class LoadNodeFromUrlOperation extends Operation<Input, Node> {
 		const node = await repository.fetchNode(node_parameters);
 
 		if (node === undefined) {
-			throw new NotFoundError();
+			throw new NotFoundError(`Unable to fetch local node: ${url}`);
 		}
 
 		return node;

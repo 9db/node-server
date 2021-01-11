@@ -112,7 +112,7 @@ class FilesystemAdapter implements Adapter {
 		const node = await this.fetchNode(node_key);
 
 		if (node === undefined) {
-			throw new NotFoundError();
+			throw new NotFoundError(`Node not found: ${node_key}`);
 		}
 
 		return node;
