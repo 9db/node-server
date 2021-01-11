@@ -69,6 +69,7 @@ class FieldRowTemplate extends Template<Input> {
 
 	private getTypeOptionsHtml(): string {
 		const type_nodes = this.getTypeNodes();
+		const selected_type_node = this.getSelectedTypeNode();
 
 		const serialized_options: string[] = [
 			`
@@ -82,9 +83,10 @@ class FieldRowTemplate extends Template<Input> {
 			const url = type_node.url;
 			const parameters = getNodeParameters(url);
 			const id = parameters.id;
+			const selected = type_node === selected_type_node ? 'selected' : '';
 
 			serialized_options.push(`
-				<option value="${url}">${id}</option>
+				<option value="${url}" ${selected}>${id}</option>
 			`);
 		});
 
@@ -93,7 +95,8 @@ class FieldRowTemplate extends Template<Input> {
 
 	private getExplicitTypeHtml(): string {
 		const index = this.getIndex();
-		const value = this.getValue();
+		const selected_type_node = this.getSelectedTypeNode();
+		const value = selected_type_node === undefined ? this.getValue() : '';
 
 		return `
 			<input name="fields[${index}][value]" value="${value}" />
@@ -106,6 +109,15 @@ class FieldRowTemplate extends Template<Input> {
 		return `
 			<input type="submit" formaction="/create-type?action=remove_field&index=${index}" formmethod="POST" value="x" />
 		`;
+	}
+
+	private getSelectedTypeNode(): TypeNode | undefined {
+		const type_nodes = this.getTypeNodes();
+		const value = this.getValue();
+
+		return type_nodes.find((type_node) => {
+			return type_node.url === value;
+		});
 	}
 
 	private getKey(): string {

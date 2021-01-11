@@ -8,9 +8,14 @@ import TypeFormTemplate from 'template/page/type-form';
 import FetchTypeInstancesOperation from 'operation/fetch-type-instances';
 import CheckNodePermissionOperation from 'operation/check-node-permission';
 
+interface DraftFieldInput {
+	readonly key: string | undefined;
+	readonly value: string | string[] | undefined;
+}
+
 interface Input {
 	readonly id: string | undefined;
-	readonly fields: DraftField[] | undefined;
+	readonly fields: DraftFieldInput[] | undefined;
 }
 
 class HtmlTypeFormEndpoint extends HtmlEndpoint<Input> {
@@ -88,7 +93,27 @@ class HtmlTypeFormEndpoint extends HtmlEndpoint<Input> {
 			];
 		}
 
-		const draft_fields = body.fields;
+		const draft_fields = body.fields.map((field) => {
+			const key = field.key || '';
+
+			let value: string | undefined;
+
+			if (Array.isArray(field.value)) {
+				value = field.value.find((element) => {
+					return element !== '';
+				});
+			} else {
+				value = field.value;
+			}
+
+			value ||= '';
+
+			return {
+				key,
+				value
+			};
+		});
+
 		const action = this.getQueryParameter('action');
 
 		if (action === undefined) {
