@@ -8,6 +8,10 @@ interface Input {
 
 class PermissionsTableTemplate extends Template<Input> {
 	protected getHtml(): string {
+		if (!this.hasPermissions()) {
+			return this.getEmptyHtml();
+		}
+
 		const permission_rows_html = this.getPermissionRowsHtml();
 
 		return `
@@ -26,6 +30,12 @@ class PermissionsTableTemplate extends Template<Input> {
 					${permission_rows_html}
 				</tbody>
 			</table>
+		`;
+	}
+
+	private getEmptyHtml(): string {
+		return `
+			<em>No permissions set.</em>
 		`;
 	}
 
@@ -55,6 +65,12 @@ class PermissionsTableTemplate extends Template<Input> {
 				</td>
 			</tr>
 		`;
+	}
+
+	private hasPermissions(): boolean {
+		const permissions = this.getPermissions();
+
+		return permissions.length > 0;
 	}
 
 	private getPermissions(): PermissionNode[] {
