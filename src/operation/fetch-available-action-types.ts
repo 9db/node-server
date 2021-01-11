@@ -15,6 +15,10 @@ class FetchAvailableActionTypesOperation extends Operation<
 	ActionType[]
 > {
 	protected async performInternal(): Promise<ActionType[]> {
+		if (this.accountIsCreator()) {
+			return this.fetchAllActionTypes();
+		}
+
 		const permissions = await this.fetchNodePermissions();
 		const action_types: ActionType[] = [];
 
@@ -69,6 +73,19 @@ class FetchAvailableActionTypesOperation extends Operation<
 		const group = node as GroupNode;
 
 		return group.accounts.includes(account.url);
+	}
+
+	private accountIsCreator(): boolean {
+		const account = this.getAccount();
+		const node = this.getNode();
+
+		return account.url === node.creator;
+	}
+
+	private fetchAllActionTypes(): Promise<ActionType[]> {
+		const values = Object.values(ActionType);
+
+		return Promise.resolve(values);
 	}
 
 	private getNode(): Node {
