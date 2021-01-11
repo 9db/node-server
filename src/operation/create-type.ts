@@ -24,7 +24,13 @@ class CreateTypeOperation extends Operation<Input, TypeNode> {
 	}
 
 	private async buildNode(): Promise<TypeNode> {
-		let node = this.getTypeNode();
+		const type_node = this.getTypeNode();
+		const permissions = this.buildPermissions();
+
+		let node = {
+			...type_node,
+			permissions
+		};
 
 		const draft_fields = this.getDraftFields();
 
@@ -98,6 +104,17 @@ class CreateTypeOperation extends Operation<Input, TypeNode> {
 		const node = await operation.perform();
 
 		return node as TypeNode;
+	}
+
+	private buildPermissions(): string[] {
+		const hostname = this.getHostname();
+
+		const everyone_read_url = buildNodeUrl(hostname, {
+			type_id: SystemId.PERMISSION_TYPE,
+			id: SystemId.EVERYONE_READ_PERMISSION
+		});
+
+		return [everyone_read_url];
 	}
 
 	private getUrl(): string {

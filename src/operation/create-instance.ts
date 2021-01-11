@@ -54,7 +54,7 @@ class CreateInstanceOperation extends Operation<Input, InstanceNode> {
 		const draft_fields = this.getDraftFields();
 		const creator = this.getAccountUrl();
 		const changes: string[] = [];
-		const permissions: string[] = [];
+		const permissions = this.buildPermissions();
 		const created_at = Date.now();
 		const updated_at = created_at;
 
@@ -128,6 +128,17 @@ class CreateInstanceOperation extends Operation<Input, InstanceNode> {
 			type_id: SystemId.GENERIC_TYPE,
 			id: parameters.type_id
 		});
+	}
+
+	private buildPermissions(): string[] {
+		const hostname = this.getHostname();
+
+		const everyone_read_url = buildNodeUrl(hostname, {
+			type_id: SystemId.PERMISSION_TYPE,
+			id: SystemId.EVERYONE_READ_PERMISSION
+		});
+
+		return [everyone_read_url];
 	}
 
 	private getNodeParameters(): NodeParameters {
