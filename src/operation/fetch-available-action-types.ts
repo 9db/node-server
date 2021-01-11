@@ -1,7 +1,9 @@
 import Node from 'type/node';
+import SystemId from 'system/enum/id';
 import GroupNode from 'type/node/group';
 import ActionType from 'enum/action-type';
 import PermissionNode from 'type/node/permission';
+import getNodeParameters from 'utility/get-node-parameters';
 import LoadNodeFromUrlOperation from 'operation/load-node-from-url';
 import Operation, { OperationInput } from 'operation';
 import FetchNodePermissionsOperation from 'operation/fetch-node-permissions';
@@ -16,7 +18,9 @@ class FetchAvailableActionTypesOperation extends Operation<
 > {
 	protected async performInternal(): Promise<ActionType[]> {
 		if (this.accountIsCreator()) {
-			return this.fetchAllActionTypes();
+			const result = this.getAllAvailableActionTypes();
+
+			return Promise.resolve(result);
 		}
 
 		const permissions = await this.fetchNodePermissions();
@@ -82,10 +86,26 @@ class FetchAvailableActionTypesOperation extends Operation<
 		return account.url === node.creator;
 	}
 
-	private fetchAllActionTypes(): Promise<ActionType[]> {
-		const values = Object.values(ActionType);
+	private getAllAvailableActionTypes(): ActionType[] {
+		const action_types = [
+			ActionType.READ,
+			ActionType.UPDATE,
+			ActionType.DELETE,
+			ActionType.PROPOSE
+		];
 
-		return Promise.resolve(values);
+		if (this.isTypeNode()) {
+			action_types.push(ActionType.CREATE);
+		}
+
+		return action_types;
+	}
+
+	private isTypeNode(): boolean {
+		const node = this.getNode();
+		const parameters = getNodeParameters(node.url);
+
+		return parameters.type_id === SystemId.GENERIC_TYPE;
 	}
 
 	private getNode(): Node {

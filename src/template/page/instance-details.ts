@@ -11,6 +11,10 @@ class InstanceDetailsTemplate extends NodeDetailsTemplate {
 
 		return template.render();
 	}
+
+	protected getNodeLabel(): string {
+		return 'instance';
+	}
 }
 
 export default InstanceDetailsTemplate;

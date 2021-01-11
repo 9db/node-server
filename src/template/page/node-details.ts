@@ -143,10 +143,11 @@ abstract class NodeDetailsTemplate extends PageTemplate<Input> {
 
 	private getEditActionHtml(): string {
 		const edit_url = this.getEditUrl();
+		const node_label = this.getNodeLabel();
 
 		return `
 			<li>
-				<a href="${edit_url}">Edit this type</a>
+				<a href="${edit_url}">Edit this ${node_label}</a>
 			</li>
 		`;
 	}
@@ -280,6 +281,7 @@ abstract class NodeDetailsTemplate extends PageTemplate<Input> {
 	}
 
 	protected abstract getFieldTableHtml(): string;
+	protected abstract getNodeLabel(): string;
 }
 
 export default NodeDetailsTemplate;

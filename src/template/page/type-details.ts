@@ -28,6 +28,10 @@ class TypeDetailsTemplate extends NodeDetailsTemplate {
 		return template.render();
 	}
 
+	protected getNodeLabel(): string {
+		return 'type';
+	}
+
 	private getInstancesHtml(): string {
 		if (!this.hasInstanceUrls()) {
 			return '<em>No instances found.</em>';
