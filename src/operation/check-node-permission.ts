@@ -16,6 +16,10 @@ interface Input extends OperationInput {
 
 class CheckNodePermissionOperation extends Operation<Input, void> {
 	protected async performInternal(): Promise<void> {
+		if (this.accountIsCreator()) {
+			return Promise.resolve();
+		}
+
 		const permission = await this.fetchRequiredPermission();
 
 		if (permission === undefined) {
@@ -82,6 +86,13 @@ class CheckNodePermissionOperation extends Operation<Input, void> {
 		}
 
 		throw new UnauthorizedError();
+	}
+
+	private accountIsCreator(): boolean {
+		const account = this.getAccount();
+		const node = this.getNode();
+
+		return account.url === node.creator;
 	}
 
 	private isEveryoneGroup(group_url: string): boolean {
