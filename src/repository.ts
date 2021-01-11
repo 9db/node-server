@@ -5,6 +5,7 @@ import FieldValue from 'type/field-value';
 import AccountNode from 'type/node/account';
 import NotFoundError from 'http/error/not-found';
 import transformNode from 'repository/utility/transform-node';
+import transformValue from 'repository/utility/transform-value';
 import NodeParameters from 'type/node-parameters';
 import standardizeUrl from 'repository/utility/standardize-url';
 import BadRequestError from 'http/error/bad-request';
@@ -186,7 +187,7 @@ class Repository {
 	private standardizeValue(value: FieldValue): FieldValue {
 		const hostname = this.getHostname();
 
-		return standardizeUrl(value, hostname);
+		return transformValue(value, hostname, standardizeUrl);
 	}
 
 	private getAdapter(): Adapter {

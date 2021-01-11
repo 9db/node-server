@@ -1,5 +1,6 @@
 import Node from 'type/node';
-import FieldValue, { PrimitiveValue, ListValue } from 'type/field-value';
+import FieldValue from 'type/field-value';
+import transformValue from 'repository/utility/transform-value';
 import FieldValueTransformer from 'repository/interface/field-value-transformer';
 
 interface WritableNode {
@@ -25,18 +26,7 @@ function transformNode(
 				return;
 		}
 
-		if (Array.isArray(value)) {
-			const original_list = value as PrimitiveValue[];
-			const transformed_list = original_list.map((list_value) => {
-				return transformer(list_value, hostname);
-			});
-
-			result[key] = transformed_list as ListValue;
-
-			return;
-		}
-
-		const transformed_value = transformer(value, hostname);
+		const transformed_value = transformValue(value, hostname, transformer);
 
 		result[key] = transformed_value;
 	});
