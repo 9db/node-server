@@ -31,6 +31,17 @@ class ChangeTypeBuilder extends SystemNodeBuilder {
 		};
 	}
 
+	protected getPermissionUrls(): string[] {
+		const urls = super.getPermissionUrls();
+
+		const system_create_url = this.buildUrl(
+			SystemId.PERMISSION_TYPE,
+			SystemId.SYSTEM_CREATE_PERMISSION
+		);
+
+		return [...urls, system_create_url];
+	}
+
 	private getStatusUrl(): string {
 		// TODO: Codify this type
 		return this.buildUrl(SystemId.GENERIC_TYPE, 'change-status');

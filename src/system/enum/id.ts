@@ -14,9 +14,11 @@ enum SystemId {
 
 	ADMIN_CREATE_PERMISSION = 'admin-create',
 	EVERYONE_READ_PERMISSION = 'everyone-read',
+	SYSTEM_CREATE_PERMISSION = 'system-create',
 
 	ADMIN_GROUP = 'admin',
-	EVERYONE_GROUP = 'everyone'
+	EVERYONE_GROUP = 'everyone',
+	SYSTEM_GROUP = 'system'
 }
 
 export default SystemId;

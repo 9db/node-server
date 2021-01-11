@@ -3,10 +3,10 @@ import GroupNode from 'type/node/group';
 import NodeParameters from 'type/node-parameters';
 import SystemNodeBuilder from 'system/node-builder';
 
-class AdminGroupBuilder extends SystemNodeBuilder {
+class SystemGroupBuilder extends SystemNodeBuilder {
 	public build(): GroupNode {
 		const node = super.build();
-		const accounts: string[] = [];
+		const accounts = this.getAccountUrls();
 
 		return {
 			...node,
@@ -17,9 +17,13 @@ class AdminGroupBuilder extends SystemNodeBuilder {
 	protected getNodeParameters(): NodeParameters {
 		return {
 			type_id: SystemId.GROUP_TYPE,
-			id: SystemId.ADMIN_GROUP
+			id: SystemId.SYSTEM_GROUP
 		};
+	}
+
+	private getAccountUrls(): string[] {
+		return [this.getSystemAccountUrl()];
 	}
 }
 
-export default AdminGroupBuilder;
+export default SystemGroupBuilder;

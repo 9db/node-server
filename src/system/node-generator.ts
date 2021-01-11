@@ -6,6 +6,7 @@ import getNodeParameters from 'utility/get-node-parameters';
 import ChangeTypeBuilder from 'system/node-builder/type/change';
 import StringTypeBuilder from 'system/node-builder/type/string';
 import AdminGroupBuilder from 'system/node-builder/group/admin';
+import SystemGroupBuilder from 'system/node-builder/group/system';
 import SessionTypeBuilder from 'system/node-builder/type/session';
 import GenericTypeBuilder from 'system/node-builder/type/generic';
 import AccountTypeBuilder from 'system/node-builder/type/account';
@@ -14,6 +15,7 @@ import SystemAccountBuilder from 'system/node-builder/account/system';
 import AnonymousAccountBuilder from 'system/node-builder/account/anonymous';
 import AdminCreatePermissionBuilder from 'system/node-builder/permission/admin-create';
 import EveryoneReadPermissionBuilder from 'system/node-builder/permission/everyone-read';
+import SystemCreatePermissionBuilder from 'system/node-builder/permission/system-create';
 
 const BUILDER_CONSTRUCTORS = [
 	// Types
@@ -27,6 +29,7 @@ const BUILDER_CONSTRUCTORS = [
 	// Groups
 	AdminGroupBuilder,
 	EveryoneGroupBuilder,
+	SystemGroupBuilder,
 
 	// Accounts
 	SystemAccountBuilder,
@@ -34,7 +37,8 @@ const BUILDER_CONSTRUCTORS = [
 
 	// Permissions
 	AdminCreatePermissionBuilder,
-	EveryoneReadPermissionBuilder
+	EveryoneReadPermissionBuilder,
+	SystemCreatePermissionBuilder
 ];
 
 class SystemNodeGenerator {

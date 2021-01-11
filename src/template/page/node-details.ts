@@ -120,7 +120,7 @@ abstract class NodeDetailsTemplate extends PageTemplate<Input> {
 
 	private getNoAvailableActionsHtml(): string {
 		if (this.isLoggedIn()) {
-			return '<em>No available actions</em>';
+			return '<em>No available actions.</em>';
 		}
 
 		return `

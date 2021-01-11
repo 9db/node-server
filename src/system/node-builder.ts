@@ -12,7 +12,7 @@ abstract class SystemNodeBuilder {
 			created_at: this.getCurrentTimestamp(),
 			updated_at: this.getCurrentTimestamp(),
 			changes: [],
-			permissions: this.getPermissionsUrls()
+			permissions: this.getPermissionUrls()
 		};
 
 		if (this.isTypeNode()) {
@@ -48,7 +48,7 @@ abstract class SystemNodeBuilder {
 		});
 	}
 
-	protected getPermissionsUrls(): string[] {
+	protected getPermissionUrls(): string[] {
 		const everyone_read_url = this.buildUrl(
 			SystemId.PERMISSION_TYPE,
 			SystemId.EVERYONE_READ_PERMISSION

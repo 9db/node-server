@@ -21,6 +21,17 @@ class SessionTypeBuilder extends SystemNodeBuilder {
 		};
 	}
 
+	protected getPermissionUrls(): string[] {
+		const urls = super.getPermissionUrls();
+
+		const system_create_url = this.buildUrl(
+			SystemId.PERMISSION_TYPE,
+			SystemId.SYSTEM_CREATE_PERMISSION
+		);
+
+		return [...urls, system_create_url];
+	}
+
 	private getAccountTypeUrl(): string {
 		return this.buildUrl(SystemId.GENERIC_TYPE, SystemId.ACCOUNT_TYPE);
 	}
