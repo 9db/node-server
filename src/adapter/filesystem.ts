@@ -67,12 +67,7 @@ class FilesystemAdapter implements Adapter {
 		const node = await this.fetchNodeUnsafe(node_key);
 		const current_value = node[field_key];
 
-		if (current_value !== old_value) {
-			throw new BadRequestError(`
-				Invalid old value supplied for field ${field_key}
-				(expected ${current_value}, but received ${old_value})
-			`);
-		}
+		this.ensureValuesMatch(field_key, current_value, old_value);
 
 		const updated_node = {
 			...node,
@@ -148,6 +143,23 @@ class FilesystemAdapter implements Adapter {
 		const filepath = this.getFilepath();
 
 		return `${filepath}/${node_key}.json`;
+	}
+
+	private ensureValuesMatch(
+		field_key: string,
+		current_value: FieldValue,
+		old_value: FieldValue
+	): void {
+		const serialized_current_value = JSON.stringify(current_value);
+		const serialized_old_value = JSON.stringify(old_value);
+
+		if (serialized_current_value !== serialized_old_value) {
+			throw new BadRequestError(`
+				Invalid old value supplied for field ${field_key}
+				(expected ${serialized_current_value},
+				but received ${serialized_old_value})
+			`);
+		}
 	}
 
 	private getFilepath(): string {

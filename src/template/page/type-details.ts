@@ -39,7 +39,11 @@ class TypeDetailsTemplate extends NodeDetailsTemplate {
 			const parameters = getNodeParameters(instance_url);
 			const instance_id = parameters.id;
 
-			return `<a href="${instance_url}">${instance_id}</a>`;
+			return `
+				<li>
+					<a href="${instance_url}">${instance_id}</a>
+				</li>
+			`;
 		});
 
 		const list_html = serialized_instances.join('\n');

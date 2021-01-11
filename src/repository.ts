@@ -7,6 +7,9 @@ import NotFoundError from 'http/error/not-found';
 import transformNode from 'repository/utility/transform-node';
 import NodeParameters from 'type/node-parameters';
 import standardizeUrl from 'repository/utility/standardize-url';
+import BadRequestError from 'http/error/bad-request';
+import ListTypeBuilder from 'system/node-builder/type/list';
+import getListInnerType from 'utility/get-list-inner-type';
 import unstandardizeUrl from 'repository/utility/unstandardize-url';
 import getNodeParameters from 'utility/get-node-parameters';
 import SystemNodeGenerator from 'system/node-generator';
@@ -29,6 +32,10 @@ class Repository {
 		parameters: NodeParameters
 	): Promise<Node | undefined> {
 		await this.generateSystemNodes();
+
+		if (this.isListTypeNode(parameters)) {
+			return this.getListTypeNode(parameters);
+		}
 
 		const adapter = this.getAdapter();
 		const node_key = this.getNodeKey(parameters);
@@ -117,6 +124,37 @@ class Repository {
 	// TODO: Make this private again.
 	public getHostname(): string {
 		return this.hostname;
+	}
+
+	private isListTypeNode(parameters: NodeParameters): boolean {
+		const { type_id, id } = parameters;
+
+		if (type_id !== SystemId.GENERIC_TYPE) {
+			return false;
+		}
+
+		const inner_type_id = getListInnerType(id);
+
+		if (inner_type_id === null) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private getListTypeNode(parameters: NodeParameters): Node {
+		const inner_type_id = getListInnerType(parameters.id);
+
+		if (inner_type_id === null) {
+			throw new BadRequestError(`
+				Unable to determine inner type for type id: ${parameters.id}
+			`);
+		}
+
+		const builder = new ListTypeBuilder(inner_type_id);
+		const node = builder.build();
+
+		return this.unstandardizeNode(node);
 	}
 
 	private getNodeKey(parameters: NodeParameters): string {

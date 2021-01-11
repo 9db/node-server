@@ -10,7 +10,7 @@ interface Input extends OperationInput {
 	readonly value: PrimitiveValue;
 }
 
-class AddValueToSetFieldOperation extends Operation<Input, void> {
+class AddValueToListFieldOperation extends Operation<Input, void> {
 	protected async performInternal(): Promise<void> {
 		const repository = this.getRepository();
 		const node = this.getNode();
@@ -50,4 +50,4 @@ class AddValueToSetFieldOperation extends Operation<Input, void> {
 	}
 }
 
-export default AddValueToSetFieldOperation;
+export default AddValueToListFieldOperation;
