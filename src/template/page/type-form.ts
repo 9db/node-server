@@ -82,8 +82,14 @@ class TypeFormTemplate extends PageTemplate<Input> {
 		};
 
 		const template = new FieldTableTemplate(input);
+		const table_html = template.render();
 
-		return template.render();
+		return `
+			<fieldset>
+				<label>Fields:</label>
+				${table_html}
+			</fieldset>
+		`;
 	}
 
 	private getSubmissionHtml(): string {

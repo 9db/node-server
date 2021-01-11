@@ -104,7 +104,7 @@ class FieldRowTemplate extends Template<Input> {
 		const index = this.getIndex();
 
 		return `
-			<input type="submit" formaction="/type/new?action=remove_field&index=${index}" formmethod="POST" value="x" />
+			<input type="submit" formaction="/create-type?action=remove_field&index=${index}" formmethod="POST" value="x" />
 		`;
 	}
 

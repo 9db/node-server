@@ -10,37 +10,48 @@ interface Input {
 
 class FieldTableTemplate extends Template<Input> {
 	protected getHtml(): string {
+		if (!this.hasDraftFields()) {
+			return this.getEmptyHtml();
+		}
+
 		const fields_html = this.getFieldsHtml();
 		const type_list_header = this.getTypeListHeader();
 		const explicit_type_header = this.getExplicitTypeHeader();
+		const new_field_button_html = this.getNewFieldButtonHtml();
 
 		return `
-			<fieldset>
-				<label>Fields:</label>
-				<table>
-					<thead>
-						<tr>
-							<th></th>
-							<th>
-								Key
-							</th>
-							<th>
-								${type_list_header}
-							</th>
-							<th>
-								${explicit_type_header}
-							</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						${fields_html}
-					</tbody>
-					<caption>
-						<input type="submit" formaction="/create-type?action=add_field" formmethod="POST" value="Add another field" />
-					</caption>
-				</table>
-			</fieldset>
+			<table>
+				<thead>
+					<tr>
+						<th></th>
+						<th>
+							Key
+						</th>
+						<th>
+							${type_list_header}
+						</th>
+						<th>
+							${explicit_type_header}
+						</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					${fields_html}
+				</tbody>
+				<caption>
+					${new_field_button_html}
+				</caption>
+			</table>
+		`;
+	}
+
+	private getEmptyHtml(): string {
+		const new_field_button_html = this.getNewFieldButtonHtml();
+
+		return `
+			<em>No fields specified.</em>
+			${new_field_button_html}
 		`;
 	}
 
@@ -74,6 +85,28 @@ class FieldTableTemplate extends Template<Input> {
 
 	private getExplicitTypeHeader(): string {
 		return 'Explicit type';
+	}
+
+	private getNewFieldButtonHtml(): string {
+		const button_text = this.getNewFieldButtonText();
+
+		return `
+			<input type="submit" formaction="/create-type?action=add_field" formmethod="POST" value="${button_text}" />
+		`;
+	}
+
+	private getNewFieldButtonText(): string {
+		if (this.hasDraftFields()) {
+			return 'Add another field';
+		} else {
+			return 'Add a field';
+		}
+	}
+
+	private hasDraftFields(): boolean {
+		const draft_fields = this.getDraftFields();
+
+		return draft_fields.length > 0;
 	}
 
 	private getDraftFields(): DraftField[] {
