@@ -1,6 +1,7 @@
 import HtmlEndpoint from 'endpoint/html';
 import InstanceNode from 'type/instance-node';
 import BadRequestError from 'http/error/bad-request';
+import EditInstanceFormTemplate from 'template/page/edit-instance-form';
 
 interface Input {
 	readonly fields: Record<string, string> | undefined;
@@ -38,7 +39,14 @@ class EditInstanceFormEndpoint extends HtmlEndpoint<Input> {
 	}
 
 	private renderFormForInstance(instance: InstanceNode): string {
-		return 'some html';
+		const account = this.getAccount();
+
+		const template = new EditInstanceFormTemplate({
+			instance,
+			account
+		});
+
+		return template.render();
 	}
 }
 
