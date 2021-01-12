@@ -27,10 +27,6 @@ if [[ $1 == '--verify' ]]; then
 	exit 0
 fi
 
-if [[ -f ./dist/.last-publish-time ]]; then
-	exit 0
-fi
-
 echo "Recompiling..."
 rm -rf dist/src
 rm -rf dist/test
