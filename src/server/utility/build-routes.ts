@@ -17,6 +17,7 @@ import JsonCreateInstanceRoute from 'route/json/create-instance';
 import HtmlUpdateTypeFormRoute from 'route/html/update-type-form';
 import HtmlCreateTypeFormRoute from 'route/html/create-type-form';
 import HtmlInstanceDetailsRoute from 'route/html/instance-details';
+import HtmlEditInstanceFormRoute from 'route/html/edit-instance-form';
 import HtmlCreateInstanceFormRoute from 'route/html/create-instance-form';
 
 function buildRoutes(): Route[] {
@@ -36,6 +37,7 @@ function buildRoutes(): Route[] {
 		new HtmlLogoutRoute(),
 		new HtmlCreateTypeFormRoute(),
 		new HtmlCreateInstanceFormRoute(),
+		new HtmlEditInstanceFormRoute(),
 		new HtmlCreateSessionRoute(),
 		new HtmlUpdateTypeFormRoute(),
 		new HtmlCreateTypeRoute(),

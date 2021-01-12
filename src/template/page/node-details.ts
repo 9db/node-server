@@ -164,9 +164,15 @@ abstract class NodeDetailsTemplate extends PageTemplate<Input> {
 	}
 
 	private getEditUrl(): string {
-		const node_url = this.getNodeUrl();
+		const type_id = this.getTypeId();
 
-		return `${node_url}/edit`;
+		if (type_id === SystemId.GENERIC_TYPE) {
+			return `/edit-type?type_id=${type_id}`;
+		}
+
+		const instance_id = this.getNodeId();
+
+		return `/edit-instance?type_id=${type_id}&instance_id=${instance_id}`;
 	}
 
 	private getNewUrl(): string {
@@ -174,9 +180,9 @@ abstract class NodeDetailsTemplate extends PageTemplate<Input> {
 
 		if (node_id === SystemId.GENERIC_TYPE) {
 			return '/create-type';
-		} else {
-			return `/create-instance?type_id=${node_id}`;
 		}
+
+		return `/create-instance?type_id=${node_id}`;
 	}
 
 	private getCreatorId(): string {
@@ -214,12 +220,6 @@ abstract class NodeDetailsTemplate extends PageTemplate<Input> {
 		const instance = this.getNode();
 
 		return instance.updated_at;
-	}
-
-	private getNodeUrl(): string {
-		const node = this.getNode();
-
-		return node.url;
 	}
 
 	private getTypeUrl(): string {
