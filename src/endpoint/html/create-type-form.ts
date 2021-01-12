@@ -18,7 +18,7 @@ interface Input {
 	readonly fields: DraftFieldInput[] | undefined;
 }
 
-class HtmlTypeFormEndpoint extends HtmlEndpoint<Input> {
+class HtmlCreateTypeFormEndpoint extends HtmlEndpoint<Input> {
 	protected async process(): Promise<string> {
 		const generic_type = await this.fetchType(SystemId.GENERIC_TYPE);
 
@@ -167,4 +167,4 @@ class HtmlTypeFormEndpoint extends HtmlEndpoint<Input> {
 	}
 }
 
-export default HtmlTypeFormEndpoint;
+export default HtmlCreateTypeFormEndpoint;

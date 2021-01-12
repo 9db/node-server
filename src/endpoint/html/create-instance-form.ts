@@ -14,7 +14,7 @@ interface Input {
 	readonly fields: Record<string, string> | undefined;
 }
 
-class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
+class HtmlCreateInstanceFormEndpoint extends HtmlEndpoint<Input> {
 	protected async process(): Promise<string> {
 		const type_node = await this.fetchTypeNode();
 
@@ -135,4 +135,4 @@ class HtmlInstanceFormEndpoint extends HtmlEndpoint<Input> {
 	}
 }
 
-export default HtmlInstanceFormEndpoint;
+export default HtmlCreateInstanceFormEndpoint;
