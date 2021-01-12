@@ -128,7 +128,10 @@ class HtmlCreateTypeFormEndpoint extends HtmlEndpoint<Input> {
 			case undefined:
 				return draft_fields;
 			default:
-				throw new BadRequestError();
+				throw new BadRequestError(`
+					Unsupported action: "${action}"
+					(expected one of "add_field" or "remove_field")
+				`);
 		}
 	}
 
@@ -146,13 +149,13 @@ class HtmlCreateTypeFormEndpoint extends HtmlEndpoint<Input> {
 		const index_param = this.getQueryParameter('index');
 
 		if (index_param === undefined) {
-			throw new BadRequestError();
+			throw new BadRequestError('Must supply an "index" query parameter');
 		}
 
 		const removal_index = parseInt(index_param, 10);
 
 		if (isNaN(removal_index)) {
-			throw new BadRequestError();
+			throw new BadRequestError(`Invalid removal index: ${index_param}`);
 		}
 
 		return draft_fields.filter((_field, index) => {

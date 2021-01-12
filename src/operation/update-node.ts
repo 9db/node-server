@@ -1,5 +1,4 @@
 import Node from 'type/node';
-import BadRequestError from 'http/error/bad-request';
 import FieldValue from 'type/field-value';
 import FetchNodeOperation from 'operation/fetch-node';
 import ChangeFieldOperation from 'operation/change-field';
@@ -30,10 +29,6 @@ class UpdateNodeOperation extends Operation<Input, Node> {
 			node = await this.applyChange(node, change);
 
 			index++;
-		}
-
-		if (node === undefined) {
-			throw new BadRequestError();
 		}
 
 		return node;

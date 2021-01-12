@@ -16,21 +16,21 @@ interface Input {
 
 class HtmlCreateInstanceFormEndpoint extends HtmlEndpoint<Input> {
 	protected async process(): Promise<string> {
-		const type_node = await this.fetchTypeNode();
+		const type_node = await this.fetchType();
 
 		await this.checkPermission(type_node);
 
 		return this.renderFormForTypeNode(type_node);
 	}
 
-	private async fetchTypeNode(): Promise<TypeNode> {
+	protected async fetchType(): Promise<TypeNode> {
 		const type_id = this.getQueryParameter('type_id');
 
 		if (type_id === undefined) {
-			throw new BadRequestError();
+			throw new BadRequestError('Must specify a "type_id" query parameter');
 		}
 
-		return this.fetchType(type_id);
+		return super.fetchType(type_id);
 	}
 
 	private checkPermission(node: TypeNode): Promise<void> {
@@ -74,7 +74,9 @@ class HtmlCreateInstanceFormEndpoint extends HtmlEndpoint<Input> {
 			const type_url = type_node[field_key];
 
 			if (typeof type_url !== 'string') {
-				throw new BadRequestError();
+				throw new BadRequestError(`
+					Invalid type url: ${type_url} (expected string)
+				`);
 			}
 
 			return this.prepareFieldInputForKey(field_key, type_url);

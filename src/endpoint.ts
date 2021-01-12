@@ -84,7 +84,9 @@ abstract class Endpoint<Input, Output extends AllowedOutputs> {
 		const value = parameters[parameter];
 
 		if (value === undefined) {
-			throw new BadRequestError();
+			throw new BadRequestError(`
+				No value found for url parameter "${parameter}"
+			`);
 		}
 
 		return value;

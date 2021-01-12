@@ -36,7 +36,9 @@ class ListRowTemplate extends Template<Input> {
 		const type_field = type_node[field_key];
 
 		if (typeof type_field !== 'string') {
-			throw new BadRequestError();
+			throw new BadRequestError(`
+				Unexpected type field url: "${type_field}" (expected string)
+			`);
 		}
 
 		const inner_type = getListInnerType(type_field);
