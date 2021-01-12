@@ -1,16 +1,17 @@
 import TypeNode from 'type/type-node';
-import FieldInput from 'template/page/instance-form/type/field-input';
+import DraftField from 'type/draft-field';
 import getNodeParameters from 'utility/get-node-parameters';
-import FieldTableTemplate from 'template/page/instance-form/field-table';
+import FieldTableTemplate from 'template/page/create-type-form/field-table';
 import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
 interface Input extends PageTemplateInput {
-	readonly type_node: TypeNode;
+	readonly generic_type: TypeNode;
 	readonly draft_id: string;
-	readonly fields: FieldInput[];
+	readonly draft_fields: DraftField[];
+	readonly type_nodes: TypeNode[];
 }
 
-class InstanceFormTemplate extends PageTemplate<Input> {
+class CreateTypeFormTemplate extends PageTemplate<Input> {
 	protected getBreadcrumbs(): Breadcrumb[] {
 		const type_label = this.getTypeLabel();
 		const type_url = this.getTypeUrl();
@@ -27,20 +28,19 @@ class InstanceFormTemplate extends PageTemplate<Input> {
 	}
 
 	protected getContentTitle(): string {
-		const type_label = this.getTypeLabel();
-
-		return `Create new ${type_label}`;
+		return 'Create new type';
 	}
 
 	protected getContentHtml(): string {
-		const type_url = this.getTypeUrl();
 		const id_input_html = this.getIdInputHtml();
+		const parent_type_input_html = this.getParentTypeInputHtml();
 		const field_table_html = this.getFieldTableHtml();
 		const submission_html = this.getSubmissionHtml();
 
 		return `
-			<form action="${type_url}" method="POST">
+			<form action="/type" method="POST">
 				${id_input_html}
+				${parent_type_input_html}
 				${field_table_html}
 				${submission_html}
 			</form>
@@ -60,16 +60,36 @@ class InstanceFormTemplate extends PageTemplate<Input> {
 		`;
 	}
 
+	private getParentTypeInputHtml(): string {
+		return `
+			<fieldset>
+				<label for="parent_type">
+					Parent type URL:
+					<em>(optional)</em>
+				</label>
+				<input name="parent_type" type="text" />
+			</fieldset>
+		`;
+	}
+
 	private getFieldTableHtml(): string {
-		const fields = this.getFields();
+		const draft_fields = this.getDraftFields();
+		const type_nodes = this.getTypeNodes();
 
 		const input = {
-			fields
+			draft_fields,
+			type_nodes
 		};
 
 		const template = new FieldTableTemplate(input);
+		const table_html = template.render();
 
-		return template.render();
+		return `
+			<fieldset>
+				<label>Fields:</label>
+				${table_html}
+			</fieldset>
+		`;
 	}
 
 	private getSubmissionHtml(): string {
@@ -84,30 +104,36 @@ class InstanceFormTemplate extends PageTemplate<Input> {
 		return input.draft_id;
 	}
 
-	private getFields(): FieldInput[] {
+	private getDraftFields(): DraftField[] {
 		const input = this.getInput();
 
-		return input.fields;
+		return input.draft_fields;
+	}
+
+	private getTypeNodes(): TypeNode[] {
+		const input = this.getInput();
+
+		return input.type_nodes;
 	}
 
 	private getTypeUrl(): string {
-		const type_node = this.getTypeNode();
+		const node = this.getGenericType();
 
-		return type_node.url;
+		return node.url;
 	}
 
 	private getTypeLabel(): string {
-		const type_node = this.getTypeNode();
-		const parameters = getNodeParameters(type_node.url);
+		const node = this.getGenericType();
+		const parameters = getNodeParameters(node.url);
 
 		return parameters.id;
 	}
 
-	private getTypeNode(): TypeNode {
+	private getGenericType(): TypeNode {
 		const input = this.getInput();
 
-		return input.type_node;
+		return input.generic_type;
 	}
 }
 
-export default InstanceFormTemplate;
+export default CreateTypeFormTemplate;

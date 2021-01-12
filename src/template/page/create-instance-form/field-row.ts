@@ -1,6 +1,6 @@
 import Template from 'template';
 import TypeNode from 'type/type-node';
-import FieldInput from 'template/page/instance-form/type/field-input';
+import FieldInput from 'template/page/create-instance-form/type/field-input';
 import InstanceNode from 'type/instance-node';
 import getNodeParameters from 'utility/get-node-parameters';
 

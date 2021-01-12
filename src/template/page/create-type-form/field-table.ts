@@ -1,7 +1,7 @@
 import Template from 'template';
 import TypeNode from 'type/type-node';
 import DraftField from 'type/draft-field';
-import FieldRowTemplate from 'template/page/type-form/field-row';
+import FieldRowTemplate from 'template/page/create-type-form/field-row';
 
 interface Input {
 	readonly draft_fields: DraftField[];

@@ -4,7 +4,7 @@ import ActionType from 'enum/action-type';
 import DraftField from 'type/draft-field';
 import HtmlEndpoint from 'endpoint/html';
 import BadRequestError from 'http/error/bad-request';
-import TypeFormTemplate from 'template/page/type-form';
+import CreateTypeFormTemplate from 'template/page/create-type-form';
 import FetchTypeInstancesOperation from 'operation/fetch-type-instances';
 import CheckNodePermissionOperation from 'operation/check-node-permission';
 
@@ -70,7 +70,7 @@ class HtmlCreateTypeFormEndpoint extends HtmlEndpoint<Input> {
 		const draft_id = this.getDraftId();
 		const draft_fields = this.getDraftFields();
 
-		const template = new TypeFormTemplate({
+		const template = new CreateTypeFormTemplate({
 			generic_type,
 			draft_id,
 			draft_fields,

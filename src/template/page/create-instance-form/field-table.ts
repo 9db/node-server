@@ -1,6 +1,6 @@
 import Template from 'template';
-import FieldInput from 'template/page/instance-form/type/field-input';
-import FieldRowTemplate from 'template/page/instance-form/field-row';
+import FieldInput from 'template/page/create-instance-form/type/field-input';
+import FieldRowTemplate from 'template/page/create-instance-form/field-row';
 
 interface Input {
 	readonly fields: FieldInput[];

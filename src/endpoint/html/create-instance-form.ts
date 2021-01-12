@@ -1,11 +1,11 @@
 import TypeNode from 'type/type-node';
-import FieldInput from 'template/page/instance-form/type/field-input';
+import FieldInput from 'template/page/create-instance-form/type/field-input';
 import HtmlEndpoint from 'endpoint/html';
 import InstanceNode from 'type/instance-node';
 import getFieldKeys from 'utility/get-field-keys';
 import ActionType from 'enum/action-type';
 import BadRequestError from 'http/error/bad-request';
-import InstanceFormTemplate from 'template/page/instance-form';
+import CreateInstanceFormTemplate from 'template/page/create-instance-form';
 import FetchTypeInstancesOperation from 'operation/fetch-type-instances';
 import CheckNodePermissionOperation from 'operation/check-node-permission';
 
@@ -62,7 +62,7 @@ class HtmlCreateInstanceFormEndpoint extends HtmlEndpoint<Input> {
 			account
 		};
 
-		const template = new InstanceFormTemplate(input);
+		const template = new CreateInstanceFormTemplate(input);
 
 		return template.render();
 	}
