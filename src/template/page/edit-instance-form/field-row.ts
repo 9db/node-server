@@ -49,7 +49,6 @@ class FieldRowTemplate extends Template<Input> {
 		const type_label = this.getTypeLabel();
 
 		return `
-			<input name="fields[${index}][type_url]" type="hidden" value="${type_url}" />
 			<a href="${type_url}">${type_label}</a>
 		`;
 	}
