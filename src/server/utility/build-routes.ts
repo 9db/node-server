@@ -14,6 +14,7 @@ import JsonFetchInstanceRoute from 'route/json/fetch-instance';
 import PlaintextNotFoundRoute from 'route/plaintext/not-found';
 import HtmlCreateInstanceRoute from 'route/html/create-instance';
 import JsonCreateInstanceRoute from 'route/json/create-instance';
+import HtmlUpdateInstanceRoute from 'route/html/update-instance';
 import HtmlUpdateTypeFormRoute from 'route/html/update-type-form';
 import HtmlCreateTypeFormRoute from 'route/html/create-type-form';
 import HtmlInstanceDetailsRoute from 'route/html/instance-details';
@@ -42,6 +43,7 @@ function buildRoutes(): Route[] {
 		new HtmlUpdateTypeFormRoute(),
 		new HtmlCreateTypeRoute(),
 		new HtmlCreateInstanceRoute(),
+		new HtmlUpdateInstanceRoute(),
 		new HtmlTypeDetailsRoute(),
 		new HtmlInstanceDetailsRoute(),
 
