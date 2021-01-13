@@ -44,7 +44,7 @@ class EditInstanceFormTemplate extends PageTemplate<Input> {
 		const submission_html = this.getSubmissionHtml();
 
 		return `
-			<form action="${instance_url}" method="PATCH">
+			<form action="${instance_url}" method="POST">
 				${id_input_html}
 				${field_table_html}
 				${submission_html}

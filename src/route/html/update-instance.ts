@@ -5,7 +5,7 @@ import HtmlUpdateInstanceEndpoint from 'endpoint/html/update-instance';
 class HtmlUpdateInstanceRoute extends HtmlRoute {
 	public constructor() {
 		super(
-			HttpMethod.PATCH,
+			HttpMethod.POST,
 			'/:type_id/:instance_id',
 			HtmlUpdateInstanceEndpoint
 		);
