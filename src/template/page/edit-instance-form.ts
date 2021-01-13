@@ -1,9 +1,12 @@
+import FieldInput from 'template/page/edit-instance-form/type/field-input';
 import InstanceNode from 'type/instance-node';
 import getNodeParameters from 'utility/get-node-parameters';
+import FieldTableTemplate from 'template/page/edit-instance-form/field-table';
 import PageTemplate, { Breadcrumb, PageTemplateInput } from 'template/page';
 
 interface Input extends PageTemplateInput {
 	readonly instance: InstanceNode;
+	readonly fields: FieldInput[];
 }
 
 class EditInstanceFormTemplate extends PageTemplate<Input> {
@@ -30,13 +33,57 @@ class EditInstanceFormTemplate extends PageTemplate<Input> {
 
 	protected getContentTitle(): string {
 		const type_label = this.getTypeLabel();
-		const instance_label = this.getInstanceLabel();
 
-		return `Edit ${type_label}: ${instance_label}`;
+		return `Edit ${type_label}`;
 	}
 
 	protected getContentHtml(): string {
-		return 'Some content here';
+		const instance_url = this.getInstanceUrl();
+		const id_input_html = this.getIdInputHtml();
+		const field_table_html = this.getFieldTableHtml();
+		const submission_html = this.getSubmissionHtml();
+
+		return `
+			<form action="${instance_url}" method="PATCH">
+				${id_input_html}
+				${field_table_html}
+				${submission_html}
+			</form>
+		`;
+	}
+
+	private getIdInputHtml(): string {
+		const instance_id = this.getInstanceId();
+
+		return `
+			<fieldset>
+				<label for="id">
+					ID:
+				</label>
+				<input name="id" type="text" disabled value="${instance_id}" />
+				<p>
+					<em>You are not able to edit the node ID after creation.</em>
+				</p>
+			</fieldset>
+		`;
+	}
+
+	private getFieldTableHtml(): string {
+		const fields = this.getFields();
+
+		const input = {
+			fields
+		};
+
+		const template = new FieldTableTemplate(input);
+
+		return template.render();
+	}
+
+	private getSubmissionHtml(): string {
+		return `
+			<input type="submit" value="Submit" />
+		`;
 	}
 
 	private getTypeLabel(): string {
@@ -53,6 +100,10 @@ class EditInstanceFormTemplate extends PageTemplate<Input> {
 	}
 
 	private getInstanceLabel(): string {
+		return this.getInstanceId();
+	}
+
+	private getInstanceId(): string {
 		const instance_url = this.getInstanceUrl();
 		const parameters = getNodeParameters(instance_url);
 
@@ -69,6 +120,12 @@ class EditInstanceFormTemplate extends PageTemplate<Input> {
 		const input = this.getInput();
 
 		return input.instance;
+	}
+
+	private getFields(): FieldInput[] {
+		const input = this.getInput();
+
+		return input.fields;
 	}
 }
 
