@@ -13,6 +13,7 @@ class FieldRowTemplate extends Template<Input> {
 		const key_html = this.getKeyHtml();
 		const type_html = this.getTypeHtml();
 		const instance_list_html = this.getInstanceListHtml();
+		const old_value_html = this.getOldValueHtml();
 		const explicit_value_html = this.getExplicitValueHtml();
 
 		return `
@@ -27,6 +28,7 @@ class FieldRowTemplate extends Template<Input> {
 					${instance_list_html}
 				</td>
 				<td>
+					${old_value_html}
 					${explicit_value_html}
 				</td>
 			</tr>
@@ -44,7 +46,6 @@ class FieldRowTemplate extends Template<Input> {
 	}
 
 	private getTypeHtml(): string {
-		const index = this.getIndex();
 		const type_url = this.getTypeUrl();
 		const type_label = this.getTypeLabel();
 
@@ -104,7 +105,16 @@ class FieldRowTemplate extends Template<Input> {
 		}
 
 		return `
-			<input name="fields[${index}][value]" value="${value}" />
+			<input name="fields[${index}][new_value]" value="${value}" />
+		`;
+	}
+
+	private getOldValueHtml(): string {
+		const index = this.getIndex();
+		const old_value = this.getOldValue();
+
+		return `
+			<input name="fields[${index}][old_value]" value="${old_value}" />
 		`;
 	}
 
@@ -140,6 +150,12 @@ class FieldRowTemplate extends Template<Input> {
 		const input = this.getInput();
 
 		return input.index;
+	}
+
+	private getOldValue(): string {
+		const input = this.getInput();
+
+		return input.old_value;
 	}
 
 	private getDraftValue(): string {

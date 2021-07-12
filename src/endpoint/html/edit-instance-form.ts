@@ -1,5 +1,5 @@
 import TypeNode from 'type/type-node';
-import FieldInput from 'template/page/create-instance-form/type/field-input';
+import FieldInput from 'template/page/edit-instance-form/type/field-input';
 import HtmlEndpoint from 'endpoint/html';
 import InstanceNode from 'type/instance-node';
 import getFieldKeys from 'utility/get-field-keys';
@@ -91,12 +91,14 @@ class EditInstanceFormEndpoint extends HtmlEndpoint<Input> {
 		const type_node = await this.loadTypeFromUrl(type_url);
 		const instance_list = await this.fetchInstanceListForTypeNode(type_node);
 		const draft_value = this.getDraftValueForFieldKey(key, instance);
+		const old_value = draft_value;
 
 		return {
 			key,
 			type_node,
 			instance_list,
-			draft_value
+			draft_value,
+			old_value
 		};
 	}
 

@@ -1,6 +1,6 @@
 import JsonEndpoint from 'endpoint/json';
 import InstanceNode from 'type/instance-node';
-import UpdateInstanceOperation, { ChangeInput } from 'operation/update-node';
+import UpdateNodeOperation, { ChangeInput } from 'operation/update-node';
 
 interface Input {
 	readonly changes: ChangeInput[];
@@ -23,7 +23,7 @@ class JsonUpdateInstanceEndpoint extends JsonEndpoint<Input> {
 			account
 		};
 
-		const operation = new UpdateInstanceOperation(input);
+		const operation = new UpdateNodeOperation(input);
 
 		return operation.perform();
 	}
